@@ -19,10 +19,10 @@ The most important side of this project was to create the HUB himself and a good
 
 ## Technology
 
-Comming soon 
+Coming soon 
 
 
 
 
 ## Contact 
-Comming soon
+Coming soon
