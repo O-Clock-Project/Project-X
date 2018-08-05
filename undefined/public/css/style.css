@@ -1,0 +1,128 @@
+@font-face{font-family:Oclock;src:url(../fonts/oclock-light.woff2) format("woff2");font-weight:200;font-style:normal}
+@font-face{font-family:Oclock;src:url(../fonts/oclock-regular.woff2) format("woff2");font-weight:400;font-style:normal}
+@font-face{font-family:Oclock;src:url(../fonts/oclock-medium.woff2) format("woff2");font-weight:600;font-style:normal}
+@font-face{font-family:Oclock;src:url(../fonts/oclock-bold.woff2) format("woff2");font-weight:700;font-style:normal}
+@font-face{font-family:Oclock;src:url(../fonts/oclock-black.woff2) format("woff2");font-weight:900;font-style:normal}
+@font-face{font-family:Oclock;src:url(../fonts/oclock-regularitalic.woff2) format("woff2");font-weight:400;font-style:italic}
+@font-face{font-family:Menlo;src:url(../fonts/menlo-regular.woff2) format("woff2");font-weight:400;font-style:normal}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #031634;
+  color: #fffdd8;
+  font-family: Oclock;
+}
+
+#login-title,
+#signup-title {
+  margin: 8rem;
+  font-size: 4rem;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#login-subtitle,
+#signup-subtitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#login-form {
+  width: 20%;
+  margin: auto;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.login-form-input {
+  width: 100%;
+  margin: 1rem 0;
+  padding: .5rem;
+  text-align: center;
+  background-color: #033649;
+  color: lightblue;
+  border: 1px solid #033649;
+  font-family: Oclock;
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
+.login-form-input:focus {
+  border-color: #0ac3a7;
+}
+
+.login-form-btn,
+.signup-form-btn {
+  margin: 1rem 0;
+  border-radius: .5em;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  padding: 1.5em 1.5em;
+  text-transform: uppercase;
+  background: #cdb380;
+  border: 0;
+  border-bottom: .3em solid #a58a55;
+  color: #031634;
+  text-shadow: 0 0 0.4em rgba(21,16,0,.1);
+  min-width: 10em;
+  cursor: pointer;
+}
+
+.login-form-btn:hover,
+.signup-form-btn:hover {
+  background: #e4ca98;
+}
+
+.login-form-btn:active,
+.signup-form-btn:active {
+  background: #cdb380;
+  border-width: .15em;
+  margin-bottom: .15em;
+  transform: translateY(.15em);
+}
+
+#signup-form {
+  width: 40%;
+  margin: auto;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+#signup-form > div {
+  border-bottom: 1px dashed #ccc;
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+  padding-bottom: .5rem;
+}
+
+.signup-form-label {
+  min-width: 50%;
+  text-align: left;
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.signup-form-input {
+  width: 50%;
+  background: 0 0;
+  border: 0;
+  text-align: right;
+  color: lightblue;
+  font-family: Oclock;
+  font-weight: 400;
+  font-size: 1.4rem;
+}
+
+.signup-form-input:focus {
+  outline: none;
+}
