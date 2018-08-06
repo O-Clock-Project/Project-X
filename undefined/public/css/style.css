@@ -96,12 +96,16 @@ body {
   text-align: center;
 }
 
-#signup-form > div {
+.signup-form-category {
   border-bottom: 1px dashed #ccc;
   display: flex;
   justify-content: space-between;
   margin: 1rem 0;
   padding-bottom: .5rem;
+}
+
+.signup-form-section {
+  margin-bottom: 3rem;
 }
 
 .signup-form-label {
@@ -123,6 +127,22 @@ body {
   font-size: 1.4rem;
 }
 
-.signup-form-input:focus {
+.signup-form-input:focus,
+#birthday_day:focus,
+#birthday_month:focus,
+#birthday_year:focus {
   outline: none;
+}
+
+#birthday_day,
+#birthday_month,
+#birthday_year {
+  font-size: 1rem;
+  font-family: Oclock;
+  height: 2rem;
+  margin-left: 5px;
+  width: 80px;
+  background-color: #033649;
+  color: #e8ddcb;
+  border: 0;
 }
