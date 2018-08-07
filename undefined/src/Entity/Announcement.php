@@ -1,0 +1,202 @@
+<?php
+
+namespace App\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\AnnouncementRepository")
+ */
+class Announcement
+{
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $title;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $body;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $frozen;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $closing_at;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="announcement", orphanRemoval=true)
+     */
+    private $comments;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="announces")
+     */
+    private $author;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Promotion", mappedBy="announces")
+     */
+    private $promotions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\AnnouncementType", inversedBy="announces")
+     */
+    private $type;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+        $this->promotions = new ArrayCollection();
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
+    public function getFrozen(): ?bool
+    {
+        return $this->frozen;
+    }
+
+    public function setFrozen(bool $frozen): self
+    {
+        $this->frozen = $frozen;
+
+        return $this;
+    }
+
+    public function getClosingAt(): ?\DateTimeInterface
+    {
+        return $this->closing_at;
+    }
+
+    public function setClosingAt(\DateTimeInterface $closing_at): self
+    {
+        $this->closing_at = $closing_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAnnouncement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getAnnouncement() === $this) {
+                $comment->setAnnouncement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Promotion[]
+     */
+    public function getPromotions(): Collection
+    {
+        return $this->promotions;
+    }
+
+    public function addPromotion(Promotion $promotion): self
+    {
+        if (!$this->promotions->contains($promotion)) {
+            $this->promotions[] = $promotion;
+            $promotion->addAnnounce($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotion(Promotion $promotion): self
+    {
+        if ($this->promotions->contains($promotion)) {
+            $this->promotions->removeElement($promotion);
+            $promotion->removeAnnounce($this);
+        }
+
+        return $this;
+    }
+
+    public function getType(): ?AnnouncementType
+    {
+        return $this->type;
+    }
+
+    public function setType(?AnnouncementType $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+}
