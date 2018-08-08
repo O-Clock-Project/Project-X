@@ -270,4 +270,9 @@ class Announcement
         }
     }
 
+    public function __toString()
+    {
+        return $this->getTitle();
+    }
+
 }

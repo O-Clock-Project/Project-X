@@ -147,4 +147,9 @@ class WarningBookmark
         }
     }
 
+    public function __toString()
+    {
+        return $this->getAuthor() . ' a signalé le bookmark ' . $this->getBookmark() . ' pour : ' . $this->getMessage();
+    }
+
 }

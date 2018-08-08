@@ -543,4 +543,9 @@ class User
         }
     }
 
+    public function __toString()
+    {
+        return $this->getFirstName() . ' ' . $this-getLastName() .  ' aka ' . $this->getUsername();
+    }
+
 }

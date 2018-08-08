@@ -164,4 +164,10 @@ class PromotionLink
         }
     }
 
+
+    public function __toString()
+    {
+        return $this->getName() . ' : ' . $this->getUrl();
+    }
+
 }

@@ -163,4 +163,11 @@ class Comment
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
+
+    
+    public function __toString()
+    {
+        return substr($this->getBody(), 0, 15);
+    }
+
 }

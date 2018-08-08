@@ -149,4 +149,11 @@ class Locale
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
+
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
+    
 }

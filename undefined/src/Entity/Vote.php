@@ -147,4 +147,9 @@ class Vote
         }
     }
 
+    public function __toString()
+    {
+        return $this->getVoter() . ' a voté ' . strval($this->getValue()) . ' pour ' . $this->getBookmark();
+    }
+
 }

@@ -146,4 +146,10 @@ class Affectation
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
+
+    public function __toString()
+    {
+        return $this->getUser() . ' est ' . $this->getRole() . ' chez ' . $this->getPromotion();
+    }
+
 }

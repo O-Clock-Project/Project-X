@@ -457,4 +457,10 @@ class Bookmark
         }
     }
 
+
+    public function __toString()
+    {
+        return $this->getTitle();
+    }
+
 }

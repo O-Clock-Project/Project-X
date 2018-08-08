@@ -167,4 +167,10 @@ class Difficulty
         }
     }
 
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
 }

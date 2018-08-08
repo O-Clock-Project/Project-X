@@ -146,4 +146,9 @@ class Tag
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
+
+    public function __toString()
+    {
+        return $this->getLabel();
+    }
 }
