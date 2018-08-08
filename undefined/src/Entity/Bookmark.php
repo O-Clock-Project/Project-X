@@ -9,6 +9,7 @@ use Locale;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BookmarkRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Bookmark
 {
@@ -30,7 +31,7 @@ class Bookmark
     private $updated_at;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":true})
      */
     private $is_active;
 
@@ -55,7 +56,7 @@ class Bookmark
     private $image;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":false})
      */
     private $banned;
 
@@ -437,6 +438,20 @@ class Bookmark
         $this->locale = $locale;
 
         return $this;
+    }
+
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdatedAt(new \DateTime('now'));
+
+        if ($this->getCreatedAt() == null) {
+            $this->setCreatedAt(new \DateTime('now'));
+        }
     }
 
 }
