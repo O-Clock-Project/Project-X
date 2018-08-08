@@ -1,0 +1,63 @@
+easy_admin:
+    site_name: 'The HUB'
+    # Change l'apparence du header
+    design:
+        brand_color: '#036564'
+        
+        menu:
+            - { entity: 'Affectation', label: 'Affectation', icon: 'user' }
+            - { entity: 'Annonce', label: 'Annonce', icon: 'bullhorn' }
+            - { entity: 'AnnonceType', label: 'Type annonce', icon: 'bullhorn' }
+            - { entity: 'Bookmark', label: 'Bookmark', icon: 'bookmark' }
+            - { entity: 'Commentaire', label: 'Commentaire', icon: 'comment' }
+            - { entity: 'Difficulté', label: 'Difficulté', icon: 'signal' }
+            - { entity: 'Langue', label: 'Langue', icon: 'globe' }
+            - { entity: 'Promotion', label: 'Promotion', icon: 'graduation-cap' }
+            - { entity: 'LienPromotion', label: 'Lien Promotion', icon: 'link' }
+            - { entity: 'Role', label: 'Role', icon: 'user' }
+            - { entity: 'Spécialité', label: 'Spécialité', icon: 'book' }
+            - { entity: 'Support', label: 'Support', icon: 'volume-off' }
+            - { entity: 'Tag', label: 'Tag', icon: 'tag' }
+            - { entity: 'User', label: 'User', icon: 'user' }
+            - { entity: 'Vote', label: 'Vote', icon: 'thumbs-up' }
+            - { entity: 'AlertBookmark', label: 'Alert Bookmark', icon: 'exclamation-triangle' }
+            # Permet le retour vers la home du site
+            #- { label: 'Retour au site', route: 'homepage'}
+    # Rajoute la fonction show sur chaque objet
+    list:
+        actions: 
+            - { name: 'show', icon: 'search', label: '', title: 'Search'}
+            - { name: 'edit', icon: 'pencil', label: '', title: 'Edit'}
+    entities:
+        Affectation:
+            class: App\Entity\Affectation
+        Annonce:
+            class: App\Entity\Announcement
+        AnnonceType:
+            class: App\Entity\AnnouncementType
+        Bookmark:
+            class: App\Entity\Bookmark
+        Commentaire:
+            class: App\Entity\Comment
+        Difficulté:
+            class: App\Entity\Difficulty
+        Langue:
+            class: App\Entity\Locale
+        Promotion:
+            class: App\Entity\Promotion
+        LienPromotion:
+            class: App\Entity\PromotionLink
+        Role:
+            class: App\Entity\Role
+        Spécialité:
+            class: App\Entity\Speciality
+        Support:
+            class: App\Entity\Support
+        Tag:
+            class: App\Entity\Tag
+        User:
+            class: App\Entity\User
+        Vote:
+            class: App\Entity\Vote
+        AlertBookmark: 
+            class: App\Entity\WarningBookmark
