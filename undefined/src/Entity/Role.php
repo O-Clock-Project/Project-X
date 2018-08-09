@@ -154,7 +154,6 @@ class Role
     }
 
     /**
-     *
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
