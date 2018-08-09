@@ -12,12 +12,12 @@ easy_admin:
             - { entity: 'AnnonceType', label: 'Type annonce', icon: 'bullhorn' }
             - { entity: 'Bookmark', label: 'Bookmark', icon: 'bookmark' }
             - { entity: 'Commentaire', label: 'Commentaire', icon: 'comment' }
-            - { entity: 'Difficulté', label: 'Difficulté', icon: 'signal' }
+            - { entity: 'Difficulte', label: 'Difficulte', icon: 'signal' }
             - { entity: 'Langue', label: 'Langue', icon: 'globe' }
             - { entity: 'Promotion', label: 'Promotion', icon: 'graduation-cap' }
             - { entity: 'LienPromotion', label: 'Lien Promotion', icon: 'link' }
             - { entity: 'Role', label: 'Role', icon: 'user' }
-            - { entity: 'Spécialité', label: 'Spécialité', icon: 'book' }
+            - { entity: 'Specialite', label: 'Specialite', icon: 'book' }
             - { entity: 'Support', label: 'Support', icon: 'volume-off' }
             - { entity: 'Tag', label: 'Tag', icon: 'tag' }
             - { entity: 'User', label: 'User', icon: 'user' }
@@ -229,7 +229,7 @@ easy_admin:
                     - 'banned'
                     - 'author'
                     - 'announcement' 
-        Difficulté:
+        Difficulte:
             class: App\Entity\Difficulty
             help: 'Voici la liste des niveaux de difficulté des Bookmarks'
             # La view de la liste des niveaux de difficultés
@@ -244,29 +244,29 @@ easy_admin:
                     - { property: 'isActive', type: 'toggle' }
                     - 'name'
                     - 'level'  
-                    - 'bookmark' 
+                    - 'bookmarks' 
             # La view d'un niveaux de difficulté d'un bookmark  
             show:
-                title:  'un niveaux de difficultés d''un bookmark'
+                title:  'un niveau de difficulté d''un bookmark'
                 help: null
             # La view de modification d'un niveaux de difficulté d'un bookmark  
             edit:
-                title:  'Mise à jour d''un niveaux de difficulté d''un bookmark'
+                title:  'Mise à jour d''un niveau de difficulté d''un bookmark'
                 help: null
                 fields:
                     - { property: 'isActive', type: 'toggle' }
                     - 'name'
                     - 'level'  
-                    - 'bookmark' 
-            # La view d'ajout d'un niveaux de difficulté d'un bookmark
+                    - 'bookmarks' 
+            # La view d'ajout d'un niveau de difficulté d'un bookmark
             new:
-                title:  'Ajout d''un niveaux de difficulté d''un bookmark '
+                title:  'Ajout d''un niveau de difficulté d''un bookmark '
                 help: null
                 fields:
                     - 'isActive'
                     - 'name'
                     - 'level'  
-                    - 'bookmark' 
+                    - 'bookmarks' 
         Langue:
             class: App\Entity\Locale
             help: 'Voici la liste des langues des Bookmarks'
@@ -417,7 +417,7 @@ easy_admin:
                     - 'code'
                     - 'affectations'
                     
-        Spécialité:
+        Specialite:
             class: App\Entity\Speciality
             help: 'Voici la liste des différentes spécialités'
             # La view de la liste des spécialités
