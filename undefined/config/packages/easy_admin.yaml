@@ -43,7 +43,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'user'
                     - 'promotion'
                     - 'role'
@@ -56,7 +56,7 @@ easy_admin:
                 title:  'Mise à jour d''une affectation'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'user'
                     - 'promotion'
                     - 'role'
@@ -65,7 +65,7 @@ easy_admin:
                 title:  'Ajout d''une affectation'
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'user'
                     - 'promotion'
                     - 'role'
@@ -81,7 +81,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'title'
                     - 'body'
                     - 'author'
@@ -97,7 +97,7 @@ easy_admin:
                 title:  'Mise à jour d''une annonce'
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'title'
                     - 'body'
                     - 'author'
@@ -109,9 +109,9 @@ easy_admin:
                 title:  'Ajout d''une annonce'
                 help: null
                 fields:
-                    - 'isActive'
                     - 'title'
                     - 'body'
+                    - 'is_active'
                     - 'author'
                     - 'promotions'  
                     - 'frozen'               
@@ -129,7 +129,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'announces'
             # La view d'une annonceType
@@ -141,7 +141,7 @@ easy_admin:
                 title:  'Mise à jour d''annonce du professeur'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'announces'
             # La view d'ajout d'une annonceType
@@ -149,7 +149,7 @@ easy_admin:
                 title:  'Ajout d''annonce du professeur'
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'name'
                     - 'announces'
         Bookmark:
@@ -164,7 +164,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'title'
                     - 'url'
                     - 'image'
@@ -178,7 +178,7 @@ easy_admin:
                 title:  'Mise à jour du Bookmark'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'title'
                     - 'url'
                     - 'image'
@@ -187,7 +187,7 @@ easy_admin:
                 title:  'Ajout d''un Bookmark'
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'title'
                     - 'url'
                     - 'image'
@@ -203,7 +203,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - { property: 'banned', type: 'toggle' } 
                     - 'author'
                     - 'announcement'  
@@ -216,7 +216,7 @@ easy_admin:
                 title:  'Mise à jour d''un commentaire'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - { property: 'banned', type: 'toggle' } 
                     - 'author'
                     - 'announcement' 
@@ -225,7 +225,7 @@ easy_admin:
                 title:  'Ajout d''un commentaire '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'banned'
                     - 'author'
                     - 'announcement' 
@@ -241,7 +241,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'level'  
                     - 'bookmarks' 
@@ -254,7 +254,7 @@ easy_admin:
                 title:  'Mise à jour d''un niveau de difficulté d''un bookmark'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'level'  
                     - 'bookmarks' 
@@ -263,7 +263,7 @@ easy_admin:
                 title:  'Ajout d''un niveau de difficulté d''un bookmark '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'name'
                     - 'level'  
                     - 'bookmarks' 
@@ -279,7 +279,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'bookmarks' 
             # La view d'une langue d'un Bookmark 
@@ -291,7 +291,7 @@ easy_admin:
                 title:  'Mise à jour d''une langue d''un Bookmark'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'bookmarks'  
             # La view d'ajout d''une langue d''un Bookmark
@@ -299,7 +299,7 @@ easy_admin:
                 title:  'Ajout d''une langue d''un Bookmark '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'name'
                     - 'bookmarks'  
         Promotion:
@@ -314,7 +314,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'affectations'
                     - 'announces' 
@@ -327,7 +327,7 @@ easy_admin:
                 title:  'Mise à jour d''une promotion'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'affectations'
                     - 'announces' 
@@ -336,7 +336,7 @@ easy_admin:
                 title:  'Ajout d''une promotion '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'name'
                     - 'affectations'
                     - 'announces'  
@@ -352,7 +352,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'url'
                     - 'icon' 
@@ -365,7 +365,7 @@ easy_admin:
                 title:  'Mise à jour du lien d''une promotion'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'url'
                     - 'icon' 
@@ -374,7 +374,7 @@ easy_admin:
                 title:  'Ajout de lien d''une promotion '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'name'
                     - 'url'
                     - 'icon' 
@@ -390,7 +390,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'code'
                     - 'affectations' 
@@ -403,7 +403,7 @@ easy_admin:
                 title:  'Mise à jour d''un rôle utilisateur'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'code'
                     - 'affectations'
@@ -412,7 +412,7 @@ easy_admin:
                 title:  'Ajout d''un rôle utilisateur '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'name'
                     - 'code'
                     - 'affectations'
@@ -429,7 +429,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'students' 
             # La view d'une spécialité
@@ -441,7 +441,7 @@ easy_admin:
                 title:  'Mise à jour d''une spécialité'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'students' 
             # La view d'ajout d'une spécialité
@@ -449,7 +449,7 @@ easy_admin:
                 title:  'Ajout d''une spécialité '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'name'
                     - 'students'
         Support:
@@ -464,7 +464,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'bookmarks'
             # La view d'un support
@@ -476,7 +476,7 @@ easy_admin:
                 title:  'Mise à jour d''un support'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'bookmarks'
             # La view d'ajout d'un support
@@ -484,7 +484,7 @@ easy_admin:
                 title:  'Ajout d''un support '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'name'
                     - 'bookmarks' 
         Tag:
@@ -499,7 +499,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'label'
                     - 'bookmarks'
             # La view d'un tag
@@ -511,7 +511,7 @@ easy_admin:
                 title:  'Mise à jour d''un tag'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'label'
                     - 'bookmarks'
             # La view d'ajout d'un tag
@@ -519,7 +519,7 @@ easy_admin:
                 title:  'Ajout d''un tag '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'label'
                     - 'bookmarks' 
         User:
@@ -534,7 +534,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'username'
                     - 'firstname'
                     - 'lastname'
@@ -547,7 +547,7 @@ easy_admin:
                 title:  'Mise à jour d''un utilisateur'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'username'
                     - 'firstname'
                     - 'lastname'
@@ -556,7 +556,7 @@ easy_admin:
                 title:  'Ajout d''un utilisateur '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'username'
                     - 'firstname'
                     - 'lastname' 
@@ -572,7 +572,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'bookmark'
                     - 'voter'
             # La view d'un vote
@@ -584,7 +584,7 @@ easy_admin:
                 title:  'Mise à jour d''un vote'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'bookmark'
                     - 'voter'
             # La view d'ajout d'un vote
@@ -592,7 +592,7 @@ easy_admin:
                 title:  'Ajout d''un vote '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'bookmark'
                     - 'voter' 
         AlertBookmark: 
@@ -607,7 +607,7 @@ easy_admin:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'bookmark'
                     - 'author'
             # La view d'un bookmark signalé
@@ -619,7 +619,7 @@ easy_admin:
                 title:  'Mise à jour d''un bookmark signalé'
                 help: null
                 fields:
-                    - { property: 'isActive', type: 'toggle' }
+                    - { property: 'is_active', type: 'toggle' }
                     - 'bookmark'
                     - 'author'
             # La view d'ajout d'un bookmark signalé
@@ -627,6 +627,6 @@ easy_admin:
                 title:  'Ajout d''un bookmark signalé '
                 help: null
                 fields:
-                    - 'isActive'
+                    - 'is_active'
                     - 'bookmark'
                     - 'author'
