@@ -2,8 +2,8 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Role;
-use App\Repository\RoleRepository;
+use App\Entity\WarningBookmark;
+use App\Repository\WarningBookmarkRepository;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\Serializer\Serializer;
@@ -19,16 +19,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 /**
  * @Route("/api")
  */
-class RoleController extends AbstractController
+class WarningBookmarkController extends AbstractController
 {
     /**
-     * @Route("/roles", name="ListRoles")
+     * @Route("/warningBookmarks", name="ListWarningBookmarks")
      * @Method("GET")
      */
-    public function getRoles(RoleRepository $roleRepo, Request $request )
+    public function getWarningBookmarks(WarningBookmarkRepository $warningBookmarkRepo, Request $request )
     {
         
-        $role = new Role;
+        $warningBookmark = new WarningBookmark;
         $params = [];
         $order = [];
         $limit = 20;
@@ -47,7 +47,7 @@ class RoleController extends AbstractController
             else if($key === 'pageNumber'){
                 $num_pages = $value;
             }
-            else if(property_exists($role, $key)){
+            else if(property_exists($warningBookmark, $key)){
                 $params[$key] = $value;
             }
             else{
@@ -59,7 +59,7 @@ class RoleController extends AbstractController
             $order['created_at'] = 'DESC';
         }
 
-        $roles = $roleRepo->findBy(
+        $warningBookmarks = $warningBookmarkRepo->findBy(
             $params,
             $order,
             intval($limit), // limit
@@ -68,24 +68,24 @@ class RoleController extends AbstractController
 
 
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($roles, 'json', SerializationContext::create()->enableMaxDepthChecks());
+        $jsonContent = $serializer->serialize($warningBookmarks, 'json', SerializationContext::create()->enableMaxDepthChecks());
         $response =  new Response($jsonContent, 200);
         $response->headers->set('Content-Type', 'application/json; charset=utf-8');
         return $response;
     }
 
     /**
-     * @Route("/roles/{role_id}", name="ShowRole")
+     * @Route("/warningBookmarks/{warningBookmark_id}", name="ShowWarningBookmark")
      * @Method("GET")
      */
-    public function getRole(RoleRepository $roleRepo, $role_id)
+    public function getWarningBookmark(WarningBookmarkRepository $warningBookmarkRepo, $warningBookmark_id)
     {
-        $role = $roleRepo->findById($role_id);
-        if (empty($role)){
-            return new JsonResponse(['message' => 'Role non trouvé'], Response::HTTP_NOT_FOUND);
+        $warningBookmark = $warningBookmarkRepo->findById($warningBookmark_id);
+        if (empty($warningBookmark)){
+            return new JsonResponse(['message' => 'WarningBookmark non trouvé'], Response::HTTP_NOT_FOUND);
         };
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($role, 'json', SerializationContext::create()->enableMaxDepthChecks());
+        $jsonContent = $serializer->serialize($warningBookmark, 'json', SerializationContext::create()->enableMaxDepthChecks());
         $response =  new Response($jsonContent, 200);
         $response->headers->set('Content-Type', 'application/json');
         return $response;

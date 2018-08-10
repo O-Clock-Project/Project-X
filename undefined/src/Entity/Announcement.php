@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
+use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -59,21 +60,25 @@ class Announcement
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="announcement", orphanRemoval=true)
+     * @MaxDepth(3)
      */
     private $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="announces")
+     * @MaxDepth(3)
      */
     private $author;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Promotion", mappedBy="announces")
+     * @MaxDepth(3)
      */
     private $promotions;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AnnouncementType", inversedBy="announces")
+     * @MaxDepth(3)
      */
     private $type;
 

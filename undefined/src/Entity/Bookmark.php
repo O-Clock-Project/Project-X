@@ -6,6 +6,7 @@ use Locale;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
+use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -75,48 +76,57 @@ class Bookmark
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\WarningBookmark", mappedBy="bookmark", orphanRemoval=true)
+     * @MaxDepth(3)
      */
     private $warnings;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Support", inversedBy="bookmarks")
+     * @MaxDepth(3)
      */
     private $support;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Difficulty", inversedBy="bookmarks")
+     * @MaxDepth(3)
      */
     private $difficulty;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookmarks")
+     * @MaxDepth(3)
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="bookmark", orphanRemoval=true)
+     * @MaxDepth(3)
      */
     private $votes;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="favorites")
      * @ORM\JoinTable(name="bookmark_faved")
+     * @MaxDepth(3)
      */
     private $faved_by;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="certified_bookmarks")
      * @ORM\JoinTable(name="bookmark_certified")
+     * @MaxDepth(3)
      */
     private $certified_by;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="bookmarks")
+     * @MaxDepth(3)
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Locale", inversedBy="bookmarks")
+     * @MaxDepth(3)
      */
     private $locale;
 
