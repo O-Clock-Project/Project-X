@@ -4,9 +4,16 @@ namespace App\Controller\Api;
 
 use App\Entity\Role;
 use App\Repository\RoleRepository;
+use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializationContext;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -20,12 +27,13 @@ class RoleController extends AbstractController
      */
     public function getRoles(RoleRepository $roleRepo, Request $request )
     {
-       $role = new Role;
-       $params = [];
-       $order = [];
-       $limit = 20;
-       $num_pages = 1;
-       $params['is_active'] = true;
+        
+        $role = new Role;
+        $params = [];
+        $order = [];
+        $limit = 20;
+        $num_pages = 1;
+        $params['is_active'] = true;
         foreach($request->query as $key => $value){
             if($key === 'sortType'){
                 break;
@@ -55,7 +63,11 @@ class RoleController extends AbstractController
             intval($limit), // limit
             intval($limit * ($num_pages - 1)) // offset
         );
-        return $this->json($data);
+        $serializer = SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($data, 'json', SerializationContext::create()->enableMaxDepthChecks());
+        $response =  new Response($jsonContent, 200);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     /**

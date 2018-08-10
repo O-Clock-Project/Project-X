@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
+use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 /**
@@ -37,16 +38,19 @@ class Affectation
     
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="affectations")
+     * @MaxDepth(3)
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Promotion", inversedBy="affectations")
+     * @MaxDepth(3)
      */
     private $promotion;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="affectations")
+     * @MaxDepth(3)
      */
     private $role;
 
