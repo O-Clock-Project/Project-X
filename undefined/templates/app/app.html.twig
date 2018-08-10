@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue sur The Hub !{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('fonts.css') }}" rel="stylesheet">
+    <link href="{{ asset('app.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div id="root"></div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('vendors.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app.js') }}"></script>
+{% endblock %}

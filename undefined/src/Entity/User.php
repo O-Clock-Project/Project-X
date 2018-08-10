@@ -66,7 +66,7 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $avatar;
+    private $pseudo_github;
 
     /**
      * @ORM\Column(type="integer")
@@ -125,6 +125,8 @@ class User
      */
     private $affectations;
 
+    private $avatar;
+
 
     public function __construct()
     {
@@ -136,6 +138,7 @@ class User
         $this->bookmarks_warned = new ArrayCollection();
         $this->announces = new ArrayCollection();
         $this->affectations = new ArrayCollection();
+        $this->pseudo_github = 'https://pseudo_githubs.githubusercontent.com/'. $this->pseudo_github;
     }
 
     public function getId()
@@ -203,14 +206,26 @@ class User
         return $this;
     }
 
-    public function getAvatar(): ?string
+    public function getPseudoGithub(): ?string
     {
-        return $this->avatar;
+        return $this->pseudo_github;
     }
 
-    public function setAvatar(string $avatar): self
+    public function setPseudoGithub(string $pseudo_github): self
     {
-        $this->avatar = $avatar;
+        $this->pseudo_github = $pseudo_github;
+
+        return $this;
+    }
+
+    public function getpseudo_github(): ?string
+    {
+        return $this->pseudo_github;
+    }
+
+    public function setpseudo_github(string $pseudo_github): self
+    {
+        $this->pseudo_github = $pseudo_github;
 
         return $this;
     }
@@ -545,7 +560,7 @@ class User
 
     public function __toString()
     {
-        return $this->getFirstName() . ' ' . $this-getLastName() .  ' aka ' . $this->getUsername();
+        return $this->getUsername();
     }
 
 }
