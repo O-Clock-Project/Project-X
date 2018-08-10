@@ -2,8 +2,8 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Role;
-use App\Repository\RoleRepository;
+use App\Entity\Announcement;
+use App\Repository\AnnouncementRepository;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\Serializer\Serializer;
@@ -19,16 +19,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 /**
  * @Route("/api")
  */
-class RoleController extends AbstractController
+class AnnouncementController extends AbstractController
 {
     /**
-     * @Route("/roles", name="ListRoles")
+     * @Route("/announcements", name="ListAnnouncements")
      * @Method("GET")
      */
-    public function getRoles(RoleRepository $roleRepo, Request $request )
+    public function getAnnouncements(AnnouncementRepository $announcementRepo, Request $request )
     {
         
-        $role = new Role;
+        $announcement = new Announcement;
         $params = [];
         $order = [];
         $limit = 20;
@@ -47,7 +47,7 @@ class RoleController extends AbstractController
             else if($key === 'pageNumber'){
                 $num_pages = $value;
             }
-            else if(property_exists($role, $key)){
+            else if(property_exists($announcement, $key)){
                 $params[$key] = $value;
             }
             else{
@@ -59,7 +59,7 @@ class RoleController extends AbstractController
             $order['created_at'] = 'DESC';
         }
 
-        $roles = $roleRepo->findBy(
+        $announcements = $announcementRepo->findBy(
             $params,
             $order,
             intval($limit), // limit
@@ -68,24 +68,24 @@ class RoleController extends AbstractController
 
 
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($roles, 'json', SerializationContext::create()->enableMaxDepthChecks());
+        $jsonContent = $serializer->serialize($announcements, 'json', SerializationContext::create()->enableMaxDepthChecks());
         $response =  new Response($jsonContent, 200);
         $response->headers->set('Content-Type', 'application/json; charset=utf-8');
         return $response;
     }
 
     /**
-     * @Route("/roles/{role_id}", name="ShowRole")
+     * @Route("/announcements/{announcement_id}", name="ShowAnnouncement")
      * @Method("GET")
      */
-    public function getRole(RoleRepository $roleRepo, $role_id)
+    public function getAnnouncement(AnnouncementRepository $announcementRepo, $announcement_id)
     {
-        $role = $roleRepo->findById($role_id);
-        if (empty($role)){
-            return new JsonResponse(['message' => 'Role non trouvé'], Response::HTTP_NOT_FOUND);
+        $announcement = $announcementRepo->findById($announcement_id);
+        if (empty($announcement)){
+            return new JsonResponse(['message' => 'Announcement non trouvé'], Response::HTTP_NOT_FOUND);
         };
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($role, 'json', SerializationContext::create()->enableMaxDepthChecks());
+        $jsonContent = $serializer->serialize($announcement, 'json', SerializationContext::create()->enableMaxDepthChecks());
         $response =  new Response($jsonContent, 200);
         $response->headers->set('Content-Type', 'application/json');
         return $response;

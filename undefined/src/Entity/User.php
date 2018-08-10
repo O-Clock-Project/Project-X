@@ -5,7 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
+use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\SerializedName;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -122,10 +124,14 @@ class User
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="user", orphanRemoval=true)
+     * @MaxDepth(3)
      */
     private $affectations;
 
-    private $avatar;
+    /**
+     * @SerializedName("avatar")
+     */
+    public $avatar;
 
 
     public function __construct()
@@ -208,12 +214,12 @@ class User
 
     public function getPseudoGithub(): ?string
     {
-        return $this->pseudo_github;
+        return  'https://avatars.githubusercontent.com/';
     }
 
     public function setPseudoGithub(string $pseudo_github): self
     {
-        $this->pseudo_github = $pseudo_github;
+        $this->pseudo_github = 'https://avatars.githubusercontent.com/'. $pseudo_github;
 
         return $this;
     }
@@ -560,7 +566,7 @@ class User
 
     public function __toString()
     {
-        return $this->getFirstName() . ' ' . $this-getLastName() .  ' aka ' . $this->getUsername();
+        return $this->getUsername();
     }
 
 }

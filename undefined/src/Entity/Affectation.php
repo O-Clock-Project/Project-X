@@ -153,7 +153,7 @@ class Affectation
 
     public function __toString()
     {
-        return $this->getUser() . ' est ' . $this->getRole() . ' chez ' . $this->getPromotion();
+        return 'affectation id '. $this->getId();
     }
 
 }

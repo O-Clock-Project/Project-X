@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
+use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -44,6 +45,7 @@ class AnnouncementType
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Announcement", mappedBy="type")
+     * @MaxDepth(3)
      */
     private $announces;
 

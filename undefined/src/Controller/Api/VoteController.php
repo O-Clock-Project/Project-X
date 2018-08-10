@@ -2,8 +2,8 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Role;
-use App\Repository\RoleRepository;
+use App\Entity\Vote;
+use App\Repository\VoteRepository;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\Serializer\Serializer;
@@ -19,16 +19,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 /**
  * @Route("/api")
  */
-class RoleController extends AbstractController
+class VoteController extends AbstractController
 {
     /**
-     * @Route("/roles", name="ListRoles")
+     * @Route("/votes", name="ListVotes")
      * @Method("GET")
      */
-    public function getRoles(RoleRepository $roleRepo, Request $request )
+    public function getVotes(VoteRepository $voteRepo, Request $request )
     {
         
-        $role = new Role;
+        $vote = new Vote;
         $params = [];
         $order = [];
         $limit = 20;
@@ -47,7 +47,7 @@ class RoleController extends AbstractController
             else if($key === 'pageNumber'){
                 $num_pages = $value;
             }
-            else if(property_exists($role, $key)){
+            else if(property_exists($vote, $key)){
                 $params[$key] = $value;
             }
             else{
@@ -59,7 +59,7 @@ class RoleController extends AbstractController
             $order['created_at'] = 'DESC';
         }
 
-        $roles = $roleRepo->findBy(
+        $votes = $voteRepo->findBy(
             $params,
             $order,
             intval($limit), // limit
@@ -68,24 +68,24 @@ class RoleController extends AbstractController
 
 
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($roles, 'json', SerializationContext::create()->enableMaxDepthChecks());
+        $jsonContent = $serializer->serialize($votes, 'json', SerializationContext::create()->enableMaxDepthChecks());
         $response =  new Response($jsonContent, 200);
         $response->headers->set('Content-Type', 'application/json; charset=utf-8');
         return $response;
     }
 
     /**
-     * @Route("/roles/{role_id}", name="ShowRole")
+     * @Route("/votes/{vote_id}", name="ShowVote")
      * @Method("GET")
      */
-    public function getRole(RoleRepository $roleRepo, $role_id)
+    public function getVote(VoteRepository $voteRepo, $vote_id)
     {
-        $role = $roleRepo->findById($role_id);
-        if (empty($role)){
-            return new JsonResponse(['message' => 'Role non trouvé'], Response::HTTP_NOT_FOUND);
+        $vote = $voteRepo->findById($vote_id);
+        if (empty($vote)){
+            return new JsonResponse(['message' => 'Vote non trouvé'], Response::HTTP_NOT_FOUND);
         };
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($role, 'json', SerializationContext::create()->enableMaxDepthChecks());
+        $jsonContent = $serializer->serialize($vote, 'json', SerializationContext::create()->enableMaxDepthChecks());
         $response =  new Response($jsonContent, 200);
         $response->headers->set('Content-Type', 'application/json');
         return $response;

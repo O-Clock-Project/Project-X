@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
+use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 /**
@@ -47,12 +48,14 @@ class Comment
     
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
+     * @MaxDepth(3)
      */
     private $author;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Announcement", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @MaxDepth(3)
      */
     private $announcement;
 
