@@ -144,7 +144,7 @@ class User
         $this->bookmarks_warned = new ArrayCollection();
         $this->announces = new ArrayCollection();
         $this->affectations = new ArrayCollection();
-        $this->avatar = 'https://avatars.githubusercontent.com/'. $this->pseudo_github;
+        $this->pseudo_github = 'https://pseudo_githubs.githubusercontent.com/'. $this->pseudo_github;
     }
 
     public function getId()
@@ -224,14 +224,14 @@ class User
         return $this;
     }
 
-    public function getAvatar(): ?string
+    public function getpseudo_github(): ?string
     {
-        return $this->avatar;
+        return $this->pseudo_github;
     }
 
-    public function setAvatar(string $avatar): self
+    public function setpseudo_github(string $pseudo_github): self
     {
-        $this->avatar = $avatar;
+        $this->pseudo_github = $pseudo_github;
 
         return $this;
     }

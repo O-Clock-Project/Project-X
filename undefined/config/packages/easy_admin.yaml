@@ -56,7 +56,7 @@ easy_admin:
                 title:  'Mise à jour d''une affectation'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'user'
                     - 'promotion'
                     - 'role'
@@ -141,7 +141,7 @@ easy_admin:
                 title:  'Mise à jour d''annonce du professeur'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'name'
                     - 'announces'
             # La view d'ajout d'une annonceType
@@ -163,11 +163,19 @@ easy_admin:
                 fields:
                     - 'id'
                     - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
+                    - { property: 'updated_at', type: 'datetime' }
                     - { property: 'is_active', type: 'toggle' }
                     - 'title'
+                    - 'resume'
+                    - 'author'
                     - 'url'
                     - 'image'
+                    - 'support'
+                    - 'difficulty'
+                    - 'user'
+                    - 'locale'
+                    - { property: 'banned', type: 'toggle' }
+                    - { property: 'published_at', type: 'datetime' }
 
             # La view d'un Bookmark
             show:
@@ -178,10 +186,17 @@ easy_admin:
                 title:  'Mise à jour du Bookmark'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
                     - 'title'
+                    - 'resume'
+                    - 'author'
                     - 'url'
                     - 'image'
+                    - 'support'
+                    - 'difficulty'
+                    - 'user'
+                    - 'locale'
+                    - 'banned'
+                    - { property: 'published_at', type: 'datetime' }
             # La view d'ajout d'un Bookmark 
             new:
                 title:  'Ajout d''un Bookmark'
@@ -189,8 +204,16 @@ easy_admin:
                 fields:
                     - 'is_active'
                     - 'title'
+                    - 'resume'
+                    - 'author'
                     - 'url'
                     - 'image'
+                    - 'support'
+                    - 'difficulty'
+                    - 'user'
+                    - 'locale'
+                    - 'banned'
+                    - { property: 'published_at', type: 'datetime' }
         Commentaire:
             class: App\Entity\Comment
             help: 'Voici tous les commentaires disponible'
@@ -205,8 +228,9 @@ easy_admin:
                     - { property: 'Updated_at', type: 'datetime' }
                     - { property: 'is_active', type: 'toggle' }
                     - { property: 'banned', type: 'toggle' } 
+                    - 'announcement' 
+                    - 'body'
                     - 'author'
-                    - 'announcement'  
             # La view d'un commentaire
             show:
                 title:  'Un commentaire'
@@ -216,10 +240,12 @@ easy_admin:
                 title:  'Mise à jour d''un commentaire'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
-                    - { property: 'banned', type: 'toggle' } 
-                    - 'author'
+                    - 'is_active'
+                    - 'banned' 
                     - 'announcement' 
+                    - 'body'
+                    - 'author'
+                    
             # La view d'ajout d'un commentaire 
             new:
                 title:  'Ajout d''un commentaire '
@@ -227,8 +253,9 @@ easy_admin:
                 fields:
                     - 'is_active'
                     - 'banned'
-                    - 'author'
                     - 'announcement' 
+                    - 'body'
+                    - 'author'
         Difficulte:
             class: App\Entity\Difficulty
             help: 'Voici la liste des niveaux de difficulté des Bookmarks'
@@ -254,7 +281,7 @@ easy_admin:
                 title:  'Mise à jour d''un niveau de difficulté d''un bookmark'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'name'
                     - 'level'  
                     - 'bookmarks' 
@@ -291,7 +318,7 @@ easy_admin:
                 title:  'Mise à jour d''une langue d''un Bookmark'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'name'
                     - 'bookmarks'  
             # La view d'ajout d''une langue d''un Bookmark
@@ -317,7 +344,8 @@ easy_admin:
                     - { property: 'is_active', type: 'toggle' }
                     - 'name'
                     - 'affectations'
-                    - 'announces' 
+                    - 'announces'
+                    - 'links' 
             # La view d'une promotion 
             show:
                 title:  'La langue d''une promotion'
@@ -327,10 +355,11 @@ easy_admin:
                 title:  'Mise à jour d''une promotion'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'name'
                     - 'affectations'
                     - 'announces' 
+                    - 'links' 
             # La view d'ajout d''une promotion
             new:
                 title:  'Ajout d''une promotion '
@@ -339,7 +368,8 @@ easy_admin:
                     - 'is_active'
                     - 'name'
                     - 'affectations'
-                    - 'announces'  
+                    - 'announces'
+                    - 'links'   
         LienPromotion:
             class: App\Entity\PromotionLink
             help: 'Voici la liste des liens des promotions'
@@ -356,6 +386,7 @@ easy_admin:
                     - 'name'
                     - 'url'
                     - 'icon' 
+                    - 'promotion'
             # La view d'un lien de la promotion 
             show:
                 title:  'Lien de la promotion '
@@ -365,10 +396,11 @@ easy_admin:
                 title:  'Mise à jour du lien d''une promotion'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'name'
                     - 'url'
                     - 'icon' 
+                    - 'promotion'
             # La view d'ajout de lien d'une promotion
             new:
                 title:  'Ajout de lien d''une promotion '
@@ -378,6 +410,7 @@ easy_admin:
                     - 'name'
                     - 'url'
                     - 'icon' 
+                    - 'promotion'
         Role:
             class: App\Entity\Role
             help: 'Voici la liste des différents rôles des utilisateurs'
@@ -403,7 +436,7 @@ easy_admin:
                 title:  'Mise à jour d''un rôle utilisateur'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'name'
                     - 'code'
                     - 'affectations'
@@ -441,7 +474,7 @@ easy_admin:
                 title:  'Mise à jour d''une spécialité'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'name'
                     - 'students' 
             # La view d'ajout d'une spécialité
@@ -476,7 +509,7 @@ easy_admin:
                 title:  'Mise à jour d''un support'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'name'
                     - 'bookmarks'
             # La view d'ajout d'un support
@@ -511,7 +544,7 @@ easy_admin:
                 title:  'Mise à jour d''un tag'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'label'
                     - 'bookmarks'
             # La view d'ajout d'un tag
@@ -536,8 +569,23 @@ easy_admin:
                     - { property: 'Updated_at', type: 'datetime' }
                     - { property: 'is_active', type: 'toggle' }
                     - 'username'
-                    - 'firstname'
-                    - 'lastname'
+                    - 'first_name'
+                    - 'last_name'
+                    - 'email'
+                    - 'pseudo_github'
+                    - 'birthday'
+                    - 'zip'
+                    - 'avatar'
+                    - 'speciality'
+                    - 'bookmarks'
+                    - 'comments'
+                    - 'votes'
+                    - 'favorites'
+                    - 'certified_bookmarks'
+                    - 'bookmarks_warned'
+                    - 'announces'
+                    - 'affectations'
+
             # La view d'un user
             show:
                 title:  'Un utilisateur'
@@ -547,10 +595,25 @@ easy_admin:
                 title:  'Mise à jour d''un utilisateur'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'username'
-                    - 'firstname'
-                    - 'lastname'
+                    - 'first_name'
+                    - 'last_name'
+                    - 'email'
+                    - 'password'
+                    - 'pseudo_github'
+                    - 'birthday'
+                    - 'zip'
+                    #- 'avatar'
+                    - 'speciality'
+                    - 'bookmarks'
+                    - 'comments'
+                    - 'votes'
+                    - 'favorites'
+                    - 'certified_bookmarks'
+                    - 'bookmarks_warned'
+                    - 'announces'
+                    - 'affectations'
             # La view d'ajout d'un user
             new:
                 title:  'Ajout d''un utilisateur '
@@ -558,8 +621,16 @@ easy_admin:
                 fields:
                     - 'is_active'
                     - 'username'
-                    - 'firstname'
-                    - 'lastname' 
+                    - 'first_name'
+                    - 'last_name'
+                    - 'email'
+                    - 'password'
+                    - 'pseudo_github'
+                    - 'birthday'
+                    - 'zip'
+                    #- 'avatar'
+                    - 'speciality'
+                    - 'affectations'
         Vote:
             class: App\Entity\Vote
             help: 'Voici la liste des différents votes'
@@ -573,6 +644,7 @@ easy_admin:
                     - { property: 'created_at', type: 'datetime' }
                     - { property: 'Updated_at', type: 'datetime' }
                     - { property: 'is_active', type: 'toggle' }
+                    - 'value'
                     - 'bookmark'
                     - 'voter'
             # La view d'un vote
@@ -584,7 +656,8 @@ easy_admin:
                 title:  'Mise à jour d''un vote'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
+                    - 'value'
                     - 'bookmark'
                     - 'voter'
             # La view d'ajout d'un vote
@@ -593,6 +666,7 @@ easy_admin:
                 help: null
                 fields:
                     - 'is_active'
+                    - 'value'
                     - 'bookmark'
                     - 'voter' 
         AlertBookmark: 
@@ -619,7 +693,7 @@ easy_admin:
                 title:  'Mise à jour d''un bookmark signalé'
                 help: null
                 fields:
-                    - { property: 'is_active', type: 'toggle' }
+                    - 'is_active'
                     - 'bookmark'
                     - 'author'
             # La view d'ajout d'un bookmark signalé
