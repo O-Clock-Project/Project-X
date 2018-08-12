@@ -1,34 +1,18 @@
 <?php
 
-namespace App\Controller\Api;
+namespace App\Services;
 
-use App\Entity\Role;
-use App\Repository\RoleRepository;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route("/api")
- */
-class RoleController extends AbstractController
+class ApiUtils
 {
-    /**
-     * @Route("/roles", name="ListRoles")
-     * @Method("GET")
-     */
-    public function getRoles(RoleRepository $roleRepo, Request $request )
+
+
+    public function getItems($object, $repo, $request )
     {
-        
-        $role = new Role;
         $params = [];
         $order = [];
         $limit = 20;
@@ -47,7 +31,7 @@ class RoleController extends AbstractController
             else if($key === 'pageNumber'){
                 $num_pages = $value;
             }
-            else if(property_exists($role, $key)){
+            else if(property_exists($object, $key)){
                 $params[$key] = $value;
             }
             else{
@@ -59,39 +43,52 @@ class RoleController extends AbstractController
             $order['created_at'] = 'DESC';
         }
 
-        $roles = $roleRepo->findBy(
+        $objects = $repo->findBy(
             $params,
             $order,
             intval($limit), // limit
             intval($limit * ($num_pages - 1)) // offset
         );
-
-
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($roles, 'json', SerializationContext::create()->enableMaxDepthChecks());
+        $jsonContent = $serializer->serialize($objects, 'json', SerializationContext::create()->enableMaxDepthChecks());
         $response =  new Response($jsonContent, 200);
         $response->headers->set('Content-Type', 'application/json; charset=utf-8');
+
         return $response;
     }
 
-    /**
-     * @Route("/roles/{role_id}", name="ShowRole")
-     * @Method("GET")
-     */
-    public function getRole(RoleRepository $roleRepo, $role_id)
+
+    public function getItem($repo, $id )
     {
-        $role = $roleRepo->findById($role_id);
-        if (empty($role)){
-            return new JsonResponse(['message' => 'Role non trouvé'], Response::HTTP_NOT_FOUND);
+        $object = $repo->findById($id);
+        if (empty($object)){
+            return new JsonResponse(['error' => 'Item non trouvé'], Response::HTTP_NOT_FOUND);
         };
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($role, 'json', SerializationContext::create()->enableMaxDepthChecks());
+        $jsonContent = $serializer->serialize($object, 'json', SerializationContext::create()->enableMaxDepthChecks());
         $response =  new Response($jsonContent, 200);
         $response->headers->set('Content-Type', 'application/json');
+
         return $response;
     }
 
-    
+    public function postItem($object, $form, $request, $em)
+    {
 
+        $form->submit($request->request->all()); // Validation des données
 
+        if($form->isValid()){
+            $em->persist($object);
+            $em->flush();
+            $serializer = SerializerBuilder::create()->build();
+            $jsonContent = $serializer->serialize($object, 'json', SerializationContext::create()->enableMaxDepthChecks());
+            $response =  new Response($jsonContent, 200);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+        else{
+            return new JsonResponse(['error' => 'Creation impossible'], Response::HTTP_BAD_REQUEST);
+        }
+        
+    }
 }

@@ -34,7 +34,7 @@ class Affectation
     /**
      * @ORM\Column(type="boolean", options={"default":true})
      */
-    private $is_active;
+    private $is_active = true;
     
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="affectations")
@@ -56,7 +56,6 @@ class Affectation
 
     public function __construct()
     {
-
     }
 
 

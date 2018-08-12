@@ -70,7 +70,7 @@ class UserController extends AbstractController
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($users, 'json', SerializationContext::create()->enableMaxDepthChecks());
         $response =  new Response($jsonContent, 200);
-        $response->headers->set('Content-Type', 'application/json; charset=utf-8');
+        $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
 

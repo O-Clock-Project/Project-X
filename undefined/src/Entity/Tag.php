@@ -2,17 +2,21 @@
 
 namespace App\Entity;
 
+use App\Entity\Bookmark;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity("label")
  */
 class Tag
 {
@@ -36,7 +40,7 @@ class Tag
     /**
      * @ORM\Column(type="boolean", options={"default":true})
      */
-    private $is_active;
+    private $is_active = true;
     
     /**
      * @ORM\Column(type="string", length=128)

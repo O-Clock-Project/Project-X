@@ -38,7 +38,7 @@ class User
     /**
      * @ORM\Column(type="boolean", options={"default":true})
      */
-    private $is_active;
+    private $is_active = true;
     
     /**
      * @ORM\Column(type="string", length=128)
@@ -82,43 +82,51 @@ class User
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Bookmark", mappedBy="user")
+     * @MaxDepth(3)
      */
     private $bookmarks;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Bookmark", mappedBy="faved_by")
      * @ORM\JoinTable(name="bookmark_faved")
+     * @MaxDepth(3)
      */
     private $favorites;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Bookmark", mappedBy="certified_by")
      * @ORM\JoinTable(name="bookmark_certified")
+     * @MaxDepth(3)
      */
     private $certified_bookmarks;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
+     * @MaxDepth(3)
      */
     private $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Speciality", inversedBy="students")
+     * @MaxDepth(2)
      */
     private $speciality;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="voter")
+     * @MaxDepth(3)
      */
     private $votes;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\WarningBookmark", mappedBy="author")
+     * @MaxDepth(3)
      */
     private $bookmarks_warned;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Announcement", mappedBy="author")
+     * @MaxDepth(3)
      */
     private $announces;
 
@@ -144,8 +152,8 @@ class User
         $this->bookmarks_warned = new ArrayCollection();
         $this->announces = new ArrayCollection();
         $this->affectations = new ArrayCollection();
-        $this->pseudo_github = 'https://pseudo_githubs.githubusercontent.com/'. $this->pseudo_github;
     }
+
 
     public function getId()
     {
@@ -212,24 +220,27 @@ class User
         return $this;
     }
 
-    public function getPseudoGithub(): ?string
+    public function getAvatar(): ?string
     {
-        return  'https://avatars.githubusercontent.com/';
+        return  $this->avatar;
     }
 
-    public function setPseudoGithub(string $pseudo_github): self
+    /**
+     * @ORM\PostLoad
+     */
+    public function setAvatar(): self
     {
-        $this->pseudo_github = 'https://avatars.githubusercontent.com/'. $pseudo_github;
+        $this->avatar = 'https://avatars.githubusercontent.com/'. $this->pseudo_github;
 
         return $this;
     }
 
-    public function getpseudo_github(): ?string
+    public function getPseudoGithub(): ?string
     {
         return $this->pseudo_github;
     }
 
-    public function setpseudo_github(string $pseudo_github): self
+    public function setPseudoGithub(string $pseudo_github): self
     {
         $this->pseudo_github = $pseudo_github;
 

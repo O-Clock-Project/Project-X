@@ -1,0 +1,8 @@
+App\Entity\Tag:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
+    properties:
+        label:
+            - NotBlank: ~
+            - Type: string
+

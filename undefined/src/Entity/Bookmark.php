@@ -2,7 +2,8 @@
 
 namespace App\Entity;
 
-use Locale;
+use App\Entity\Tag;
+use App\Entity\Locale;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
@@ -37,7 +38,7 @@ class Bookmark
     /**
      * @ORM\Column(type="boolean", options={"default":true})
      */
-    private $is_active;
+    private $is_active = true;
 
     /**
      * @ORM\Column(type="string", length=255)

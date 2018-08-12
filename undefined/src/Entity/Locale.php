@@ -36,7 +36,7 @@ class Locale
     /**
      * @ORM\Column(type="boolean", options={"default":true})
      */
-    private $is_active;
+    private $is_active = true;
 
     /**
      * @ORM\Column(type="string", length=64)
