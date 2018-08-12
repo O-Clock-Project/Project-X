@@ -3,93 +3,68 @@
 namespace App\Controller\Api;
 
 use App\Entity\Affectation;
+use App\Form\AffectationType;
+use App\Services\ApiUtils;
 use App\Repository\AffectationRepository;
-use JMS\Serializer\SerializerBuilder;
-use JMS\Serializer\SerializationContext;
-use Symfony\Component\Serializer\Serializer;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/api")
  */
 class AffectationController extends AbstractController
+// route qui commence par /api pour toutes les routes du controller
 {
     /**
-     * @Route("/affectations", name="ListAffectations")
-     * @Method("GET")
+     * @Route("/affectations", name="listAffectations", methods="GET")
      */
-    public function getAffectations(AffectationRepository $AffectationRepo, Request $request )
+    public function getAffectations(AffectationRepository $affectationRepo, Request $request )
+    //Méthode permettant de renvoyer la liste de tous les items, avec filtres, ordre pagination et niveau de détail possible
     {
         
-        $affectation = new Affectation;
-        $params = [];
-        $order = [];
-        $limit = 20;
-        $num_pages = 1;
-        $params['is_active'] = true;
-        foreach($request->query as $key => $value){
-            if($key === 'sortType'){
-                break;
-            }
-            else if($key === 'orderField'){
-                $order[$value] = $request->query->get('sortType');
-            }
-            else if($key === 'rowsByPage'){
-                $limit = $value;
-            }
-            else if($key === 'pageNumber'){
-                $num_pages = $value;
-            }
-            else if(property_exists($affectation, $key)){
-                $params[$key] = $value;
-            }
-            else{
-                return new JsonResponse(['message' => 'Un critère n\'a pas été trouvé'], Response::HTTP_NOT_FOUND);
-            }
-        }
+        $affectation = new Affectation; // On instancie un nouvel item temporaire et vide pour disposer de la liste de tous les propriétés possibles
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->getItems($affectation, $affectationRepo, $request); 
 
-        if(empty($order)) {
-            $order['created_at'] = 'DESC';
-        }
-
-        $affectations = $affectationRepo->findBy(
-            $params,
-            $order,
-            intval($limit), // limit
-            intval($limit * ($num_pages - 1)) // offset
-        );
-
-
-        $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($affectations, 'json', SerializationContext::create()->enableMaxDepthChecks());
-        $response =  new Response($jsonContent, 200);
-        $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-        return $response;
+        return $response; //On retourne la réponse formattée (liste d'items trouvés si réussi, message d'erreur sinon)
     }
 
     /**
-     * @Route("/affectations/{affectation_id}", name="ShowAffectation")
-     * @Method("GET")
+     * @Route("/affectations/{id}", name="showAffectation", requirements={"id"="\d+"}, methods="GET")
      */
-    public function getAffectation(AffectationRepository $affectationRepo, $affectation_id)
+    public function getAffectation(AffectationRepository $affectationRepo, $id, Request $request)
+    //Méthode permettant de renvoyer l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
-        $affectation = $affectationRepo->findById($affectation_id);
-        if (empty($affectation)){
-            return new JsonResponse(['message' => 'Affectation non trouvé'], Response::HTTP_NOT_FOUND);
-        };
-        $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($affectation, 'json', SerializationContext::create()->enableMaxDepthChecks());
-        $response =  new Response($jsonContent, 200);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->getItem($affectationRepo, $id, $request);
+
+        return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
 
+    /**
+     * @Route("/affectations", name="postAffectation", methods="POST")
+     */
+    public function postAffectation (Request $request, EntityManagerInterface $em)
+    //Méthode permettant de persister un nouvel item à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        $affectation = new Affectation(); // On instancie un nouvel item qui va venir être hydraté par les informations fournies dans la requête
 
+        // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
+        // Cf le fichier config/validator/validation.yaml pour les contraintes
+        $form = $this->createForm(AffectationType::class, $affectation);
+
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->postItem($affectation, $form, $request, $em);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
 }

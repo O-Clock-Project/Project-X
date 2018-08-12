@@ -3,93 +3,68 @@
 namespace App\Controller\Api;
 
 use App\Entity\Support;
+use App\Form\SupportType;
+use App\Services\ApiUtils;
 use App\Repository\SupportRepository;
-use JMS\Serializer\SerializerBuilder;
-use JMS\Serializer\SerializationContext;
-use Symfony\Component\Serializer\Serializer;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/api")
  */
 class SupportController extends AbstractController
+// route qui commence par /api pour toutes les routes du controller
 {
     /**
-     * @Route("/supports", name="ListSupports")
-     * @Method("GET")
+     * @Route("/supports", name="listSupports", methods="GET")
      */
     public function getSupports(SupportRepository $supportRepo, Request $request )
+    //Méthode permettant de renvoyer la liste de tous les items, avec filtres, ordre pagination et niveau de détail possible
     {
         
-        $support = new Support;
-        $params = [];
-        $order = [];
-        $limit = 20;
-        $num_pages = 1;
-        $params['is_active'] = true;
-        foreach($request->query as $key => $value){
-            if($key === 'sortType'){
-                break;
-            }
-            else if($key === 'orderField'){
-                $order[$value] = $request->query->get('sortType');
-            }
-            else if($key === 'rowsByPage'){
-                $limit = $value;
-            }
-            else if($key === 'pageNumber'){
-                $num_pages = $value;
-            }
-            else if(property_exists($support, $key)){
-                $params[$key] = $value;
-            }
-            else{
-                return new JsonResponse(['message' => 'Un critère n\'a pas été trouvé'], Response::HTTP_NOT_FOUND);
-            }
-        }
+        $support = new Support; // On instancie un nouvel item temporaire et vide pour disposer de la liste de tous les propriétés possibles
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->getItems($support, $supportRepo, $request); 
 
-        if(empty($order)) {
-            $order['created_at'] = 'DESC';
-        }
-
-        $supports = $supportRepo->findBy(
-            $params,
-            $order,
-            intval($limit), // limit
-            intval($limit * ($num_pages - 1)) // offset
-        );
-
-
-        $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($supports, 'json', SerializationContext::create()->enableMaxDepthChecks());
-        $response =  new Response($jsonContent, 200);
-        $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-        return $response;
+        return $response; //On retourne la réponse formattée (liste d'items trouvés si réussi, message d'erreur sinon)
     }
 
     /**
-     * @Route("/supports/{support_id}", name="ShowSupport")
-     * @Method("GET")
+     * @Route("/supports/{id}", name="showSupport", requirements={"id"="\d+"}, methods="GET")
      */
-    public function getSupport(SupportRepository $supportRepo, $support_id)
+    public function getSupport(SupportRepository $supportRepo, $id, Request $request)
+    //Méthode permettant de renvoyer l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
-        $support = $supportRepo->findById($support_id);
-        if (empty($support)){
-            return new JsonResponse(['message' => 'Support non trouvé'], Response::HTTP_NOT_FOUND);
-        };
-        $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($support, 'json', SerializationContext::create()->enableMaxDepthChecks());
-        $response =  new Response($jsonContent, 200);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->getItem($supportRepo, $id, $request);
+
+        return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
 
+    /**
+     * @Route("/supports", name="postSupport", methods="POST")
+     */
+    public function postSupport (Request $request, EntityManagerInterface $em)
+    //Méthode permettant de persister un nouvel item à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        $support = new Support(); // On instancie un nouvel item qui va venir être hydraté par les informations fournies dans la requête
 
+        // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
+        // Cf le fichier config/validator/validation.yaml pour les contraintes
+        $form = $this->createForm(SupportType::class, $support);
+
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->postItem($support, $form, $request, $em);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
 }

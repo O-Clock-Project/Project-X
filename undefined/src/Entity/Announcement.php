@@ -5,10 +5,11 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
-use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AnnouncementRepository")
@@ -20,65 +21,77 @@ class Announcement
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"full", "concise"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
+     * @Groups({"full"})
      */
     private $is_active = true;
     
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"full", "concise"})
      */
     private $title;
     
     /**
      * @ORM\Column(type="text")
+     * @Groups({"full", "concise"})
      */
     private $body;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"full"})
      */
     private $frozen;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $closing_at;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="announcement", orphanRemoval=true)
-     * @MaxDepth(3)
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="announces")
-     * @MaxDepth(3)
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $author;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Promotion", mappedBy="announces")
-     * @MaxDepth(3)
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $promotions;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AnnouncementType", inversedBy="announces")
-     * @MaxDepth(3)
+     * @MaxDepth(1)
+     * @Groups({"full", "concise"})
      */
     private $type;
 
