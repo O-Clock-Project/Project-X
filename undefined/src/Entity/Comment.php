@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
@@ -17,42 +19,53 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"full", "concise"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
+     * @Groups({"full"})
      */
-    private $is_active;
+    private $is_active = true;
     
     /**
      * @ORM\Column(type="text")
+     * @Groups({"full", "concise"})
+     * @Groups({"full"})
      */
     private $body;
     
     /**
      * @ORM\Column(type="boolean", options={"default":false})
+     * @Groups({"full"})
      */
     private $banned;
     
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $author;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Announcement", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $announcement;
 

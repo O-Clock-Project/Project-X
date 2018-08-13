@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
-use Locale;
+use app\Entity\Locale;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BookmarkRepository")
@@ -20,103 +22,132 @@ class Bookmark
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"full", "concise"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
+     * @Groups({"full"})
      */
-    private $is_active;
+    private $is_active = true;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"full", "concise"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"full", "concise"})
      */
     private $resume;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"full", "concise"})
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"full"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="boolean", options={"default":false})
+     * @Groups({"full"})
      */
     private $banned;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $published_at;
 
     /**
      * @ORM\Column(type="string", length=128)
+     * @Groups({"full"})
      */
     private $author;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\WarningBookmark", mappedBy="bookmark", orphanRemoval=true)
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $warnings;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Support", inversedBy="bookmarks")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $support;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Difficulty", inversedBy="bookmarks")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $difficulty;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookmarks")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="bookmark", orphanRemoval=true)
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $votes;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="favorites")
      * @ORM\JoinTable(name="bookmark_faved")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $faved_by;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="certified_bookmarks")
      * @ORM\JoinTable(name="bookmark_certified")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $certified_by;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="bookmarks")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Locale", inversedBy="bookmarks")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $locale;
 

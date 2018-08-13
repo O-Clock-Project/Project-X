@@ -6,8 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\SerializedName;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Table(name="app_users")
@@ -20,112 +23,146 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"full", "concise"})
      */
     private $id;
     
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $created_at;
     
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $updated_at;
     
     /**
      * @ORM\Column(type="boolean", options={"default":true})
+     * @Groups({"full"})
      */
-    private $is_active;
+    private $is_active = true;
     
     /**
      * @ORM\Column(type="string", length=128)
+     * @Groups({"full", "concise"})
      */
     private $username;
     
     /**
      * @ORM\Column(type="string", length=128)
+     * @Groups({"full", "concise"})
      */
     private $first_name;
 
     /**
      * @ORM\Column(type="string", length=128)
+     * @Groups({"full", "concise"})
      */
     private $last_name;
 
     /**
      * @ORM\Column(type="string", length=128)
+     * @Groups({"full", "concise"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"full"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"full"})
      */
     private $pseudo_github;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"full"})
      */
     private $zip;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $birthday;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Bookmark", mappedBy="user")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $bookmarks;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Bookmark", mappedBy="faved_by")
      * @ORM\JoinTable(name="bookmark_faved")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $favorites;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Bookmark", mappedBy="certified_by")
      * @ORM\JoinTable(name="bookmark_certified")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $certified_bookmarks;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Speciality", inversedBy="students")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $speciality;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="voter")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $votes;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\WarningBookmark", mappedBy="author")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $bookmarks_warned;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Announcement", mappedBy="author")
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $announces;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="user", orphanRemoval=true)
+     * @MaxDepth(1)
+     * @Groups({"full"})
      */
     private $affectations;
 
-    private $avatar;
+    /**
+     * @SerializedName("avatar")
+     * @Groups({"full", "concise"})
+     */
+    public $avatar;
 
 
     public function __construct()
@@ -138,8 +175,8 @@ class User
         $this->bookmarks_warned = new ArrayCollection();
         $this->announces = new ArrayCollection();
         $this->affectations = new ArrayCollection();
-        $this->pseudo_github = 'https://pseudo_githubs.githubusercontent.com/'. $this->pseudo_github;
     }
+
 
     public function getId()
     {
@@ -206,24 +243,27 @@ class User
         return $this;
     }
 
+    public function getAvatar(): ?string
+    {
+        return  $this->avatar;
+    }
+
+    /**
+     * @ORM\PostLoad
+     */
+    public function setAvatar(): self
+    {
+        $this->avatar = 'https://avatars.githubusercontent.com/'. $this->pseudo_github;
+
+        return $this;
+    }
+
     public function getPseudoGithub(): ?string
     {
         return $this->pseudo_github;
     }
 
     public function setPseudoGithub(string $pseudo_github): self
-    {
-        $this->pseudo_github = $pseudo_github;
-
-        return $this;
-    }
-
-    public function getpseudo_github(): ?string
-    {
-        return $this->pseudo_github;
-    }
-
-    public function setpseudo_github(string $pseudo_github): self
     {
         $this->pseudo_github = $pseudo_github;
 

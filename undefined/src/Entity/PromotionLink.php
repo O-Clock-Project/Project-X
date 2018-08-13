@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PromotionLinkRepository")
@@ -17,42 +19,51 @@ class PromotionLink
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"full", "concise"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"full"})
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
+     * @Groups({"full"})
      */
-    private $is_active;
+    private $is_active = true;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"full", "concise"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"full", "concise"})
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"full", "concise"})
      */
     private $icon;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Promotion", inversedBy="links")
      * @ORM\JoinColumn(nullable=false)
+     * @MaxDepth(1)
+     * @Groups({"full", "concise"})
      */
     private $promotion;
 
