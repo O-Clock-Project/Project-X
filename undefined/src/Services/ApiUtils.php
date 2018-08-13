@@ -99,7 +99,7 @@ class ApiUtils
     //Méthode qui permet de trouver un item par son id passé dans l'url
     {
         // On cherche avec l'id grace au repo si on trouve l'objet correspondant
-        $object = $repo->findById($id);
+        $object = $repo->findOneById($id);
         // Si $object est vide on retourne une erreur 404 et un message d'erreur
         if (empty($object)){
             return new JsonResponse(['error' => 'Item non trouvé'], Response::HTTP_NOT_FOUND);
@@ -112,6 +112,42 @@ class ApiUtils
         $response =  new Response($jsonContent, 200);
         // On set le header Content-Type sur json et utf-8
         $response->headers->set('Content-Type', 'application/json; charset=utf-8');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+        return $response; //On renvoie la réponse
+    }
+
+    public function getItemRelations($repo, $id, $request, $relation )
+    //Méthode qui permet de trouver un item par son id passé dans l'url et d'aller chercher les éléments de la relation spécifiée
+    {
+        // On cherche avec l'id grace au repo si on trouve l'objet correspondant
+        $object = $repo->findOneById($id);
+        // Si $object est vide on retourne une erreur 404 et un message d'erreur
+        if (empty($object)){
+            return new JsonResponse(['error' => 'Item non trouvé'], Response::HTTP_NOT_FOUND);
+        };
+
+        $_classMethods = get_class_methods(get_class($object));
+        $method = 'get' . ucfirst($relation);
+        if (!in_array($method, $_classMethods)) {
+            $method = substr($method, 0, -1);
+            if (!in_array($method, $_classMethods)){
+                return new JsonResponse(['error' => 'Relation non trouvée'], Response::HTTP_NOT_FOUND);
+            }
+        }
+        else{
+            $relationItems = $object->$method();
+        }
+
+        // Si dans la requête on a la clé displayGroup on met sa value dans $group
+        $group = $request->query->get('displayGroup');
+        // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
+        $jsonContent = $this->handleSerialization($relationItems, $group);
+        // on crée une Réponse avec le code http 200 ("réussite")
+        $response =  new Response($jsonContent, 200);
+        // On set le header Content-Type sur json et utf-8
+        $response->headers->set('Content-Type', 'application/json; charset=utf-8');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response; //On renvoie la réponse
     }
@@ -138,6 +174,7 @@ class ApiUtils
             $response =  new Response($jsonContent, Response::HTTP_CREATED);
             // On set le header Content-Type sur json et utf-8
             $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
 
             return $response; //On renvoie la réponse
         }

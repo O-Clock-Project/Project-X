@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use app\Entity\Locale;
+use App\Entity\Locale;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;

@@ -48,6 +48,20 @@ class TagController extends AbstractController
     }
 
     /**
+     * @Route("/tags/{id}/{relation}", name="showTagRelation", requirements={"id"="\d+", "relation"="[a-z-A-Z]+"}, methods="GET")
+     */
+    public function getTagRelations(TagRepository $tagRepo, $id, $relation, Request $request)
+    //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
+    {
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->getItemRelations($tagRepo, $id, $request,$relation);
+
+        return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
+    }
+
+    /**
      * @Route("/tags", name="postTag", methods="POST")
      */
     public function postTag (Request $request, EntityManagerInterface $em)

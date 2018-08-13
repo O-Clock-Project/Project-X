@@ -48,6 +48,21 @@ class PromotionController extends AbstractController
     }
 
     /**
+     * @Route("/promotions/{id}/{relation}", name="showPromotionRelation", requirements={"id"="\d+", "relation"="[a-z-A-Z]+"}, methods="GET")
+     */
+    public function getPromotionRelations(PromotionRepository $promotionRepo, $id, $relation, Request $request)
+    //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
+    {
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->getItemRelations($promotionRepo, $id, $request,$relation);
+
+        return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
+    }
+
+
+    /**
      * @Route("/promotions", name="postPromotion", methods="POST")
      */
     public function postPromotion (Request $request, EntityManagerInterface $em)
