@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
+use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 /**
@@ -43,11 +44,13 @@ class WarningBookmark
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Bookmark", inversedBy="warnings")
      * @ORM\JoinColumn(nullable=false)
+     * @MaxDepth(3)
      */
     private $bookmark;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookmarks_warned")
+     * @MaxDepth(3)
      */
     private $author;
 

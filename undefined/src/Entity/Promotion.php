@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
+use JMS\Serializer\Annotation\MaxDepth;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -44,16 +45,19 @@ class Promotion
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="promotion", orphanRemoval=true)
+     * @MaxDepth(3)
      */
     private $affectations;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Announcement", inversedBy="promotions")
+     * @MaxDepth(3)
      */
     private $announces;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\PromotionLink", mappedBy="promotion", orphanRemoval=true)
+     * @MaxDepth(3)
      */
     private $links;
 
