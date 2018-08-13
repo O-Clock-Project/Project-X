@@ -19,19 +19,26 @@ use Faker;
 class AppFixtures extends Fixture
 {
     private $encoder;
-
-
+    
+    
     // Fonction permettant l'encodage des mot de passe dans la bdd
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
     }
-
+    
     public function load(ObjectManager $manager)
     {
         // On crée une instance de Faker en français
-        $generator = Faker\Factory::create('fr_FR');
-
+        $faker = Faker\Factory::create('fr_FR');
+        
+        // J'instancie "DataProvider" où ce trouvent mes données fictive
+        $faker->addProvider(new DataProvider($faker));
+        
+        // On passe le Manager de Doctrine à Faker 
+        $populator = new Faker\ORM\Doctrine\Populator($faker, $manager);
+        
+        
         // Je crée en "dur" des instances de User et de Role
         // pour l'exportation, si il y a une regénération de fixtures
         // elles seront toujours disponible
@@ -41,12 +48,12 @@ class AppFixtures extends Fixture
         $roleAdmin->setIsActive('1');
         
         $roleUser = New Role();
-        $roleUser->setCode('ROLE_USER');
+        $roleUser->setCode('ROLE_STUDENT');
         $roleUser->setname('Etudiant');
         $roleUser->setIsActive('1');
         
         $roleModerator = New Role();
-        $roleModerator->setCode('ROLE_MODERATOR');
+        $roleModerator->setCode('ROLE_TEACHER');
         $roleModerator->setname('Professeur');
         $roleModerator->setIsActive('1');
         
@@ -67,9 +74,9 @@ class AppFixtures extends Fixture
         $userAdmin->setPseudoGithub('Charly');
         $userAdmin->setZip('95522');
         $userAdmin->setIsActive('1');
-
+        
         $manager->persist($userAdmin);
-
+        
         $userModerator = new User();
         $userModerator->setUsername('professeur');
         //$userModerator->setPassword($this->encoder->encodePassword($userModerator, 'prof'));
@@ -82,176 +89,157 @@ class AppFixtures extends Fixture
         $userModerator->setPseudoGithub('Soso85');
         $userModerator->setZip('18522');
         $userModerator->setIsActive('1');
-
+        
         $manager->persist($userModerator);
         
+        
         // Affectation pour un admin
-        $AffectationUserAdmin = new Affectation();
-        $AffectationUserAdmin->setRole($roleAdmin);
-        $AffectationUserAdmin->setUser($userAdmin);
-        $AffectationUserAdmin->setIsActive('1');
+        $affectationUserAdmin = new Affectation();
+        $affectationUserAdmin->setRole($roleAdmin);
+        $affectationUserAdmin->setUser($userAdmin);
+        $affectationUserAdmin->setIsActive('1');
         
-        $manager->persist($AffectationUserAdmin);
-
+        
         // Affectation pour un Professeur
-        $AffectationUserProf = new Affectation();
-        $AffectationUserProf->setRole($roleModerator);
-        $AffectationUserProf->setUser($userModerator);
-        $AffectationUserProf->setIsActive('1');
+        $affectationUserProf = new Affectation();
+        $affectationUserProf->setRole($roleModerator);
+        $affectationUserProf->setUser($userModerator);
+        $affectationUserProf->setIsActive('1');
         
-        $manager->persist($AffectationUserProf);
 
-        // Affectation pour un utilisateur
-        $AffectationUserSimple = new Affectation();
-        $AffectationUserSimple->setRole($roleUser);
-        //$AffectationUserSimple->setUser($userSimple);
-        $AffectationUserSimple->setIsActive('1');
-        
-        $manager->persist($AffectationUserSimple);
-
-        // J'instacie "DataProvider" où ce trouvent mes données fictive
-        $generator->addProvider(new DataProvider($generator));
-        
-        // On passe le Manager de Doctrine à Faker 
-        $populator = new Faker\ORM\Doctrine\Populator($generator, $manager);
         
         $populator->addEntity('App\Entity\Promotion', 10,[
-             'name' => function() use ($generator) { return $generator->unique()->promotionName(); },
+             'name' => function() use ($faker) { return $faker->unique()->promotionName(); },
              'is_active' => 1,
         ]);
         $populator->addEntity('App\Entity\Speciality', 3,[
-            'name' => function() use ($generator) { return $generator->unique()->specialityName(); },
+            'name' => function() use ($faker) { return $faker->unique()->specialityName(); },
             'is_active' => 1,
         ]);
         $populator->addEntity('App\Entity\Support', 3,[
-            'name' => function() use ($generator) { return $generator->unique()->supportName(); },
+            'name' => function() use ($faker) { return $faker->unique()->supportName(); },
             'is_active' => 1,
         ]);
-        $populator->addEntity('App\Entity\Locale',6 ,[
-            'name' => function() use ($generator) { return $generator->unique()->localeName(); },
+        $populator->addEntity('App\Entity\Locale', 6 ,[
+            'name' => function() use ($faker) { return $faker->unique()->localeName(); },
             'is_active' => 1,
-        ]);
+            ]);
         $populator->addEntity('App\Entity\Difficulty',3 ,[
-            'name' => function() use ($generator) { return $generator->unique()->difficultyName(); },
+            'name' => function() use ($faker) { return $faker->unique()->difficultyName(); },
             'is_active' => 1,
-            'level' => function() use ($generator) { 
-                return $generator->unique()->numberBetween($min = 1, $max = 3); 
-            },
-
+            'level' => function() use ($faker) { return $faker->unique()->numberBetween($min = 1, $max = 3); },
         ]);
 
         // On peut passer en 3ème paramètre le générateur de notre choix, ici un "userName" cohérent pour Person
         $populator->addEntity('App\Entity\User', 20, array(
             'is_active' => 1,
-            // 'affectations' => 92,
-            'username' => function() use ($generator) { 
-                return $generator->userName(); 
+            'username' => function() use ($faker) { 
+                return $faker->userName(); 
             },
-            'first_name' => function() use ($generator) { 
-                return $generator->firstName(); 
+            'first_name' => function() use ($faker) { 
+                return $faker->firstName(); 
             },
-            'last_name' => function() use ($generator) { 
-                return $generator->lastName(); 
+            'last_name' => function() use ($faker) { 
+                return $faker->lastName(); 
             },
-            'email' => function() use ($generator) { 
-                return $generator->email(); 
+            'email' => function() use ($faker) { 
+                return $faker->email(); 
             },
-            'password' => function() use ($generator) { 
-                return $generator->word(); 
+            'password' => function() use ($faker) { 
+                return $faker->word(); 
             },
-            'pseudo_github' => function() use ($generator) { 
-                return $generator->userName(); 
+            'pseudo_github' => function() use ($faker) { 
+                return $faker->userName(); 
              },
-            'birthday' => function() use ($generator) { 
-                return $generator->dateTime(); 
+            'birthday' => function() use ($faker) { 
+                return $faker->dateTime(); 
             },
-            'zip' => function() use ($generator) { 
-                return $generator->numberBetween($min = 1000, $max = 9000); 
+            'zip' => function() use ($faker) { 
+                return $faker->numberBetween($min = 1000, $max = 9000); 
             },
         ));
 
         $populator->addEntity('App\Entity\Tag',10 ,[
             'is_active' => 1,
-            'label' => function() use ($generator) { return $generator->unique()->tagName(); },
+            'label' => function() use ($faker) { return $faker->unique()->tagName(); },
         ]);
 
         $populator->addEntity('App\Entity\Bookmark', 20, array(
             'is_active' => 1,
             'banned' => 0,
-            'title' => function() use ($generator) { 
-                return $generator->sentence($nbWords = 6, $variableNbWords = true); 
+            'title' => function() use ($faker) { 
+                return $faker->sentence($nbWords = 6, $variableNbWords = true); 
             },
-            'resume' => function() use ($generator) { 
-                return $generator->paragraph($nbSentences = 3, $variableNbSentences = true); 
+            'resume' => function() use ($faker) { 
+                return $faker->paragraph($nbSentences = 3, $variableNbSentences = true); 
             },
-            'url' => function() use ($generator) { 
-                return $generator->url(); 
+            'url' => function() use ($faker) { 
+                return $faker->url(); 
             },
-            'image' => function() use ($generator) { 
-                return $generator->imageUrl($width = 640, $height = 480); 
+            'image' => function() use ($faker) { 
+                return $faker->imageUrl($width = 640, $height = 480); 
             },
-            'published_at' => function() use ($generator) { 
-                return $generator->dateTime(); 
+            'published_at' => function() use ($faker) { 
+                return $faker->dateTime(); 
             },
-            'author' => function() use ($generator) { 
-                return $generator->Name(); 
+            'author' => function() use ($faker) { 
+                return $faker->Name(); 
             },
         )); 
+        
 
-        $populator->addEntity('App\Entity\Announcement',10 ,[
+        $populator->addEntity('App\Entity\AnnouncementType',4 ,[
+            'is_active' => 1,
+            'name' => function() use ($faker) { return $faker->unique()->announcementType(); },
+        ]);
+
+        $populator->addEntity('App\Entity\Announcement',20 ,[
             'is_active' => 1,
             'frozen' => 0,
-            'closing_at' => function() use ($generator) { 
-                return $generator->dateTimeBetween($startDate = 'now', $endDate = '+1 years'); 
+            'closing_at' => function() use ($faker) { 
+                return $faker->dateTimeBetween($startDate = 'now', $endDate = '+1 years'); 
             },
-            'title' => function() use ($generator) { 
-                return $generator->sentence($nbWords = 6, $variableNbWords = true); 
+            'title' => function() use ($faker) { 
+                return $faker->sentence($nbWords = 6, $variableNbWords = true); 
             },
-            'body' => function() use ($generator) { 
-                return $generator->paragraph($nbSentences = 3, $variableNbSentences = true); 
+            'body' => function() use ($faker) { 
+                return $faker->paragraph($nbSentences = 3, $variableNbSentences = true); 
             },
 
         ]);
 
-        $populator->addEntity('App\Entity\Comment',20 ,[
+        $populator->addEntity('App\Entity\Comment',50 ,[
             'is_active' => 1,
             'banned' => 0,
-            'body' => function() use ($generator) { 
-                return $generator->sentence($nbWords = 25, $variableNbWords = true);
+            'body' => function() use ($faker) { 
+                return $faker->sentence($nbWords = 25, $variableNbWords = true);
             },
         ]);
 
         $populator->addEntity('App\Entity\WarningBookmark',10 ,[
             'is_active' => 1,
-            'message' => function() use ($generator) { 
-                return $generator->sentence($nbWords = 25, $variableNbWords = true);
+            'message' => function() use ($faker) { 
+                return $faker->sentence($nbWords = 25, $variableNbWords = true);
             },
         ]);
 
         $populator->addEntity('App\Entity\Vote',20 ,[
             'is_active' => 1,
-            'value' => function() use ($generator) { 
-                return $generator->numberBetween($min = 0, $max = 1);
+            'value' => function() use ($faker) { 
+                return $faker->numberBetween($min = 0, $max = 1);
             },
         ]);
 
-        $populator->addEntity('App\Entity\PromotionLink',10 ,[
+        $populator->addEntity('App\Entity\PromotionLink',30 ,[
             'is_active' => 1,
-            'name' => function() use ($generator) { 
-                return $generator->sentence($nbWords = 6);
+            'name' => function() use ($faker) { 
+                return $faker->promotionLink();
             },
-            'url' => function() use ($generator) { 
-                return $generator->url();
+            'url' => function() use ($faker) { 
+                return $faker->url();
             },
-            'icon' => function() use ($generator) { 
-                return $generator->imageUrl($width = 640, $height = 480) ;
-            },
-        ]);
-
-        $populator->addEntity('App\Entity\AnnouncementType',10 ,[
-            'is_active' => 1,
-            'name' => function() use ($generator) { 
-                return $generator->text($maxNbChars = 6)  ; 
+            'icon' => function() use ($faker) { 
+                return $faker->imageUrl($width = 640, $height = 480) ;
             },
         ]);
 
@@ -264,14 +252,55 @@ class AppFixtures extends Fixture
         $languages = $inserted['App\Entity\Locale'];  */
         
         $promotions = $inserted['App\Entity\Promotion'];
-        foreach($inserted['App\Entity\User'] as $user)
+        $affectationUserAdmin->setPromotion($promotions[0]);
+        $affectationUserProf->setPromotion($promotions[0]);
+        $manager->persist($affectationUserAdmin);
+        $manager->persist($affectationUserProf);
+        
+        $users = $inserted['App\Entity\User'];
+        foreach($users as $user)
         {
             $affectation = new Affectation();
             $affectation->setRole($roleUser);
             $affectation->setUser($user);
             shuffle($promotions);
             $affectation->setPromotion($promotions[0]);
+            $manager->persist($affectation);
+        };
+
+        $tags = $inserted['App\Entity\Tag'];
+        foreach($inserted['App\Entity\Bookmark'] as $bookmark)
+        {
+            //Pour chaque bookmark on ajoute de 1 à 6 tags au hasard
+            //et on l'ajoute en favori et en certifié par des utilisateur
+            shuffle($tags);
+            shuffle($users);
+            $bookmark->__construct();
+            for ( $i=0 ; $i<$faker->numberBetween(1,6) ; $i++){
+                $bookmark->addTag($tags[$i]);
+            }
+            for ( $i=0 ; $i<$faker->numberBetween(1,10) ; $i++){
+                
+                $bookmark->addFavedBy($users[$i]);
+            }
+            for ( $i=0 ; $i<$faker->numberBetween(0,3) ; $i++){
+                
+                $bookmark->addCertifiedBy($users[$i + $faker->numberBetween(5,10)]);
+            }
         }
+
+        $announcements = $inserted['App\Entity\Announcement'];
+        foreach($inserted['App\Entity\Promotion'] as $promotion)
+        {
+            //Pour chaque promotion on ajoute de 1 à 3 annonces au hasard
+            shuffle($announcements);
+            $promotion->__construct();
+            for ( $i=0 ; $i<$faker->numberBetween(1,3) ; $i++){
+                $promotion->addAnnounce($announcements[$i]);
+            }
+        }
+
+
         
         $manager->flush();
         

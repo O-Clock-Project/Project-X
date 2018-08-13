@@ -8,9 +8,11 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 
 class ApiUtils
@@ -188,8 +190,9 @@ class ApiUtils
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         //On crée un ObjectNormalizer en lui passant le ClassMetadataFactory 
         //nb: un normalizer est une classe qui est en charge de la transformation d'un objet en un tableau
-        $objectNormalizer = new ObjectNormalizer($classMetadataFactory);
+        $objectNormalizer = new ObjectNormalizer($classMetadataFactory, new CamelCaseToSnakeCaseNameConverter( null , true));
 
+        
         // On dit au normalizer comment gérer les références circulaires (ici en substituant un json {'id': id } à l'objet entier)
         $objectNormalizer->setCircularReferenceHandler(function ($reference) {
             return ['id' => $reference->getId()];

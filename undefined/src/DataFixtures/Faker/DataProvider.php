@@ -5,7 +5,7 @@ namespace App\DataFixtures\Faker;
 class DataProvider extends \Faker\Provider\Base
 {
     protected static $promotions = [
-        '0',
+        'OClock',
         'BigBang',
         'Cosmo',
         'Discovery',
@@ -18,7 +18,20 @@ class DataProvider extends \Faker\Provider\Base
         'Krypton',
     ];
 
-    protected static $specialies = [
+    protected static $announcementTypes = [
+        'Annonce',
+        'Sondage',
+        'Kiem Tao',
+        'Blague',
+    ];
+
+    protected static $promotionLinks = [
+        'Planning',
+        'Cockpit',
+        'Github',
+    ];
+
+    protected static $specialities = [
         'Symfony',
         'React',
         'WordPress',
@@ -40,9 +53,9 @@ class DataProvider extends \Faker\Provider\Base
     ];
 
     protected static $difficulties = [
-        'Débutant',
-        'Confirmé',
-        'Expert',
+        'Apprendre',
+        'S\améliorer',
+        'Se perfectionner',
     ];
 
     protected static $tags = [
@@ -63,7 +76,15 @@ class DataProvider extends \Faker\Provider\Base
     }
 
     public static function specialityName(){
-        return static::randomElement(self::$specialies);
+        return static::randomElement(self::$specialities);
+    }
+
+    public static function announcementType(){
+        return static::randomElement(self::$announcementTypes);
+    }
+
+    public static function promotionLink(){
+        return static::randomElement(self::$promotionLinks);
     }
 
     public static function supportName(){
