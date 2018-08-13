@@ -2,8 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Tag;
-use App\Entity\Locale;
+use app\Entity\Locale;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;

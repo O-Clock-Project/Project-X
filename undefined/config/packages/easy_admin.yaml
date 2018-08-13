@@ -40,35 +40,43 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'user'
-                    - 'promotion'
-                    - 'role'
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'user', label: 'Utilisateur' }
+                    - { property: 'promotion', label: 'Promotion' }
+                    - { property: 'role', label: 'Rôle' }
             # La view d'une affectation
             show:
                 title:  'Une affectation'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'user', label: 'Utilisateur' }
+                    - { property: 'promotion', label: 'Promotion' }
+                    - { property: 'role', label: 'Rôle' }
             # La view d'une modification d'une affectation  
             edit:
                 title:  'Mise à jour d''une affectation'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'user'
-                    - 'promotion'
-                    - 'role'
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'user', label: 'Utilisateur' }
+                    - { property: 'promotion', label: 'Promotion' }
+                    - { property: 'role', label: 'Rôle' }
             # La view d'un ajout d'une affectation
             new:
                 title:  'Ajout d''une affectation'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'user'
-                    - 'promotion'
-                    - 'role'
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'user', label: 'Utilisateur' }
+                    - { property: 'promotion', label: 'Promotion' }
+                    - { property: 'role', label: 'Rôle' }
         Annonce:
             class: App\Entity\Announcement
             help: 'Voici toutes les annonces disponible'
@@ -78,44 +86,55 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'title'
-                    - 'body'
-                    - 'author'
-                    - 'promotions'  
-                    - { property: 'frozen', type: 'toggle' }                 
-                    - { property: 'closing_at', type: 'datetime' }
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'title', label: 'Titre' }
+                    - { property: 'body', label: 'Contenu' }
+                    - { property: 'author', label: 'Auteur' }
+                    - { property: 'promotions' , label: 'Promotion' }
+                    - { property: 'frozen', label: 'Stopper l''ajout de commentaire', type: 'toggle' }                 
+                    - { property: 'closing_at', label: 'Date de disparition de l''annonce' , type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
             # La view d'une annonce
             show:
                 title:  'Une annonce'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'title', label: 'Titre' }
+                    - { property: 'body', label: 'Contenu' }
+                    - { property: 'author', label: 'Auteur' }
+                    - { property: 'promotions' , label: 'Promotion' }
+                    - { property: 'frozen', label: 'Stopper l''ajout de commentaire' }                 
+                    - { property: 'closing_at', label: 'Date de disparition de l''annonce' , type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' }}
             # La view de modification d'une annonce    
             edit:
                 title:  'Mise à jour d''une annonce'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'title'
-                    - 'body'
-                    - 'author'
-                    - 'promotions'  
-                    - 'frozen'               
-                    - { property: 'closing_at', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'title', label: 'Titre' }
+                    - { property: 'body', label: 'Contenu' }
+                    - { property: 'author', label: 'Auteur' }
+                    - { property: 'promotions', label: 'Promotion', type_options: { 'by_reference': false } }  
+                    - { property: 'frozen', label: 'Stopper l''ajout de commentaire' }               
+                    - { property: 'closing_at', label: 'Date de disparition de l''annonce' , type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' }}
             # La view d'ajout d'une annonce
             new:
                 title:  'Ajout d''une annonce'
                 help: null
                 fields:
-                    - 'title'
-                    - 'body'
-                    - 'is_active'
-                    - 'author'
-                    - 'promotions'  
-                    - 'frozen'               
-                    - { property: 'closing_at', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'title', label: 'Titre' }
+                    - { property: 'body', label: 'Contenu' }
+                    - { property: 'author', label: 'Auteur' }
+                    - { property: 'promotions', label: 'Promotion', type_options: { 'by_reference': false } }  
+                    - { property: 'frozen', label: 'Stopper l''ajout de commentaire' }               
+                    - { property: 'closing_at', label: 'Date de disparition de l''annonce' , type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } } 
                                 
         AnnonceType:
             class: App\Entity\AnnouncementType
@@ -126,32 +145,39 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'name'
-                    - 'announces'
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'name', label: 'Titre de l''annonce type' }
+                    - { property: 'announces', label: 'Annonce correspondante' } 
             # La view d'une annonceType
             show:
                 title:  'Une annonce du professeur'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Titre de l''annonce type' }
+                    - { property: 'announces', label: 'Annonce correspondante' } 
             # La view de modification d'une annonceType    
             edit:
                 title:  'Mise à jour d''annonce du professeur'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'announces'
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property:  'name', label: 'Titre de l''annonce type'}
+                    - { property: 'announces', label: 'Annonce correspondante', type_options: { 'by_reference': false } }
             # La view d'ajout d'une annonceType
             new:
                 title:  'Ajout d''annonce du professeur'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'announces'
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property:  'name', label: 'Titre de l''annonce type'}
+                    - { property: 'announces', label: 'Annonce correspondante', type_options: { 'by_reference': false } }
         Bookmark:
             class: App\Entity\Bookmark
             help: 'Voici tous les Bookmarks disponible'
@@ -161,59 +187,76 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'title'
-                    - 'resume'
-                    - 'author'
-                    - 'url'
-                    - 'image'
-                    - 'support'
-                    - 'difficulty'
-                    - 'user'
-                    - 'locale'
-                    - { property: 'banned', type: 'toggle' }
-                    - { property: 'published_at', type: 'datetime' }
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'title', label: 'Titre' }
+                    - { property: 'resume', label: 'Résumé' }
+                    - { property: 'author', label: 'Auteur' }
+                    - { property: 'url', label: 'Url' }
+                    - { property: 'image', label: 'Image' }
+                    - { property: 'support', label: 'Support' }
+                    - { property: 'difficulty', label: 'Difficulté' }
+                    - { property: 'user', label: 'Utilisateur' }
+                    - { property: 'locale', label: 'Langue' }
+                    - { property: 'banned' , label: 'Bannir', type: 'toggle' }
+                    - { property: 'published_at', label: 'Date de création de la ressource', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
 
             # La view d'un Bookmark
             show:
                 title:  'Un Bookmark'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'title', label: 'Titre' }
+                    - { property: 'resume', label: 'Résumé' }
+                    - { property: 'author', label: 'Auteur' }
+                    - { property: 'url', label: 'Url' }
+                    - { property: 'image', label: 'Image' }
+                    - { property: 'support', label: 'Support' }
+                    - { property: 'difficulty', label: 'Difficulté' }
+                    - { property: 'user', label: 'Utilisateur' }
+                    - { property: 'locale', label: 'Langue' }
+                    - { property: 'banned' , label: 'Bannir'}
+                    - { property: 'published_at', label: 'Date de création de la ressource (officielle)', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
             # La view de modification d'un Bookmark    
             edit:
                 title:  'Mise à jour du Bookmark'
                 help: null
                 fields:
-                    - 'title'
-                    - 'resume'
-                    - 'author'
-                    - 'url'
-                    - 'image'
-                    - 'support'
-                    - 'difficulty'
-                    - 'user'
-                    - 'locale'
-                    - 'banned'
-                    - { property: 'published_at', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'title', label: 'Titre' }
+                    - { property: 'resume', label: 'Résumé' }
+                    - { property: 'author', label: 'Auteur' }
+                    - { property: 'url', label: 'Url' }
+                    - { property: 'image', label: 'Image' }
+                    - { property: 'support', label: 'Support' }
+                    - { property: 'difficulty', label: 'Difficulté' }
+                    - { property: 'user', label: 'Utilisateur' }
+                    - { property: 'locale', label: 'Langue' }
+                    - { property: 'banned' , label: 'Bannir'}
+                    - { property: 'published_at', label: 'Date de création de la ressource (officielle)', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
             # La view d'ajout d'un Bookmark 
             new:
                 title:  'Ajout d''un Bookmark'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'title'
-                    - 'resume'
-                    - 'author'
-                    - 'url'
-                    - 'image'
-                    - 'support'
-                    - 'difficulty'
-                    - 'user'
-                    - 'locale'
-                    - 'banned'
-                    - { property: 'published_at', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'title', label: 'Titre' }
+                    - { property: 'resume', label: 'Résumé' }
+                    - { property: 'author', label: 'Auteur' }
+                    - { property: 'url', label: 'Url' }
+                    - { property: 'image', label: 'Image' }
+                    - { property: 'support', label: 'Support' }
+                    - { property: 'difficulty', label: 'Difficulté' }
+                    - { property: 'user', label: 'Utilisateur' }
+                    - { property: 'locale', label: 'Langue' }
+                    - { property: 'banned' , label: 'Bannir'}
+                    - { property: 'published_at', label: 'Date de création de la ressource (officielle)', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
         Commentaire:
             class: App\Entity\Comment
             help: 'Voici tous les commentaires disponible'
@@ -223,39 +266,48 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - { property: 'banned', type: 'toggle' } 
-                    - 'announcement' 
-                    - 'body'
-                    - 'author'
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'banned', label: 'Bannir', type: 'toggle' } 
+                    - { property: 'announcement', label: 'Annonce correspondante' }
+                    - { property: 'body' , label: 'Contenu' }
+                    - { property: 'author' , label: 'Auteur' }
             # La view d'un commentaire
             show:
                 title:  'Un commentaire'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'banned', label: 'Bannir' } 
+                    - { property: 'announcement', label: 'Annonce correspondante' }
+                    - { property: 'body' , label: 'Contenu' }
+                    - { property: 'author' , label: 'Auteur' }
             # La view de modification d'un commentaire   
             edit:
                 title:  'Mise à jour d''un commentaire'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'banned' 
-                    - 'announcement' 
-                    - 'body'
-                    - 'author'
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'banned', label: 'Bannir' } 
+                    - { property: 'announcement', label: 'Annonce correspondante' }
+                    - { property: 'body' , label: 'Contenu' }
+                    - { property: 'author' , label: 'Auteur' }
                     
             # La view d'ajout d'un commentaire 
             new:
                 title:  'Ajout d''un commentaire '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'banned'
-                    - 'announcement' 
-                    - 'body'
-                    - 'author'
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'banned', label: 'Bannir' } 
+                    - { property: 'announcement', label: 'Annonce correspondante' }
+                    - { property: 'body' , label: 'Contenu' }
+                    - { property: 'author' , label: 'Auteur' }
         Difficulte:
             class: App\Entity\Difficulty
             help: 'Voici la liste des niveaux de difficulté des Bookmarks'
@@ -265,35 +317,43 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'name'
-                    - 'level'  
-                    - 'bookmarks' 
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'name' , label: 'Nom de la difficulté' }
+                    - { property: 'level' , label: 'Niveau' }
+                    - { property: 'bookmarks' , label: 'Bookmark associé' }
             # La view d'un niveaux de difficulté d'un bookmark  
             show:
                 title:  'un niveau de difficulté d''un bookmark'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name' , label: 'Nom de la difficulté' }
+                    - { property: 'level' , label: 'Niveau' }
+                    - { property: 'bookmarks' , label: 'Bookmark associé' }
             # La view de modification d'un niveaux de difficulté d'un bookmark  
             edit:
                 title:  'Mise à jour d''un niveau de difficulté d''un bookmark'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'level'  
-                    - 'bookmarks' 
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name' , label: 'Nom de la difficulté' }
+                    - { property: 'level' , label: 'Niveau' }
+                    - { property: 'bookmarks' , label: 'Bookmark associé', type_options: { 'by_reference': false }} 
             # La view d'ajout d'un niveau de difficulté d'un bookmark
             new:
                 title:  'Ajout d''un niveau de difficulté d''un bookmark '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'level'  
-                    - 'bookmarks' 
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name' , label: 'Nom de la difficulté' }
+                    - { property: 'level' , label: 'Niveau' }
+                    - { property: 'bookmarks' , label: 'Bookmark associé', type_options: { 'by_reference': false } } 
         Langue:
             class: App\Entity\Locale
             help: 'Voici la liste des langues des Bookmarks'
@@ -303,32 +363,39 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'name'
-                    - 'bookmarks' 
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'name', label: 'Nom de la langue' }
+                    - { property: 'bookmarks', label: 'Bookmark associé' }
             # La view d'une langue d'un Bookmark 
             show:
                 title:  'La langue d''un Bookmark'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom de la langue' }
+                    - { property: 'bookmarks', label: 'Bookmark associé' }
             edit:
             # La view de modification d'une langue d'un Bookmark
                 title:  'Mise à jour d''une langue d''un Bookmark'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'bookmarks'  
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom de la langue' }
+                    - { property: 'bookmarks', label: 'Bookmark associé', type_options: { 'by_reference': false } }
             # La view d'ajout d''une langue d''un Bookmark
             new:
                 title:  'Ajout d''une langue d''un Bookmark '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'bookmarks'  
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom de la langue' }
+                    - { property: 'bookmarks', label: 'Bookmark associé', type_options: { 'by_reference': false } }
         Promotion:
             class: App\Entity\Promotion
             help: 'Voici la liste des promotions'
@@ -338,38 +405,48 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'name'
-                    - 'affectations'
-                    - 'announces'
-                    - 'links' 
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'name', label: 'Nom' }
+                    - { property: 'affectations', label: 'Droit des utilisateurs dans la promotion' }
+                    - { property: 'announces', label: 'Annonce de la promotion'}
+                    - { property: 'links', label: 'Lien vers les infos de la promotion' }
             # La view d'une promotion 
             show:
-                title:  'La langue d''une promotion'
+                title:  'Promotion'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom' }
+                    - { property: 'affectations', label: 'Droit des utilisateurs dans la promotion' }
+                    - { property: 'announces', label: 'Annonce de la promotion'}
+                    - { property: 'links', label: 'Lien vers les infos de la promotion' }
             edit:
             # La view de modification d'une promotion
                 title:  'Mise à jour d''une promotion'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'affectations'
-                    - 'announces' 
-                    - 'links' 
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom' }
+                    - { property: 'affectations', label: 'Droit des utilisateurs dans la promotion', type_options: { 'by_reference': false } }
+                    - { property: 'announces', label: 'Annonce de la promotion', type_options: { 'by_reference': false }}
+                    - { property: 'links', label: 'Lien vers les infos de la promotion', type_options: { 'by_reference': false } }
             # La view d'ajout d''une promotion
             new:
                 title:  'Ajout d''une promotion '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'affectations'
-                    - 'announces'
-                    - 'links'   
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom' }
+                    - { property: 'affectations', label: 'Droit des utilisateurs dans la promotion', type_options: { 'by_reference': false } }
+                    - { property: 'announces', label: 'Annonce de la promo', type_options: { 'by_reference': false }}
+                    - { property: 'links', label: 'Lien vers les infos de la promotion', type_options: { 'by_reference': false } } 
+        
         LienPromotion:
             class: App\Entity\PromotionLink
             help: 'Voici la liste des liens des promotions'
@@ -379,38 +456,47 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'name'
-                    - 'url'
-                    - 'icon' 
-                    - 'promotion'
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'name', label: 'Nom du lien' }
+                    - { property: 'url', label: 'Url' }
+                    - { property: 'icon', label: 'Icon' }
+                    - { property: 'promotion', label: 'Promotion' }
             # La view d'un lien de la promotion 
             show:
                 title:  'Lien de la promotion '
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom du lien' }
+                    - { property: 'url', label: 'Url' }
+                    - { property: 'icon', label: 'Icon' }
+                    - { property: 'promotion', label: 'Promotion' }
             edit:
             # La view de modification du lien d'une promotion
-                title:  'Mise à jour du lien d''une promotion'
+                title:  'Mise à jour de lien pour une promotion'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'url'
-                    - 'icon' 
-                    - 'promotion'
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom du lien' }
+                    - { property: 'url', label: 'Url' }
+                    - { property: 'icon', label: 'Icon' }
+                    - { property: 'promotion', label: 'Promotion' }
             # La view d'ajout de lien d'une promotion
             new:
-                title:  'Ajout de lien d''une promotion '
+                title:  'Ajout de lien pour une promotion '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'url'
-                    - 'icon' 
-                    - 'promotion'
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom du lien' }
+                    - { property: 'url', label: 'Url' }
+                    - { property: 'icon', label: 'Icon' }
+                    - { property: 'promotion', label: 'Promotion' }
         Role:
             class: App\Entity\Role
             help: 'Voici la liste des différents rôles des utilisateurs'
@@ -420,35 +506,43 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'name'
-                    - 'code'
-                    - 'affectations' 
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'name', label: 'Nom du rôle' }
+                    - { property: 'code', label: 'Code du rôle' }
+                    - { property: 'affectations' , label: 'Affectations possédant ce rôle' }
             # La view d'un rôle utilisateur
             show:
-                title:  'Rôle utilisateur'
+                title:  'Rôle de l''utilisateur'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom du rôle' }
+                    - { property: 'code', label: 'Code du rôle' }
+                    - { property: 'affectations' , label: 'Affectations possédant ce rôle' }
             edit:
             # La view de modification d'un rôle utilisateur
-                title:  'Mise à jour d''un rôle utilisateur'
+                title:  'Mise à jour d''un rôle d''utilisateur'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'code'
-                    - 'affectations'
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'name', label: 'Nom du rôle' }
+                    - { property: 'code', label: 'Code du rôle' }
+                    - { property: 'affectations' , label: 'Affectations possédant ce rôle', type_options: { 'by_reference': false } }
             # La view d'ajout d'un rôle utilisateur
             new:
-                title:  'Ajout d''un rôle utilisateur '
+                title:  'Ajout d''un rôle d''utilisateur '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'code'
-                    - 'affectations'
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'name', label: 'Nom du rôle' }
+                    - { property: 'code', label: 'Code du rôle' }
+                    - { property: 'affectations' , label: 'Affectations possédant ce rôle', type_options: { 'by_reference': false } }
                     
         Specialite:
             class: App\Entity\Speciality
@@ -459,32 +553,39 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'name'
-                    - 'students' 
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'name', label: 'Nom de la spécialité' }
+                    - { property: 'students', label: 'Élève de cette spécialité' }
             # La view d'une spécialité
             show:
                 title:  'Une spécialité'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'name', label: 'Nom de la spécialité' }
+                    - { property: 'students', label: 'Élèves de cette spécialité' }
             edit:
             # La view de modification d'une spécialité
                 title:  'Mise à jour d''une spécialité'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'students' 
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'name', label: 'Nom de la spécialité' }
+                    - { property: 'students', label: 'Élève de cette spécialité', type_options: { 'by_reference': false } }
             # La view d'ajout d'une spécialité
             new:
                 title:  'Ajout d''une spécialité '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'students'
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'name', label: 'Nom de la spécialité' }
+                    - { property: 'students', label: 'Élève de cette spécialité', type_options: { 'by_reference': false } }
         Support:
             class: App\Entity\Support
             help: 'Voici la liste des différents supports'
@@ -494,32 +595,39 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'name'
-                    - 'bookmarks'
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active', label: 'Activer', type: 'toggle' }
+                    - { property: 'name', label: 'Type de support' }
+                    - { property: 'bookmarks', label: 'Bookmark de ce type de support' }
             # La view d'un support
             show:
                 title:  'Un support'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active', label: 'Activer'}
+                    - { property: 'name', label: 'Type de support' }
+                    - { property: 'bookmarks', label: 'Bookmark de ce type de support' }
             edit:
             # La view de modification d'un support
                 title:  'Mise à jour d''un support'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'bookmarks'
+                    - { property: 'is_active', label: 'Activer'}
+                    - { property: 'name', label: 'Type de support' }
+                    - { property: 'bookmarks', label: 'Bookmark de ce type de support', type_options: { 'by_reference': false } }
             # La view d'ajout d'un support
             new:
                 title:  'Ajout d''un support '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'name'
-                    - 'bookmarks' 
+                    - { property: 'is_active', label: 'Activer'}
+                    - { property: 'name', label: 'Type de support' }
+                    - { property: 'bookmarks', label: 'Bookmark de ce type de support', type_options: { 'by_reference': false } }
         Tag:
             class: App\Entity\Tag
             help: 'Voici la liste des différents tags'
@@ -529,32 +637,39 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'label'
-                    - 'bookmarks'
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active', label: 'Activer', type: 'toggle' }
+                    - { property: 'label', label: 'Libellé du tag' }
+                    - { property: 'bookmarks',label: 'Bookmark associé à ce tag'}
             # La view d'un tag
             show:
                 title:  'Un tag'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active', label: 'Activer' }
+                    - { property: 'label', label: 'Libellé du tag' }
+                    - { property: 'bookmarks',label: 'Bookmark associé à ce tag'}
             edit:
             # La view de modification d'un tag
                 title:  'Mise à jour d''un tag'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'label'
-                    - 'bookmarks'
+                    - { property: 'is_active', label: 'Activer' }
+                    - { property: 'label', label: 'Libellé du tag' }
+                    - { property: 'bookmarks', label: 'Bookmark associé à ce tag', type_options: { 'by_reference': false } } 
             # La view d'ajout d'un tag
             new:
                 title:  'Ajout d''un tag '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'label'
-                    - 'bookmarks' 
+                    - { property: 'is_active', label: 'Activer' }
+                    - { property: 'label', label: 'Libellé du tag' }
+                    - { property: 'bookmarks', label: 'Bookmark associé à ce tag', type_options: { 'by_reference': false } } 
         User:
             class: App\Entity\User
             help: 'Voici la liste des différents utilisateurs'
@@ -564,73 +679,100 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'username'
-                    - 'first_name'
-                    - 'last_name'
-                    - 'email'
-                    - 'pseudo_github'
-                    - 'birthday'
-                    - 'zip'
-                    - 'avatar'
-                    - 'speciality'
-                    - 'bookmarks'
-                    - 'comments'
-                    - 'votes'
-                    - 'favorites'
-                    - 'certified_bookmarks'
-                    - 'bookmarks_warned'
-                    - 'announces'
-                    - 'affectations'
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'username', label: 'Id' }
+                    - { property: 'first_name', label: 'Id' }
+                    - { property: 'last_name', label: 'Id' }
+                    - { property: 'email', label: 'Email' }
+                    - { property: 'pseudo_github', label: 'Pseudo Github' }
+                    - { property: 'birthday', label: 'Date de naissance' }
+                    - { property: 'zip', label: 'Zip' }
+                    - { property: 'avatar', label: 'Avatar' }
+                    - { property: 'speciality', label: 'Spécialité' }
+                    - { property: 'bookmarks', label: 'Bookmarks postés par l''utilisateur' }
+                    - { property: 'comments', label: 'Commentaires postés par l''utilisateur'  }
+                    - { property: 'votes', label: 'Votes postés par l''utilisateur' }
+                    - { property: 'favorites', label: 'Bookmarks favoris de l''utilisateur' }
+                    - { property: 'certified_bookmarks', label: 'Bookmarks certifié' }
+                    - { property: 'bookmarks_warned', label: 'Avertissement sur les Bookmarks' }
+                    - { property: 'announces', label: 'Annonces postées par l''utilisateur' }
+                    - { property: 'affectations', label: 'Droit de l''utilisateur' }
 
             # La view d'un user
             show:
                 title:  'Un utilisateur'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'username', label: 'Id' }
+                    - { property: 'first_name', label: 'Id' }
+                    - { property: 'last_name', label: 'Id' }
+                    - { property: 'email', label: 'Email' }
+                    - { property: 'pseudo_github', label: 'Pseudo Github' }
+                    - { property: 'birthday', label: 'Date de naissance' }
+                    - { property: 'zip', label: 'Zip' }
+                    - { property: 'avatar', label: 'Avatar' }
+                    - { property: 'speciality', label: 'Spécialité' }
+                    - { property: 'bookmarks', label: 'Bookmarks postés par l''utilisateur' }
+                    - { property: 'comments', label: 'Commentaires postés par l''utilisateur'  }
+                    - { property: 'votes', label: 'Votes postés par l''utilisateur' }
+                    - { property: 'favorites', label: 'Bookmarks favoris de l''utilisateur' }
+                    - { property: 'certified_bookmarks', label: 'Bookmarks certifié' }
+                    - { property: 'bookmarks_warned', label: 'Avertissement sur les Bookmarks' }
+                    - { property: 'announces', label: 'Annonces postées par l''utilisateur' }
+                    - { property: 'affectations', label: 'Droit de l''utilisateur' }
             edit:
             # La view de modification d'un user
                 title:  'Mise à jour d''un utilisateur'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'username'
-                    - 'first_name'
-                    - 'last_name'
-                    - 'email'
-                    - 'password'
-                    - 'pseudo_github'
-                    - 'birthday'
-                    - 'zip'
-                    #- 'avatar'
-                    - 'speciality'
-                    - 'bookmarks'
-                    - 'comments'
-                    - 'votes'
-                    - 'favorites'
-                    - 'certified_bookmarks'
-                    - 'bookmarks_warned'
-                    - 'announces'
-                    - 'affectations'
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'username', label: 'Id' }
+                    - { property: 'first_name', label: 'Id' }
+                    - { property: 'last_name', label: 'Id' }
+                    - { property: 'email', label: 'Email' }
+                    - { property: 'pseudo_github', label: 'Pseudo Github' }
+                    - { property: 'birthday', label: 'Date de naissance' }
+                    - { property: 'zip', label: 'Zip' }
+                    #- { property: 'avatar', label: 'Avatar' }
+                    - { property: 'speciality', label: 'Spécialité' }
+                    - { property: 'bookmarks', label: 'Bookmarks postés par l''utilisateur', type_options: { 'by_reference': false } }
+                    - { property: 'comments', label: 'Commentaires postés par l''utilisateur', type_options: { 'by_reference': false }  }
+                    - { property: 'votes', label: 'Votes postés par l''utilisateur', type_options: { 'by_reference': false } }
+                    - { property: 'favorites', label: 'Bookmarks favoris de l''utilisateur', type_options: { 'by_reference': false } }
+                    - { property: 'certified_bookmarks', label: 'Bookmarks certifié', type_options: { 'by_reference': false } }
+                    - { property: 'bookmarks_warned', label: 'Avertissement sur les Bookmarks', type_options: { 'by_reference': false } }
+                    - { property: 'announces', label: 'Annonces postées par l''utilisateur', type_options: { 'by_reference': false } }
+                    - { property: 'affectations', label: 'Droit de l''utilisateur', type_options: { 'by_reference': false } } 
             # La view d'ajout d'un user
             new:
                 title:  'Ajout d''un utilisateur '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'username'
-                    - 'first_name'
-                    - 'last_name'
-                    - 'email'
-                    - 'password'
-                    - 'pseudo_github'
-                    - 'birthday'
-                    - 'zip'
-                    #- 'avatar'
-                    - 'speciality'
-                    - 'affectations'
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'username', label: 'Id' }
+                    - { property: 'first_name', label: 'Id' }
+                    - { property: 'last_name', label: 'Id' }
+                    - { property: 'email', label: 'Email' }
+                    - { property: 'pseudo_github', label: 'Pseudo Github' }
+                    - { property: 'birthday', label: 'Date de naissance' }
+                    - { property: 'zip', label: 'Zip' }
+                    #- { property: 'avatar', label: 'Avatar' }
+                    - { property: 'speciality', label: 'Spécialité' }
+                    - { property: 'bookmarks', label: 'Bookmarks postés par l''utilisateur', type_options: { 'by_reference': false } }
+                    - { property: 'comments', label: 'Commentaires postés par l''utilisateur', type_options: { 'by_reference': false }  }
+                    - { property: 'votes', label: 'Votes postés par l''utilisateur', type_options: { 'by_reference': false } }
+                    - { property: 'favorites', label: 'Bookmarks favoris de l''utilisateur', type_options: { 'by_reference': false } }
+                    - { property: 'certified_bookmarks', label: 'Bookmarks certifié', type_options: { 'by_reference': false } }
+                    - { property: 'bookmarks_warned', label: 'Avertissement sur les Bookmarks', type_options: { 'by_reference': false } }
+                    - { property: 'announces', label: 'Annonces postées par l''utilisateur', type_options: { 'by_reference': false } }
+                    - { property: 'affectations', label: 'Droit de l''utilisateur', type_options: { 'by_reference': false } } 
         Vote:
             class: App\Entity\Vote
             help: 'Voici la liste des différents votes'
@@ -640,35 +782,43 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'value'
-                    - 'bookmark'
-                    - 'voter'
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'value', label: 'Valeur' }
+                    - { property: 'bookmark', label: 'Bookmark associé' }
+                    - { property: 'voter', label: 'Auteur du vote' }
             # La view d'un vote
             show:
                 title:  'Un vote'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'value', label: 'Valeur' }
+                    - { property: 'bookmark', label: 'Bookmark associé' }
+                    - { property: 'voter', label: 'Auteur du vote' }
             edit:
             # La view de modification d'un vote
                 title:  'Mise à jour d''un vote'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'value'
-                    - 'bookmark'
-                    - 'voter'
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'value', label: 'Valeur' }
+                    - { property: 'bookmark', label: 'Bookmark associé' }
+                    - { property: 'voter', label: 'Auteur du vote' }
             # La view d'ajout d'un vote
             new:
                 title:  'Ajout d''un vote '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'value'
-                    - 'bookmark'
-                    - 'voter' 
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'value', label: 'Valeur' }
+                    - { property: 'bookmark', label: 'Bookmark associé' }
+                    - { property: 'voter', label: 'Auteur du vote' } 
         AlertBookmark: 
             class: App\Entity\WarningBookmark
             help: 'Voici la liste des différents bookmarks signalés'
@@ -678,29 +828,40 @@ easy_admin:
                 # Je determine la valeur (le type) de mes propriétes et également 
                 # les propriétés que je souhaite afficher sur mon interface Admin
                 fields:
-                    - 'id'
-                    - { property: 'created_at', type: 'datetime' }
-                    - { property: 'Updated_at', type: 'datetime' }
-                    - { property: 'is_active', type: 'toggle' }
-                    - 'bookmark'
-                    - 'author'
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'message', label: 'Message' }
+                    - { property: 'bookmark', label: 'Le bookmark associé' }
+                    - { property: 'author', label: 'L''utilisateur à l''origine' }
             # La view d'un bookmark signalé
             show:
                 title:  'Bookmark signalé'
                 help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'message', label: 'Message' }
+                    - { property: 'bookmark', label: 'Le bookmark associé' }
+                    - { property: 'author', label: 'L''utilisateur à l''origine' }
             edit:
             # La view de modification d'un vote
                 title:  'Mise à jour d''un bookmark signalé'
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'bookmark'
-                    - 'author'
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'message', label: 'Message' }
+                    - { property: 'bookmark', label: 'Le bookmark associé' }
+                    - { property: 'author', label: 'L''utilisateur à l''origine' }
             # La view d'ajout d'un bookmark signalé
             new:
                 title:  'Ajout d''un bookmark signalé '
                 help: null
                 fields:
-                    - 'is_active'
-                    - 'bookmark'
-                    - 'author'
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'message', label: 'Message' }
+                    - { property: 'bookmark', label: 'Le bookmark associé' }
+                    - { property: 'author', label: 'L''utilisateur à l''origine' }

@@ -46,6 +46,7 @@ class BookmarkController extends AbstractController
 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
+    
 
     /**
      * @Route("/bookmarks", name="postBookmark", methods="POST")
