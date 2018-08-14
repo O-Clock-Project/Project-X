@@ -19,46 +19,46 @@ class Affectation
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise", "profile", "promotion"})
+     * @Groups({ "concise" , "profile", "promotion"})
      */
     private $id;
     
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"full"})
+     * 
      */
     private $created_at;
     
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"full"})
+     * 
      */
     private $updated_at;
     
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * @Groups({"full"})
+     * 
      */
     private $is_active = true;
     
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="affectations")
      * @MaxDepth(1)
-     * @Groups({"full", "concise", "promotion"})
+     * @Groups({ "concise" , "promotion"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Promotion", inversedBy="affectations")
      * @MaxDepth(1)
-     * @Groups({"full", "concise", "profile"})
+     * @Groups({ "concise" , "profile"})
      */
     private $promotion;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="affectations")
      * @MaxDepth(1)
-     * @Groups({"full", "concise", "profile", "promotion"})
+     * @Groups({ "concise" , "profile", "promotion"})
      */
     private $role;
 

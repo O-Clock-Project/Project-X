@@ -26,7 +26,10 @@ class DataProvider extends \Faker\Provider\Base
     ];
 
     protected static $promotionLinks = [
-        'Planning',
+        'Replays',
+        'Drive',
+        'Fiches Récap',
+        'Slack',
         'Cockpit',
         'Github',
     ];
@@ -41,6 +44,15 @@ class DataProvider extends \Faker\Provider\Base
         'Audio',
         'Video',
         'Écrite',
+    ];
+
+    protected static $icons = [
+        'FaSchool',
+        'FaGithub',
+        'FaGooglePlay',
+        'FaGoogleDrive',
+        'FaArchive',
+        'FaSlackHash',
     ];
 
     protected static $languages = [
@@ -89,6 +101,10 @@ class DataProvider extends \Faker\Provider\Base
 
     public static function supportName(){
         return static::randomElement(self::$supports);
+    }
+
+    public static function iconName(){
+        return static::randomElement(self::$icons);
     }
 
     public static function localeName(){

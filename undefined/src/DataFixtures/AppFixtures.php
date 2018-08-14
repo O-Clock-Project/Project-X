@@ -7,6 +7,7 @@ use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Promotion;
 use App\Entity\Affectation;
+use App\Entity\PromotionLink;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -230,18 +231,6 @@ class AppFixtures extends Fixture
             },
         ]);
 
-        $populator->addEntity('App\Entity\PromotionLink',30 ,[
-            'is_active' => 1,
-            'name' => function() use ($faker) { 
-                return $faker->promotionLink();
-            },
-            'url' => function() use ($faker) { 
-                return $faker->url();
-            },
-            'icon' => function() use ($faker) { 
-                return $faker->imageUrl($width = 640, $height = 480) ;
-            },
-        ]);
 
         // On demande à Faker d'éxécuter les ajouts en BDD
         $inserted = $populator->execute();
@@ -297,8 +286,19 @@ class AppFixtures extends Fixture
             $promotion->__construct();
             for ( $i=0 ; $i<$faker->numberBetween(1,3) ; $i++){
                 $promotion->addAnnounce($announcements[$i]);
+                for ( $i=0; $i<6; $i++){
+                    $link = new PromotionLink();
+                    $link->setName($faker->unique()->promotionLink());
+                    $link->setUrl($faker->url());
+                    $link->setIcon($faker->unique()->iconName());
+                    $faker->unique($reset = true);
+                    $manager->persist($link);
+                    $promotion->addLink($link);
+                    $manager->persist($promotion);
+                }
             }
         }
+
 
 
         
