@@ -616,9 +616,12 @@ class User implements UserInterface, \Serializable
         return null;
     }
 
+    /*
+    * TODO function getRoles a changer
+     */
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return array('ROLE_TEACHER');
     }
 
     public function eraseCredentials()

@@ -89,7 +89,20 @@ class AppFixtures extends Fixture
         $userModerator->setIsActive('1');
         
         $manager->persist($userModerator);
+
+        $userSimple = new User();
+        $userSimple->setPassword($this->encoder->encodePassword($userModerator, 'user'));
+        //$userModerator->setPassword('user');
+        $userSimple->setEmail('user@user.fr');
+        $userSimple->setBirthday(new DateTime("15-02-1990"));//ddMMyyyy
+        $userSimple->setUsername('Clem');
+        $userSimple->setFirstName('Gillois');
+        $userSimple->setLastName('Clément');
+        $userSimple->setPseudoGithub('Clem');
+        $userSimple->setZip('26730');
+        $userSimple->setIsActive('1');
         
+        $manager->persist($userSimple);
         
         // Affectation pour un admin
         $affectationUserAdmin = new Affectation();

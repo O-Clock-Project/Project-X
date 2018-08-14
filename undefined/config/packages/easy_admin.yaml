@@ -10,13 +10,13 @@ easy_admin:
             - { entity: 'Affectation', label: 'Affectation', icon: 'user' }
             - { entity: 'Annonce', label: 'Annonce', icon: 'bullhorn' }
             - { entity: 'AnnonceType', label: 'Type annonce', icon: 'bullhorn' }
-            - { entity: 'Bookmark', label: 'Bookmark', icon: 'bookmark' }
+            - { entity: 'Bookmark',role: ROLE_TEACHER, label: 'Bookmark', icon: 'bookmark' }
             - { entity: 'Commentaire', label: 'Commentaire', icon: 'comment' }
             - { entity: 'Difficulte', label: 'Difficulte', icon: 'signal' }
             - { entity: 'Langue', label: 'Langue', icon: 'globe' }
-            - { entity: 'Promotion', label: 'Promotion', icon: 'graduation-cap' }
+            - { entity: 'Promotion',role: ROLE_TEACHER, label: 'Promotion', icon: 'graduation-cap' }
             - { entity: 'LienPromotion', label: 'Lien Promotion', icon: 'link' }
-            - { entity: 'Role', label: 'Role', icon: 'user' }
+            - { entity: 'Role', role: ROLE_TEACHER, label: 'Role', icon: 'user' }
             - { entity: 'Specialite', label: 'Specialite', icon: 'book' }
             - { entity: 'Support', label: 'Support', icon: 'volume-off' }
             - { entity: 'Tag', label: 'Tag', icon: 'tag' }
@@ -24,12 +24,13 @@ easy_admin:
             - { entity: 'Vote', label: 'Vote', icon: 'thumbs-up' }
             - { entity: 'AlertBookmark', label: 'Alert Bookmark', icon: 'exclamation-triangle' }
             # Permet le retour vers la home du site
-            #- { label: 'Retour au site', route: 'homepage'}
+            - { label: 'Retour au site', route: 'app'}
     # Rajoute la fonction show sur chaque objet
     list:
         actions: 
             - { name: 'show', icon: 'search', label: '', title: 'Search'}
             - { name: 'edit', icon: 'pencil', label: '', title: 'Edit'}
+            - { name: 'delete', icon: 'trash', label: '', title: 'Delete'}
     entities:
         Affectation:
             class: App\Entity\Affectation
@@ -260,6 +261,10 @@ easy_admin:
                     - { property: 'locale', label: 'Langue' }
                     - { property: 'banned' , label: 'Bannir'}
                     - { property: 'published_at', label: 'Date de création de la ressource (officielle)', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
+            # Permet la suppression d'un Bookmark QUE pour les Admin
+            delete:
+                role: ROLE_ADMINISTRATOR
+
         Commentaire:
             class: App\Entity\Comment
             help: 'Voici tous les commentaires disponible'
@@ -401,6 +406,7 @@ easy_admin:
                     - { property: 'bookmarks', label: 'Bookmark associé', type_options: { 'by_reference': false } }
         Promotion:
             class: App\Entity\Promotion
+            role: ROLE_TEACHER
             help: 'Voici la liste des promotions'
             # La view de la liste des promotions
             list:
@@ -442,6 +448,8 @@ easy_admin:
             # La view d'ajout d''une promotion
             new:
                 title:  'Ajout d''une promotion '
+                # Possibilité d'ajouter une promotion QUE pour l'admin
+                role: ROLE_ADMINISTRATOR
                 help: null
                 fields:
                     - { property: 'is_active',label: 'Activer' }
@@ -449,7 +457,7 @@ easy_admin:
                     - { property: 'affectations', label: 'Droit des utilisateurs dans la promotion', type_options: { 'by_reference': false } }
                     - { property: 'announces', label: 'Annonce de la promo', type_options: { 'by_reference': false }}
                     - { property: 'links', label: 'Lien vers les infos de la promotion', type_options: { 'by_reference': false } } 
-        
+                
         LienPromotion:
             class: App\Entity\PromotionLink
             help: 'Voici la liste des liens des promotions'
@@ -502,6 +510,7 @@ easy_admin:
                     - { property: 'promotion', label: 'Promotion' }
         Role:
             class: App\Entity\Role
+            role: ROLE_TEACHER
             help: 'Voici la liste des différents rôles des utilisateurs'
             # La view de la liste des différents rôles des utilisateurs
             list:
@@ -540,6 +549,8 @@ easy_admin:
             # La view d'ajout d'un rôle utilisateur
             new:
                 title:  'Ajout d''un rôle d''utilisateur '
+                # Possibilité d'ajouter un role QUE pour l'admin
+                role: ROLE_ADMINISTRATOR
                 help: null
                 fields:
                     - { property: 'is_active',label: 'Activer'}

@@ -1,7 +1,14 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Connexion{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/reset.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
+    
     {% for message in app.flashes('notice') %}
         <div class="flash-notice alert alert-success">
             {{ message }}
@@ -11,20 +18,20 @@
         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    <form action="{{ path('login') }}" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    <div id="login">
+      
+        <h1 id="login-title">The Hub</h1>
+        <h2 id="login-subtitle">Connexion</h2>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password" />
+        <form id="login-form" action="{{ path('login') }}" method="post" autocomplete="off">
+            
+            <input class="login-form-input" type="text" id="username" name="_username" value="{{ last_username }}" placeholder="Username" />
 
-        {#
-            If you want to control the URL the user
-            is redirected to on success (more details below)
-            <input type="hidden" name="_target_path" value="/account" />
-        #}
+           
+            <input class="login-form-input" type="password" id="password" name="_password" placeholder="Mot de passe" />
 
-        <button type="submit">login</button>
-    </form>
+            <button class="login-form-btn" type="submit">Se connecter</button>
+        </form>
+    </div>
 
 {% endblock %}
