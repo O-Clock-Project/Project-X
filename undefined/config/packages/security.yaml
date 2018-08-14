@@ -1,24 +1,57 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\User:
+            # Permet l'encryptage des mots de passe
+            algorithm: bcrypt
     providers:
-        in_memory: { memory: ~ }
+        #in_memory: { memory: ~ }
+        thehub_provider:
+            entity:
+                class: App\Entity\User
+                #property: username
+                #property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            # j'autorise les utilisateurs anonyme à consulter une partie de l'application (le login)
             anonymous: true
-
+            #pattern:    ^/
+            provider: thehub_provider
+            
+            # https://symfony.com/doc/current/security/form_login_setup.html
+            form_login:
+                # route de l'affichage de la page de login
+                login_path: login
+                # route verification du login
+                check_path: login
+                # url de redirection apres login
+                default_target_path: /app
+                
+            logout:
+                # url logout
+                path:   /logout
+                target: /
+            
             # activate different ways to authenticate
 
-            # http_basic: true
+            http_basic: true
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: true
-            # https://symfony.com/doc/current/security/form_login_setup.html
+   
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_TEACHER}
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        
+        
+
+    role_hierarchy:
+        # role de la clef contient l'autre role
+        ROLE_STUDENT: ROLE_STUDENT
+        ROLE_TEACHER: ROLE_STUDENT
+        ROLE_ADMINISTRATOR: [ROLE_STUDENT, ROLE_TEACHER]

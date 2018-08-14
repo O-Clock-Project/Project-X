@@ -64,13 +64,12 @@ class AppFixtures extends Fixture
 
         
         $userAdmin = new User();
-        $userAdmin->setUsername('admin');
-        //$userAdmin->setPassword($this->encoder->encodePassword($userAdmin, 'admin'));
-        $userAdmin->setPassword('admin');
+        $userAdmin->setPassword($this->encoder->encodePassword($userAdmin, 'admin'));
+        //$userAdmin->setPassword('admin');
         $userAdmin->setEmail('admin@admin.fr');
-        $userAdmin->setBirthday(new DateTime("10-8-1980"));
-        $userAdmin->setusername('Charly');
-        $userAdmin->setfirstName('Joly');
+        $userAdmin->setBirthday(new DateTime("10-8-1980"));//ddMMyyyy
+        $userAdmin->setUsername('Charly');
+        $userAdmin->setFirstName('Joly');
         $userAdmin->setLastName('Charles');
         $userAdmin->setPseudoGithub('Charly');
         $userAdmin->setZip('95522');
@@ -79,20 +78,32 @@ class AppFixtures extends Fixture
         $manager->persist($userAdmin);
         
         $userModerator = new User();
-        $userModerator->setUsername('professeur');
-        //$userModerator->setPassword($this->encoder->encodePassword($userModerator, 'prof'));
-        $userModerator->setPassword('prof');
+        $userModerator->setPassword($this->encoder->encodePassword($userModerator, 'prof'));
+        //$userModerator->setPassword('prof');
         $userModerator->setEmail('prof@prof.fr');
         $userModerator->setBirthday(new DateTime("28-12-1985"));//ddMMyyyy
-        $userModerator->setusername('Soso85');
-        $userModerator->setfirstName('Martin');
+        $userModerator->setUsername('Soso85');
+        $userModerator->setFirstName('Martin');
         $userModerator->setLastName('Sophie');
         $userModerator->setPseudoGithub('Soso85');
         $userModerator->setZip('18522');
         $userModerator->setIsActive('1');
         
         $manager->persist($userModerator);
+
+        $userSimple = new User();
+        $userSimple->setPassword($this->encoder->encodePassword($userModerator, 'user'));
+        //$userModerator->setPassword('user');
+        $userSimple->setEmail('user@user.fr');
+        $userSimple->setBirthday(new DateTime("15-02-1990"));//ddMMyyyy
+        $userSimple->setUsername('Clem');
+        $userSimple->setFirstName('Gillois');
+        $userSimple->setLastName('Clément');
+        $userSimple->setPseudoGithub('Clem');
+        $userSimple->setZip('26730');
+        $userSimple->setIsActive('1');
         
+        $manager->persist($userSimple);
         
         // Affectation pour un admin
         $affectationUserAdmin = new Affectation();
