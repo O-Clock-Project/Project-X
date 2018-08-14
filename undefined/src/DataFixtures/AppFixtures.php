@@ -64,8 +64,8 @@ class AppFixtures extends Fixture
         
         $userAdmin = new User();
         $userAdmin->setUsername('admin');
-        //$userAdmin->setPassword($this->encoder->encodePassword($userAdmin, 'admin'));
-        $userAdmin->setPassword('admin');
+        $userAdmin->setPassword($this->encoder->encodePassword($userAdmin, 'admin'));
+        //$userAdmin->setPassword('admin');
         $userAdmin->setEmail('admin@admin.fr');
         $userAdmin->setBirthday(new DateTime("10-8-1980"));
         $userAdmin->setusername('Charly');
@@ -79,8 +79,8 @@ class AppFixtures extends Fixture
         
         $userModerator = new User();
         $userModerator->setUsername('professeur');
-        //$userModerator->setPassword($this->encoder->encodePassword($userModerator, 'prof'));
-        $userModerator->setPassword('prof');
+        $userModerator->setPassword($this->encoder->encodePassword($userModerator, 'prof'));
+        //$userModerator->setPassword('prof');
         $userModerator->setEmail('prof@prof.fr');
         $userModerator->setBirthday(new DateTime("28-12-1985"));//ddMMyyyy
         $userModerator->setusername('Soso85');
