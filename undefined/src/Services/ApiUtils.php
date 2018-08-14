@@ -28,7 +28,7 @@ class ApiUtils
         $order = []; 
         $limit = 20; // 20 résultats retournés par défaut
         $num_pages = 1; // Page 1 par défaut
-        $group = 'full'; // Tous les détails par défaut
+        $group = 'concise'; // Tous les détails par défaut
         $params['is_active'] = true; // Filtre sur is_active = true par défaut (pour éviter d'avoir à dire à chaque fois qu'on ne veut pas les inactifs)
         
         // Pour chaque entrée dans le tableau query
@@ -92,6 +92,7 @@ class ApiUtils
         $response =  new Response($jsonContent, 200);
         // On set le header Content-Type sur json et utf-8
         $response->headers->set('Content-Type', 'application/json; charset=utf-8');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response; //On renvoie la réponse
     }
@@ -183,7 +184,7 @@ class ApiUtils
     
     }
 
-    public function handleSerialization($toSerialize, $group = 'full')
+    public function handleSerialization($toSerialize, $group = 'concise')
     // Méthode qui permet de factoriser toute la partie redondante de sérialization
     {
         //On crée un ClassMetadataFactory qui va aller parcourir les annotations de nos entités

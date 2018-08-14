@@ -21,44 +21,44 @@ class Difficulty
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({ "concise" })
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"full"})
+     * 
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"full"})
+     * 
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * @Groups({"full"})
+     * 
      */
     private $is_active = true;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"full", "concise"})
+     * @Groups({ "concise" })
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({ "concise" })
      */
     private $level;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Bookmark", mappedBy="difficulty")
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * 
      */
     private $bookmarks;
 
