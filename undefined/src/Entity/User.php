@@ -23,7 +23,7 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "profile", "promotion"})
+     * @Groups({ "concise" , "profile", "promotion", "bookmarks"})
      */
     private $id;
     
@@ -47,7 +47,7 @@ class User
     
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({ "concise" , "profile", "promotion"})
+     * @Groups({ "concise" , "profile", "promotion", "bookmarks"})
      */
     private $username;
     

@@ -46,13 +46,19 @@ class DataProvider extends \Faker\Provider\Base
         'Écrite',
     ];
 
-    protected static $icons = [
+    protected static $linkIcons = [
         'FaSchool',
         'FaGithub',
         'FaGooglePlay',
         'FaGoogleDrive',
         'FaArchive',
         'FaSlackHash',
+    ];
+
+    protected static $supportIcons = [
+        'FaFilm',
+        'FaHeadphones',
+        'FaFileAlt',
     ];
 
     protected static $languages = [
@@ -103,8 +109,12 @@ class DataProvider extends \Faker\Provider\Base
         return static::randomElement(self::$supports);
     }
 
-    public static function iconName(){
-        return static::randomElement(self::$icons);
+    public static function linkIcon(){
+        return static::randomElement(self::$linkIcons);
+    }
+
+    public static function supportIcon(){
+        return static::randomElement(self::$supportIcons);
     }
 
     public static function localeName(){

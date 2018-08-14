@@ -22,7 +22,7 @@ class Bookmark
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "profile"})
+     * @Groups({ "concise" , "profile", "bookmarks"})
      */
     private $id;
 
@@ -46,7 +46,7 @@ class Bookmark
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "concise" })
+     * @Groups({ "concise", "bookmarks" })
      */
     private $title;
 
@@ -58,66 +58,66 @@ class Bookmark
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "concise" })
+     * @Groups({ "concise", "bookmarks" })
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      */
     private $image;
 
     /**
      * @ORM\Column(type="boolean", options={"default":false})
-     * 
+     *
      */
     private $banned;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
+     * @Groups({ "bookmarks" })
      */
     private $published_at;
 
     /**
      * @ORM\Column(type="string", length=128)
-     * 
+     * @Groups({ "bookmarks" })
      */
     private $author;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\WarningBookmark", mappedBy="bookmark", orphanRemoval=true)
      * @MaxDepth(1)
-     * 
+     *
      */
     private $warnings;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Support", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * 
+     * @Groups({ "bookmarks", "bookmarks" })
      */
     private $support;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Difficulty", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * 
+     * @Groups({ "bookmarks" })
      */
     private $difficulty;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * 
+     * @Groups({ "bookmarks" })
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="bookmark", orphanRemoval=true)
      * @MaxDepth(1)
-     * 
+     * @Groups({ "bookmarks" })
      */
     private $votes;
 
@@ -125,7 +125,7 @@ class Bookmark
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="favorites")
      * @ORM\JoinTable(name="bookmark_faved")
      * @MaxDepth(1)
-     * 
+     * @Groups({ "bookmarks" })
      */
     private $faved_by;
 
@@ -133,21 +133,21 @@ class Bookmark
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="certified_bookmarks")
      * @ORM\JoinTable(name="bookmark_certified")
      * @MaxDepth(1)
-     * 
+     * @Groups({ "bookmarks" })
      */
     private $certified_by;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * 
+     * @Groups({ "bookmarks" })
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Locale", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * 
+     * @Groups({ "bookmarks" })
      */
     private $locale;
 
@@ -487,6 +487,7 @@ class Bookmark
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
+
 
 
     public function __toString()

@@ -21,7 +21,7 @@ class Support
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" })
+     * @Groups({ "concise", "bookmarks" })
      */
     private $id;
 
@@ -45,9 +45,16 @@ class Support
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise" })
+     * @Groups({ "concise" , "bookmarks"})
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({ "concise" , "promotion", "bookmarks"})
+     */
+    private $icon;
+
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Bookmark", mappedBy="support")
@@ -141,6 +148,18 @@ class Support
     public function setIsActive(bool $is_active): self
     {
         $this->is_active = $is_active;
+
+        return $this;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(string $icon): self
+    {
+        $this->icon = $icon;
 
         return $this;
     }

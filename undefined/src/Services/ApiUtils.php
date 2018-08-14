@@ -30,6 +30,7 @@ class ApiUtils
         $num_pages = 1; // Page 1 par défaut
         $group = 'concise'; // Tous les détails par défaut
         $params['is_active'] = true; // Filtre sur is_active = true par défaut (pour éviter d'avoir à dire à chaque fois qu'on ne veut pas les inactifs)
+        $params['banned'] = false; 
         
         // Pour chaque entrée dans le tableau query
         foreach($request->query as $key => $value){
@@ -98,6 +99,14 @@ class ApiUtils
     }
 
 
+
+
+
+
+
+    
+
+
     public function getItem($repo, $id, $request )
     //Méthode qui permet de trouver un item par son id passé dans l'url
     {
@@ -119,6 +128,15 @@ class ApiUtils
 
         return $response; //On renvoie la réponse
     }
+
+
+
+
+
+
+
+
+    
 
     public function getItemRelations($repo, $id, $request, $relation )
     //Méthode qui permet de trouver un item par son id passé dans l'url et d'aller chercher les éléments de la relation spécifiée
@@ -183,6 +201,10 @@ class ApiUtils
         }
     
     }
+
+
+
+    
 
     public function handleSerialization($toSerialize, $group = 'concise')
     // Méthode qui permet de factoriser toute la partie redondante de sérialization

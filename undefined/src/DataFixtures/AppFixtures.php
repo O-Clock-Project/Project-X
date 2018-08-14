@@ -119,6 +119,7 @@ class AppFixtures extends Fixture
         ]);
         $populator->addEntity('App\Entity\Support', 3,[
             'name' => function() use ($faker) { return $faker->unique()->supportName(); },
+            'icon' => function() use ($faker) { return $faker->unique()->supportIcon(); },
             'is_active' => 1,
         ]);
         $populator->addEntity('App\Entity\Locale', 6 ,[
@@ -290,7 +291,7 @@ class AppFixtures extends Fixture
                     $link = new PromotionLink();
                     $link->setName($faker->unique()->promotionLink());
                     $link->setUrl($faker->url());
-                    $link->setIcon($faker->unique()->iconName());
+                    $link->setIcon($faker->unique()->linkIcon());
                     $faker->unique($reset = true);
                     $manager->persist($link);
                     $promotion->addLink($link);
