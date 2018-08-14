@@ -17,7 +17,7 @@ security:
             security: false
         main:
             # j'autorise les utilisateurs anonyme à consulter une partie de l'application (le login)
-            anonymous: true
+            anonymous: ~
             #pattern:    ^/
             provider: thehub_provider
             
