@@ -21,7 +21,7 @@ class Role
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile", "promotion"})
      */
     private $id;
 
@@ -45,13 +45,13 @@ class Role
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile", "promotion"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile", "promotion"})
      */
     private $code;
 

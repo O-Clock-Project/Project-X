@@ -19,7 +19,7 @@ class Affectation
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile", "promotion"})
      */
     private $id;
     
@@ -44,21 +44,21 @@ class Affectation
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="affectations")
      * @MaxDepth(1)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "promotion"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Promotion", inversedBy="affectations")
      * @MaxDepth(1)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile"})
      */
     private $promotion;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="affectations")
      * @MaxDepth(1)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile", "promotion"})
      */
     private $role;
 

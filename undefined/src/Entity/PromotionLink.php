@@ -19,7 +19,7 @@ class PromotionLink
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "promotion"})
      */
     private $id;
 
@@ -43,19 +43,19 @@ class PromotionLink
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "promotion"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "promotion"})
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "promotion"})
      */
     private $icon;
 

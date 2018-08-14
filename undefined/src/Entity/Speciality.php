@@ -21,7 +21,7 @@ class Speciality
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile"})
      */
     private $id;
 
@@ -45,7 +45,7 @@ class Speciality
     
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile"})
      */
     private $name;
 

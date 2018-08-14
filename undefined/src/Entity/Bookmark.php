@@ -22,7 +22,7 @@ class Bookmark
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile"})
      */
     private $id;
 

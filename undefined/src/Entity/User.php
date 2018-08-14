@@ -23,7 +23,7 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile", "promotion"})
      */
     private $id;
     
@@ -47,25 +47,25 @@ class User
     
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile", "promotion"})
      */
     private $username;
     
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile"})
      */
     private $first_name;
 
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile"})
      */
     private $last_name;
 
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile"})
      */
     private $email;
 
@@ -77,26 +77,26 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"full"})
+     * @Groups({"full", "profile"})
      */
     private $pseudo_github;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"full"})
+     * @Groups({"full", "profile"})
      */
     private $zip;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"full"})
+     * @Groups({"full", "profile"})
      */
     private $birthday;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Bookmark", mappedBy="user")
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * @Groups({"full", "profile"})
      */
     private $bookmarks;
 
@@ -104,7 +104,7 @@ class User
      * @ORM\ManyToMany(targetEntity="App\Entity\Bookmark", mappedBy="faved_by")
      * @ORM\JoinTable(name="bookmark_faved")
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * @Groups({"full", "profile"})
      */
     private $favorites;
 
@@ -112,7 +112,7 @@ class User
      * @ORM\ManyToMany(targetEntity="App\Entity\Bookmark", mappedBy="certified_by")
      * @ORM\JoinTable(name="bookmark_certified")
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * @Groups({"full", "profile"})
      */
     private $certified_bookmarks;
 
@@ -126,14 +126,14 @@ class User
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Speciality", inversedBy="students")
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * @Groups({"full", "profile"})
      */
     private $speciality;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="voter")
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * @Groups({"full", "profile"})
      */
     private $votes;
 
@@ -154,13 +154,13 @@ class User
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="user", orphanRemoval=true)
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * @Groups({"full", "profile"})
      */
     private $affectations;
 
     /**
      * @SerializedName("avatar")
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile"})
      */
     public $avatar;
 

@@ -21,7 +21,7 @@ class Promotion
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile", "promotion"})
      */
     private $id;
 
@@ -45,28 +45,28 @@ class Promotion
     
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "profile", "promotion"})
      */
     private $name;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="promotion", orphanRemoval=true)
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * @Groups({"full", "promotion"})
      */
     private $affectations;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Announcement", inversedBy="promotions")
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * @Groups({"full", "promotion"})
      */
     private $announces;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\PromotionLink", mappedBy="promotion", orphanRemoval=true)
      * @MaxDepth(1)
-     * @Groups({"full"})
+     * @Groups({"full", "promotion"})
      */
     private $links;
 

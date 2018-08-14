@@ -21,7 +21,7 @@ class Announcement
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"full", "concise"})
+     * @Groups({"full", "concise", "promotion"})
      */
     private $id;
 
