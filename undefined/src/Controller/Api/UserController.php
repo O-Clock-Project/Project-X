@@ -6,9 +6,12 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Services\ApiUtils;
 use App\Repository\UserRepository;
+use App\Repository\PromotionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -80,5 +83,30 @@ class UserController extends AbstractController
         $response = $utils->postItem($user, $form, $request, $em);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/rights/{user_id}/promotion/{promotion_id}", name="rightsByProm", requirements={"user_id"="\d+", "promotion_id"="\d+"}, methods="GET")
+     */
+    public function getUserRoleByPromotion(UserRepository $userRepo, $user_id, PromotionRepository $promotionRepo, $promotion_id, Request $request)
+    //Méthode custom permettant de renvoyer les rôles d'un user spécifié dans une promotion en particulier
+    {
+        $user = $userRepo->findOneById($user_id);
+        $promotion = $promotionRepo->findOneById($promotion_id);        
+        if (empty($user)){
+            return new JsonResponse(['error' => 'User non trouvé'], Response::HTTP_NOT_FOUND);
+        };
+        if (empty($promotion)){
+            return new JsonResponse(['error' => 'Promotion non trouvée'], Response::HTTP_NOT_FOUND);
+        };
+        $roles = $user->getBestRole($promotion);
+        $response = new JsonResponse(
+            array(
+                'user' => $user->getId(), 
+                'promotion' => $promotion->getId(), 
+                'best_role' => $roles
+        ));
+
+        return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
 }

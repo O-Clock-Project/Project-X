@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 // Import de la classe UserInterface pour permettre la connexion (authentification)
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Promotion;
 
 /**
  * @ORM\Table(name="app_users")
@@ -165,6 +166,12 @@ class User implements UserInterface, \Serializable
      * @Groups({ "concise" , "profile"})
      */
     public $avatar;
+
+    /**
+     * @SerializedName("best_role")
+     * @Groups({ "concise" , "profile"})
+     */
+    public $bestRole;
 
 
     public function __construct()
@@ -616,12 +623,28 @@ class User implements UserInterface, \Serializable
         return null;
     }
 
-    /*
-    * TODO function getRoles a changer
-     */
-    public function getRoles()
+    /** 
+     * Méthode permettant de ramener la liste de rôles d'un utilisateur, dans toutes ses affectations par défaut ou dans une promo en particulier
+     **/
+    public function getRoles(Promotion $promotion = null)
     {
-        return array('ROLE_TEACHER');
+        $affectations = $this->getAffectations();
+        $roles = [];
+        
+        if ($promotion === null){
+            foreach($affectations as $affectation){
+                $roles[] = $affectation->getRole()->getCode();
+            }
+        }
+        else{
+            foreach($affectations as $affectation){
+                if ($affectation->getPromotion() ==  $promotion){
+                    $roles[] = $affectation->getRole()->getCode();
+                }
+            }
+        }
+        
+        return $roles;
     }
 
     public function eraseCredentials()
@@ -653,4 +676,43 @@ class User implements UserInterface, \Serializable
         ) = unserialize($serialized, array('allowed_classes' => false));
     }
 
+    // Fonction qui parcourt les roles retournés par getRoles et qui retourne le meilleur (son score et son code)
+    public function getBestRole(Promotion $promotion = null){
+
+        $roles = $this->getRoles($promotion);
+
+        $roleScore = [
+            0=>'NO_ROLES', // Dans le cas d'user sans affectation (temporairement ou par erreur)
+            1=>'ROLE_STUDENT' ,
+            2=>'ROLE_FRONT',
+            3=>'ROLE_TEACHER',
+            4=>'ROLE_REFERENT',
+            5=>'ROLE_ADMINISTRATOR',
+        ];
+
+        $bestScore = 0;
+
+        foreach($roles as $role){
+            $score = array_search($role, $roleScore);
+            if ( $score > $bestScore  ){
+                $bestScore = $score;
+            }
+        }
+        
+        return array(
+            'code' => $roleScore[$bestScore],
+            'level'=> $bestScore
+        );
+    }
+
+    /**
+     * @ORM\PostLoad
+     */
+    public function setBestRole(): self
+    // A chaque fois que l'user est chargé, on sette son bestRole dans sa propriété
+    {
+        $this->bestRole = $this->getBestRole();
+
+        return $this;
+    }
 }

@@ -28,14 +28,20 @@ class ApiUtils
         $order = []; 
         $limit = 20; // 20 résultats retournés par défaut
         $num_pages = 1; // Page 1 par défaut
-        $group = 'concise'; // Tous les détails par défaut
+        $group = 'concise'; // Les détails minimum par défaut
         $params['is_active'] = true; // Filtre sur is_active = true par défaut (pour éviter d'avoir à dire à chaque fois qu'on ne veut pas les inactifs)
-        $params['banned'] = false; 
+        if(property_exists($object, 'banned')){
+            $params['banned'] = false;
+        }
         
         // Pour chaque entrée dans le tableau query
         foreach($request->query as $key => $value){
             // Si la clé est sortType, tu sors de ce tour de boucle car cette clé ne sert qu'associé à la clé orderField (donc on évite tous les tests inutiles)
             if($key === 'sortType'){
+                continue;
+            }
+            // 
+            else if ( $key ==='bearer'){
                 continue;
             }
             // Si la clé est OrderField et que sortType n'est pas nul, alors on met dans l'array $order sur quel champ trier et on utilise sortType pour le sens de tri
@@ -204,7 +210,7 @@ class ApiUtils
 
 
 
-    
+
 
     public function handleSerialization($toSerialize, $group = 'concise')
     // Méthode qui permet de factoriser toute la partie redondante de sérialization
@@ -238,5 +244,9 @@ class ApiUtils
 
         // On retourne le contenu sérialisé en json
         return $jsonContent = $serializer->serialize($toSerialize, 'json', $options);
+    }
+
+    public function checkJWToken($token){
+
     }
 }
