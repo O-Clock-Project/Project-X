@@ -16,13 +16,26 @@ body {
   font-family: Oclock;
 }
 
-#login-title,
+#login,
+#signup{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* #login-title,
 #signup-title {
   margin: 8rem;
   font-size: 4rem;
   font-weight: 900;
   text-align: center;
   text-transform: uppercase;
+} */
+
+#login-title-logo,
+#signup-title-logo{
+  margin:8rem; 
+  width: 17%;
 }
 
 #login-subtitle,
@@ -145,4 +158,4 @@ body {
   background-color: #033649;
   color: #e8ddcb;
   border: 0;
-}
+} 

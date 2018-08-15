@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -35,7 +36,7 @@ class UserType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'Le mot de passe saisi n\'est pas le même',
                 'options' => [
                     'attr' => [
                         'class' => 'signup-form-input',
@@ -43,12 +44,12 @@ class UserType extends AbstractType
                     ]
                 ],
                 'required' => true,
-                'first_options'  => [
-                    'label' => 'Tapez votre mot de passe'
-                ],
-                'second_options' => [
-                    'label' => 'Répètez le mot de passe'
-                ],
+                 'first_options'  => [
+                     'label' => 'Votre mot de passe'
+                 ],
+                 'second_options' => [
+                     'label' => 'Répètez le mot de passe'
+                 ],
                 'required' => false
             ])
             // ->add('code')
@@ -67,22 +68,21 @@ class UserType extends AbstractType
                 ], 
             ])
             ->add('birthday', BirthdayType::class, [
-                'label' => 'Date de naissance',
-                'placeholder' => [
-                    'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour',
-                ], 
+                'widget' => 'single_text',
+                'label' => 'Date de naissance', 
                 'attr' => [
                     'class' => 'signup-form-input',
                     'placeholder' => 'Date de naissance'  
-                ],
-                
+                ],    
             ])
-            ->add('zip', IntegerType::class, [
+
+            ->add('zip', NumberType::class, [
                 'label' => 'Code postal', 
                 'attr' => [
                     'class' => 'signup-form-input',
                     'placeholder' => 'Code Postal'  
                 ],
+                'invalid_message' => 'Le code postal saisi n\'est pas un chiffre',
             ])
             ->add('pseudogithub', TextType::class, [
                 'label' => 'Pseudo Github', 
@@ -91,7 +91,6 @@ class UserType extends AbstractType
                     'placeholder' => 'Pseudo Github'  
                 ],
             ])
-            //->add('sexe')
             //->add('isActive')
        
         ;
