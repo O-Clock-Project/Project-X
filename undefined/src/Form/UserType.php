@@ -21,7 +21,7 @@ class UserType extends AbstractType
                 'invalid_message' => 'The password fields must match.',
                 'options' => [
                     'attr' => [
-                        'class' => 'password-field'
+                        'class' => 'signup-form-label'
                     ]
                 ],
                 'required' => true,
