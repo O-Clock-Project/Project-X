@@ -1,3 +1,19 @@
+App\Entity\Bookmark:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
+    properties:
+        label:
+            - NotBlank: ~
+            - Type: string
+
+App\Entity\Comment:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
+    properties:
+        label:
+            - NotBlank: ~
+            - Type: string
+
 App\Entity\Tag:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
@@ -6,3 +22,18 @@ App\Entity\Tag:
             - NotBlank: ~
             - Type: string
 
+App\Entity\User:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
+    properties:
+        label:
+            - NotBlank: ~
+            - Type: string            
+
+App\Entity\Vote:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
+    properties:
+        label:
+            - NotBlank: ~
+            - Type: string
