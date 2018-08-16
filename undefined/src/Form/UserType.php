@@ -48,7 +48,7 @@ class UserType extends AbstractType
                      'label' => 'Votre mot de passe'
                  ],
                  'second_options' => [
-                     'label' => 'Répètez le mot de passe'
+                     'label' => 'Confirmer mot de passe'
                  ],
                 'required' => false
             ])
@@ -68,14 +68,15 @@ class UserType extends AbstractType
                 ], 
             ])
             ->add('birthday', BirthdayType::class, [
-                'widget' => 'single_text',
-                'label' => 'Date de naissance', 
-                'attr' => [
-                    'class' => 'signup-form-input',
-                    'placeholder' => 'Date de naissance'  
-                ],    
+                'widget' => 'choice',
+                'format' => 'yyyy-MM-dd',
+                'label' => 'Date de naissance',
+                'placeholder' => [
+                    'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour',
+                ] 
+                    
             ])
-
+         
             ->add('zip', NumberType::class, [
                 'label' => 'Code postal', 
                 'attr' => [
