@@ -2,12 +2,21 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Tag;
+use App\Entity\Locale;
+use App\Entity\Support;
 use App\Entity\Bookmark;
+use App\Entity\Difficulty;
 use App\Form\BookmarkType;
 use App\Services\ApiUtils;
+use App\Controller\Api\TagController;
 use App\Repository\BookmarkRepository;
+use App\Controller\Api\LocaleController;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Controller\Api\SupportController;
+use App\Controller\Api\DifficultyController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -80,6 +89,49 @@ class BookmarkController extends AbstractController
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->postItem($bookmark, $form, $request, $em);
 
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/filters", name="getFilters", methods="GET")
+     */
+    public function getFilters (Request $request)
+    //
+    {
+        $support = new SupportController();
+        $supportRepo = $this->getDoctrine()->getRepository(Support::class);
+        $supports= $supportRepo->findAll();
+        $difficulty = new DifficultyController();
+        $difficultyRepo = $this->getDoctrine()->getRepository(Difficulty::class);
+        $difficulties= $difficultyRepo->findAll();
+        $locale = new LocaleController();
+        $localeRepo = $this->getDoctrine()->getRepository(Locale::class);
+        $locales= $localeRepo->findAll();
+        $tag = new TagController();
+        $tagRepo = $this->getDoctrine()->getRepository(Tag::class);
+        $tags= $tagRepo->findAll();
+
+        $filters = array(
+            'Supports' => $supports,
+            'Difficultés' => $difficulties,
+            'Langues' => $locales,
+            'Tags' => $tags
+        );
+        
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+        //puis la mise en forme de la réponse reçue au format json
+
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $jsonContent = $utils->handleSerialization($filters, "filters");
+
+
+      
+        $response =  new Response($jsonContent, Response::HTTP_CREATED);
+        // On set le header Content-Type sur json et utf-8
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+        return $response; //On renvoie la réponse
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
 }

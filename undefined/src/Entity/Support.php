@@ -21,7 +21,7 @@ class Support
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise", "bookmarks" })
+     * @Groups({ "concise", "bookmarks", "filters" })
      */
     private $id;
 
@@ -45,7 +45,7 @@ class Support
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise" , "bookmarks"})
+     * @Groups({ "concise" , "bookmarks", "filters"})
      */
     private $name;
 

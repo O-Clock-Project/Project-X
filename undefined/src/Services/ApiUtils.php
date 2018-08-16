@@ -30,7 +30,9 @@ class ApiUtils
         $num_pages = 1; // Page 1 par défaut
         $group = 'concise'; // Tous les détails par défaut
         $params['is_active'] = true; // Filtre sur is_active = true par défaut (pour éviter d'avoir à dire à chaque fois qu'on ne veut pas les inactifs)
-        $params['banned'] = false; 
+        if(property_exists($object, 'banned')){
+            $params['banned'] = false; 
+        }
         
         // Pour chaque entrée dans le tableau query
         foreach($request->query as $key => $value){

@@ -25,7 +25,7 @@ class Tag
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise", "bookmarks" })
+     * @Groups({ "concise", "bookmarks", "filters" })
      */
     private $id;
 
@@ -49,7 +49,7 @@ class Tag
     
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({ "concise", "bookmarks" })
+     * @Groups({ "concise", "bookmarks", "filters" })
      */
     private $label;
 
