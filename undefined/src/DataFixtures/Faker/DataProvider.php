@@ -43,7 +43,7 @@ class DataProvider extends \Faker\Provider\Base
     protected static $supports = [
         'Audio',
         'Video',
-        'Écrite',
+        'Écrit',
     ];
 
     protected static $linkIcons = [
@@ -72,7 +72,7 @@ class DataProvider extends \Faker\Provider\Base
 
     protected static $difficulties = [
         'Apprendre',
-        'S\améliorer',
+        'Progresser',
         'Se perfectionner',
     ];
 

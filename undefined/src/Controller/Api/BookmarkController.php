@@ -112,10 +112,10 @@ class BookmarkController extends AbstractController
         $tags= $tagRepo->findAll();
 
         $filters = array(
-            'Supports' => $supports,
-            'Difficultés' => $difficulties,
-            'Langues' => $locales,
-            'Tags' => $tags
+            'supports' => $supports,
+            'difficulties' => $difficulties,
+            'locales' => $locales,
+            'tags' => $tags
         );
         
         $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
@@ -126,12 +126,12 @@ class BookmarkController extends AbstractController
 
 
       
-        $response =  new Response($jsonContent, Response::HTTP_CREATED);
+        $response =  new Response($jsonContent, Response::HTTP_OK);
         // On set le header Content-Type sur json et utf-8
         $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Access-Control-Allow-Origin', '*');
 
         return $response; //On renvoie la réponse
-        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+
     }
 }
