@@ -48,16 +48,20 @@ class UserController extends AbstractController
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
 
+
+
+
     /**
-     * @Route("/users/{id}/{relation}", name="showUserRelation", requirements={"id"="\d+", "relation"="[a-z-A-Z]+"}, methods="GET")
+     * @Route("/users/{id}/{child}/{relation}", name="showUserRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getUserRelations(UserRepository $userRepo, $id, $relation, Request $request)
+    public function getUserRelations(UserRepository $userRepo, $id, $relation, $child, Request $request, EntityManagerInterface $em)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
+        
         $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
                                //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->getItemRelations($userRepo, $id, $request,$relation);
+        $response = $utils->getItemRelations( $id,  $child, $relation, $em , $request);
 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
@@ -69,6 +73,27 @@ class UserController extends AbstractController
     //Méthode permettant de persister un nouvel item à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
         $user = new User(); // On instancie un nouvel item qui va venir être hydraté par les informations fournies dans la requête
+
+        // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
+        // Cf le fichier config/validator/validation.yaml pour les contraintes
+        $form = $this->createForm(UserType::class, $user);
+
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->postItem($user, $form, $request, $em);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/users/{id}", name="upadateUser", requirements={"id"="\d+"}, methods="PUT")
+     */
+    public function updateUser (Request $request, EntityManagerInterface $em, UserRepository $userRepo)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        $user = $userRepo->findbyId();
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes

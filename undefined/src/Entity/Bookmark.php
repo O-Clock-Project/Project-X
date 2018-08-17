@@ -96,7 +96,7 @@ class Bookmark
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Support", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * @Groups({ "bookmarks", "bookmarks" })
+     * @Groups({ "bookmarks" })
      */
     private $support;
 

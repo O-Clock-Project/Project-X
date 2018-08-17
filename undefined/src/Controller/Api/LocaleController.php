@@ -49,15 +49,16 @@ class LocaleController extends AbstractController
 
 
     /**
-     * @Route("/locales/{id}/{relation}", name="showLocaleRelation", requirements={"id"="\d+", "relation"="[a-z-A-Z]+"}, methods="GET")
+     * @Route("/locales/{id}/{child}/{relation}", name="showLocaleRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getLocaleRelations(LocaleRepository $localeRepo, $id, $relation, Request $request)
+    public function getLocaleRelations(LocaleRepository $localeRepo, $id, $relation, $child, Request $request, EntityManagerInterface $em)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
+        
         $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
                                //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->getItemRelations($localeRepo, $id, $request,$relation);
+        $response = $utils->getItemRelations( $id,  $child, $relation, $em , $request);
 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }

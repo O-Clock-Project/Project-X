@@ -49,18 +49,21 @@ class SpecialityController extends AbstractController
 
 
     /**
-     * @Route("/specialities/{id}/{relation}", name="showSpecialityRelation", requirements={"id"="\d+", "relation"="[a-z-A-Z]+"}, methods="GET")
+     * @Route("/specialities/{id}/{child}/{relation}", name="showSpecialityRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getSpecialityRelations(SpecialityRepository $specialityRepo, $id, $relation, Request $request)
+    public function getSpecialityRelations(SpecialityRepository $specialityRepo, $id, $relation, $child, Request $request, EntityManagerInterface $em)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
+        
         $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
                                //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->getItemRelations($specialityRepo, $id, $request,$relation);
+        $response = $utils->getItemRelations( $id,  $child, $relation, $em , $request);
 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
+
+
 
     /**
      * @Route("/specialities", name="postSpeciality", methods="POST")
