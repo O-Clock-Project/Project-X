@@ -25,7 +25,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "profile", "promotion", "bookmarks"})
+     * @Groups({ "concise" , "profile", "promotion", "bookmarks", "bookmark"})
      */
     private $id;
     
@@ -49,7 +49,7 @@ class User implements UserInterface, \Serializable
     
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({ "concise" , "profile", "promotion", "bookmarks"})
+     * @Groups({ "concise" , "profile", "promotion", "bookmarks", "bookmark"})
      */
     private $username;
     

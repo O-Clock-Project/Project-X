@@ -19,7 +19,7 @@ class Vote
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "profile", "bookmarks"})
+     * @Groups({ "concise" , "profile", "bookmarks", "bookmark"})
      */
     private $id;
 
@@ -43,7 +43,7 @@ class Vote
     
     /**
      * @ORM\Column(type="integer")
-     * @Groups({ "concise", "bookmarks" })
+     * @Groups({ "concise", "bookmarks", "bookmark" })
      */
     private $value;
     

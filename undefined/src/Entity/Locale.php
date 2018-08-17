@@ -21,7 +21,7 @@ class Locale
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise", "bookmarks", "filters" })
+     * @Groups({ "concise", "bookmarks", "filters", "bookmark" })
      */
     private $id;
 
@@ -45,7 +45,7 @@ class Locale
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise", "bookmarks", "filters" })
+     * @Groups({ "concise", "bookmarks", "filters", "bookmark" })
      */
     private $name;
 
