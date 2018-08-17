@@ -57,15 +57,16 @@ class BookmarkController extends AbstractController
     }
 
     /**
-     * @Route("/bookmarks/{id}/{relation}", name="showBookmarkRelation", requirements={"id"="\d+", "relation"="[a-z-A-Z]+"}, methods="GET")
+     * @Route("/bookmarks/{id}/{child}/{relation}", name="showBookmarkRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getBookmarkRelations(BookmarkRepository $bookmarkRepo, $id, $relation, Request $request)
+    public function getBookmarkRelations(BookmarkRepository $bookmarkRepo, $id, $relation, $child, Request $request, EntityManagerInterface $em)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
+        
         $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
                                //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->getItemRelations($bookmarkRepo, $id, $request,$relation);
+        $response = $utils->getItemRelations( $id,  $child, $relation, $em , $request);
 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
@@ -100,16 +101,16 @@ class BookmarkController extends AbstractController
     {
         $support = new SupportController();
         $supportRepo = $this->getDoctrine()->getRepository(Support::class);
-        $supports= $supportRepo->findAll();
+        $supports= $supportRepo->findBy(array(), array('name' => 'ASC'));
         $difficulty = new DifficultyController();
         $difficultyRepo = $this->getDoctrine()->getRepository(Difficulty::class);
-        $difficulties= $difficultyRepo->findAll();
+        $difficulties= $difficultyRepo->findBy(array(), array('name' => 'ASC'));;
         $locale = new LocaleController();
         $localeRepo = $this->getDoctrine()->getRepository(Locale::class);
-        $locales= $localeRepo->findAll();
+        $locales= $localeRepo->findBy(array(), array('name' => 'ASC'));;
         $tag = new TagController();
         $tagRepo = $this->getDoctrine()->getRepository(Tag::class);
-        $tags= $tagRepo->findAll();
+        $tags= $tagRepo->findBy(array(), array('label' => 'ASC'));;
 
         $filters = array(
             'supports' => $supports,

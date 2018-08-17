@@ -7,11 +7,11 @@ class DataProvider extends \Faker\Provider\Base
     protected static $promotions = [
         'OClock',
         'BigBang',
-        'Cosmo',
+        'Cosmos',
         'Discovery',
         'Explorer',
         'Fusion',
-        'Galaxie',
+        'Galaxy',
         'Hyperspace',
         'Invaders',
         'Journey',
@@ -64,16 +64,16 @@ class DataProvider extends \Faker\Provider\Base
     protected static $languages = [
         'Français',
         'Anglais',
-        'Espagnole',
+        'Espagnol',
         'Allemand',
         'Italien',
         'Portugais',
     ];
 
     protected static $difficulties = [
-        'Apprendre',
+        'Commencer',
         'Progresser',
-        'Se perfectionner',
+        'Se dépasser',
     ];
 
     protected static $tags = [

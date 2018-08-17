@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -15,14 +16,12 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 
+
 class ApiUtils
 // Service qui me permet de factoriser tout le code qui serait redondant dans mes controllers
 {
 
-
-    public function getItems($object, $repo, $request )
-    // Méthode qui permet de récupérer tous les items d'une entité, avec filtres, ordre, pagination et niveau de détails configurables
-    {
+    public function handleRequestWithParams($object, $repo, $request, $id = null, $relation = null){
 
         $params = [];
         $order = []; 
@@ -34,6 +33,7 @@ class ApiUtils
             $params['banned'] = false; 
         }
         
+
         // Pour chaque entrée dans le tableau query
         foreach($request->query as $key => $value){
             // Si la clé est sortType, tu sors de ce tour de boucle car cette clé ne sert qu'associé à la clé orderField (donc on évite tous les tests inutiles)
@@ -63,32 +63,72 @@ class ApiUtils
             // Si la clé correspond à une propriété existante dans l'entité demandée, alors on alimente le tableau $params avec le champ
             // sur lequel on veut filtrer et la valeur recherchée
             else if(property_exists($object, $key)){
+
                 $params[$key] = $value;
             }
             // Si la clé ne correspond à rien d'attendu alors on renvoie un message d'erreur avec le header "mauvaise requête"
             else{
-                return new JsonResponse(['error' => 'Un critère n\'a pas été trouvé'], Response::HTTP_BAD_REQUEST);
+                return array('error' => new JsonResponse(['error' => 'Un critère n\'a pas été trouvé'], Response::HTTP_BAD_REQUEST));
             }
+
         }
         
         // Si $order est toujours vide après l'analyse de la requête alors on triera sur created_at en DESC par défaut
         if(empty($order)) {
             $order['created_at'] = 'DESC';
         }
+    
+        //On crée un queryBuilder à partir du Repo reçu (donc de la bonne entité)
+        $qb = $repo->createQueryBuilder('obj');
+        //Pour chaque item dans $params on ajoute une condition de filtre
+        foreach($params as $key => $value){
+            $qb->andWhere('obj.'.$key.' = :filterParam'.$key)
+            ->setParameter('filterParam'.$key, $value);
+        }
+        //Pour chaque item dans $order on ajoute un critère de trie
+        foreach($order as $key => $value){
+            $qb->orderBy('obj.'.$key, $value );
+        }
+        // Si on a une id reçue (donc !null), c'est qu'on a une jointure à faire
+        if ($id !== null){
+            $qb->leftJoin('obj.'.$relation, 'objrel') //On va chercher la collection doctrine ( objet_requêté.$relation) et on lui donne l'alias objrel
+                ->andWhere('objrel.id = :id') //On ajoute comme condition pour cette jointure que l'id des items dans la collection soit égal à l'id reçu
+                ->setParameter('id', $id); //on affecte $id à id pour la ligne au dessus
+        }
+        $qb->setMaxResults( $limit ); //on applique la limite
+        $qb->setFirstResult($limit * ($num_pages - 1)); //Et l'offset pour la pagination
 
-        // On envoie la demande au Repo avec tous nos critères
-        $objects = $repo->findBy(
-            $params, //critères de filtre
-            $order, //critères de tri/ordre
-            intval($limit), // limite de résultats
-            intval($limit * ($num_pages - 1)) // numéro de "page" demandé (pour le décalage/offset)
-        );
+        $objects = $qb->getQuery() //On crée la requête en SQL
+                       ->execute(); //Et on l'éxécute
 
         // Si $objects est vide, on renvoie une erreur 404 et un mesage d'erreur
         if (empty($objects)){
-            return new JsonResponse(['error' => 'Items non trouvés'], Response::HTTP_NOT_FOUND);
+            return array('error' => new JsonResponse(['error' => 'Items non trouvés'], Response::HTTP_NOT_FOUND));
         };
-              
+        
+        // Si tout va bien, on envoie un array avec les résultats de la requêtes ($objects), le groupe d'affichage ($group) et error à vide puisque ça a marché
+        return array('objects' => $objects, 'group' => $group, 'error' => null);
+    }
+
+
+
+
+    public function getItems($object, $repo, $request )
+    // Méthode qui permet de récupérer tous les items d'une entité, avec filtres, ordre, pagination et niveau de détails configurables
+    {
+
+        // je passe les paramètres nécessaires au traitement de la requête et des paramètres demandés
+        $result = $this->handleRequestWithParams($object, $repo, $request);
+
+        // je vérifie si j'ai eu une erreur en retour, si oui je la return au controller
+        if($result['error'] !== null ){
+            return $result['error'];
+        }
+        // si pas d'erreur je récupère les objets retournés par la requête et le groupe de sérialization
+        $objects = $result['objects'];
+        $group = $result['group'];
+        
+
         // On passe les objets reçus à la méthode handleSerialization qui s'occupe de transformer tout ça en json
         $jsonContent = $this->handleSerialization($objects, $group);
         // on crée une Réponse avec le code http 200 ("réussite")
@@ -101,12 +141,7 @@ class ApiUtils
     }
 
 
-
-
-
-
-
-    
+  
 
 
     public function getItem($repo, $id, $request )
@@ -118,8 +153,15 @@ class ApiUtils
         if (empty($object)){
             return new JsonResponse(['error' => 'Item non trouvé'], Response::HTTP_NOT_FOUND);
         };
+
+        $group = 'concise'; //valeur par défaut de $group
         // Si dans la requête on a la clé displayGroup on met sa value dans $group
-        $group = $request->query->get('displayGroup');
+        foreach($request->query as $key => $value){
+            if($key === 'displayGroup'){
+                $group = $value;
+            }
+        }
+
         // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
         $jsonContent = $this->handleSerialization($object, $group);
         // on crée une Réponse avec le code http 200 ("réussite")
@@ -132,40 +174,37 @@ class ApiUtils
     }
 
 
+  
 
-
-
-
-
-
-    
-
-    public function getItemRelations($repo, $id, $request, $relation )
-    //Méthode qui permet de trouver un item par son id passé dans l'url et d'aller chercher les éléments de la relation spécifiée
+    public function getItemRelations($id, $child, $relation, $em, $request )
+    //Méthode qui permet de trouver un item par son id passé dans l'url et d'aller chercher les éléments de la relation spécifiée (avec filtres, etc comme getItems)
     {
-        // On cherche avec l'id grace au repo si on trouve l'objet correspondant
-        $object = $repo->findOneById($id);
-        // Si $object est vide on retourne une erreur 404 et un message d'erreur
-        if (empty($object)){
-            return new JsonResponse(['error' => 'Item non trouvé'], Response::HTTP_NOT_FOUND);
-        };
-
-        $_classMethods = get_class_methods(get_class($object));
-        $method = 'get' . ucfirst($relation);
-        if (!in_array($method, $_classMethods)) {
-            $method = substr($method, 0, -1);
-            if (!in_array($method, $_classMethods)){
-                return new JsonResponse(['error' => 'Relation non trouvée'], Response::HTTP_NOT_FOUND);
-            }
+        $childClass= substr(ucfirst($child),0,-1);
+        if(substr($childClass,-2) === 'ie'){
+            $childClass = substr($childClass, 0, -2).'y';
         }
-        else{
-            $relationItems = $object->$method();
-        }
+        //On va chercher la classe de l'entité-enfant reçue
+        $childClass = 'App\Entity\\' .$childClass; //on met la première lettre en majuscule et on enlève le s à la fin
+        $childObject = new $childClass; // On instancie un objet vide à partir 
+        $childObjectRepo = $em->getRepository($childClass); // On récupère le repo correspondant à l'entité-enfant pour faire la requête
 
-        // Si dans la requête on a la clé displayGroup on met sa value dans $group
-        $group = $request->query->get('displayGroup');
+
+  
+        $result = $this->handleRequestWithParams($childObject, $childObjectRepo, $request, $id, $relation);
+        
+
+        // je vérifie si j'ai eu une erreur en retour, si oui je la return au controller
+        if($result['error'] !== null ){
+            return $result['error'];
+        }
+        // si pas d'erreur je récupère les objets retournés par la requête et le groupe de sérialization
+        $objects = $result['objects'];
+        $group = $result['group'];
+        
+
+
         // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
-        $jsonContent = $this->handleSerialization($relationItems, $group);
+        $jsonContent = $this->handleSerialization($objects, $group);
         // on crée une Réponse avec le code http 200 ("réussite")
         $response =  new Response($jsonContent, 200);
         // On set le header Content-Type sur json et utf-8
@@ -174,6 +213,8 @@ class ApiUtils
 
         return $response; //On renvoie la réponse
     }
+
+
 
     public function postItem($object, $form, $request, $em)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
