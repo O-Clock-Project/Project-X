@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\UserEditType;
 use App\Services\ApiUtils;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +30,7 @@ class UserController extends AbstractController
                                //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItems($user, $userRepo, $request); 
-
+        //dump($response);die; 
         return $response; //On retourne la réponse formattée (liste d'items trouvés si réussi, message d'erreur sinon)
     }
 

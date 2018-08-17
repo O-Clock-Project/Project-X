@@ -6,20 +6,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
-use Symfony\Component\Serializer\Annotation\Groups;
+//use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\WarningBookmarkRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class WarningBookmark
+class WarningBookmark 
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" })
+
      */
     private $id;
 
@@ -43,7 +44,7 @@ class WarningBookmark
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({ "concise" })
+
      */
     private $message;
 
@@ -51,7 +52,7 @@ class WarningBookmark
      * @ORM\ManyToOne(targetEntity="App\Entity\Bookmark", inversedBy="warnings")
      * @ORM\JoinColumn(nullable=false)
      * @MaxDepth(1)
-     * @Groups({ "concise" })
+
      */
     private $bookmark;
 

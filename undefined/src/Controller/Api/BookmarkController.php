@@ -29,7 +29,7 @@ class BookmarkController extends AbstractController
                                //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItems($bookmark, $bookmarkRepo, $request); 
-
+        
         return $response; //On retourne la réponse formattée (liste d'items trouvés si réussi, message d'erreur sinon)
     }
 
@@ -40,10 +40,10 @@ class BookmarkController extends AbstractController
     //Méthode permettant de renvoyer l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+        //dump($utils);die;                      //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItem($bookmarkRepo, $id, $request);
-
+        //dump($response);die; 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
 

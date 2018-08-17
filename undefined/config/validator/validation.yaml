@@ -1,39 +1,128 @@
+# Les questionnaires fictif pour recevoir les réponses des requêtes envoyés du front #
+
+App\Entity\Announcement:
+    properties:
+        title :
+            - NotBlank: 
+                message:  Veuillez entrer un titre.  
+            - Type: string 
+        body :
+            - NotBlank:
+                message:  Veuillez entrer un contenu pour l'annonce.  
+            - Type: string      
+
 App\Entity\Bookmark:
     constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: url
+            errorPath: url
+            message: 'Cette url existe déjà !'
     properties:
-        label:
-            - NotBlank: ~
+        title :
+            - NotBlank:
+                message:  Veuillez entrer un titre.  
             - Type: string
+        resume :
+            - NotBlank: 
+                message:  Veuillez entrer un resumé du bookmark que vous souhaitez envoyer.  
+            - Type: string  
+        url :
+            - NotBlank:
+                message:  Veuillez entrer un lien vers le bookmark.  
+            - Url: 
+                protocols: [http, https, ftp]
+                message: Cette url "{{ value }}" , n'est pas une url valide.           
+        # image :
+        #     - NotBlank:
+        #         message:  Veuillez entrer une image du bookmark.
+        #     - Image: ~  
+        published_at:
+            - NotBlank: 
+                message:  Veuillez entrer la date de creation du bookmark.
+            - Date: ~
+        author :
+            - NotBlank:
+                message:  Veuillez entrer le nom de l'auteur (ou provenance) du bookmark.
+            - Type: string  
 
 App\Entity\Comment:
-    constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
     properties:
-        label:
-            - NotBlank: ~
+        body:
+            - NotBlank: 
+                message:  Veuillez entrer un contenu à votre commentaire.
             - Type: string
 
 App\Entity\Tag:
     constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: label
+            errorPath: label
+            message: 'Ce tag existe déjà !'
     properties:
         label:
-            - NotBlank: ~
+            - NotBlank:
+                message:  Veuillez entrer un nom de tag.
             - Type: string
 
 App\Entity\User:
     constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: [ email, pseudo_github ]
+            errorPath: [ email, pseudo_github ]
+            message: ' "{{ value }}" existe déjà !'           
     properties:
-        label:
-            - NotBlank: ~
-            - Type: string            
-
-App\Entity\Vote:
-    constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
-    properties:
-        label:
-            - NotBlank: ~
+        first_name:
+            - NotBlank:
+                message: ' Veuillez entrer un nom '  
+            - Type: string 
+            - Range:
+                min: 2
+                minMessage: Votre nom doit comporter au moins {{ limit }} caractères.
+        last_name:
+            - NotBlank: 
+                message: ' Veuillez entrer un prénom ' 
             - Type: string
+            - Range:
+                min: 2
+                minMessage: Votre prénom doit comporter au moins {{ limit }} caractères.
+        email:
+            - NotBlank: 
+                message: ' Veuillez entrer un email ' 
+            - Email: 
+                message: Le email "{{ value }}" , n'est pas un email valide.
+                checkMX: true
+        birthday:
+            - NotBlank:
+                message: ' Veuillez entrer une date de naissance ' 
+            - Date: 
+                message: La date de naissance "{{ value }}" , n'est pas valide.
+        pseudo_github:
+            - NotBlank:
+                message: ' Veuillez entrer un pseudo Github ' 
+            - Type: string  
+        zip:
+            - NotBlank:
+                message: ' Veuillez entrer un code postal ' 
+            - Type: 
+                type: integer
+                message: Le code Postal, ' {{ value }} ' , n'est pas valide.
+        password:
+            - Symfony\Component\Security\Core\Validator\Constraints\UserPassword:
+                message: Votre ancien mot de passe n'est pas le bon 
+            - Type: 
+                type: string
+            - Range:
+                max: 8
+                miaxMessage: Votre mot de passe doit comporter au maximum {{ limit }} caractères.
+                  
+App\Entity\Vote:
+    # constraints:
+    #      - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+    properties:
+        value:
+            - NotBlank: 
+                message: ' Veuillez entrer une note' 
+            - Type: integer
+            
+
+        

@@ -1,0 +1,193 @@
+# Annotation pour les Entités appartenant à des groups #
+App\Entity\Affectation:
+    Attributes:
+        id:
+            - groups: [concise, profile, promotion]
+        user:
+            - groups: [concise, promotion]
+        promotion:
+            - groups: [concise, profile]
+        role:
+            - groups: [concise, profile, promotion] 
+       
+App\Entity\AnnouncementType:
+    Attributes:
+        id:
+            - groups: [concise]
+        name:
+            - groups: [concise] 
+
+App\Entity\Difficulty:
+    Attributes:
+        id:
+            - groups: [concise, bookmarks]
+        name:
+            - groups: [concise, bookmarks]
+        level:
+            - groups: [concise, bookmarks]
+
+App\Entity\Locale:
+    Attributes:
+        id:
+            - groups: [concise, bookmarks]
+        name:
+            - groups: [concise, bookmarks]
+
+App\Entity\Promotion:
+    Attributes:
+        id:
+            - groups: [concise, profile, promotion]
+        name:
+            - groups: [concise, profile, promotion]
+        affectations:
+            - groups: [promotion]
+        announces:
+            - groups: [promotion]
+        links:
+            - groups: [promotion]      
+
+App\Entity\PromotionLink:
+    Attributes:
+        id:
+            - groups: [concise, promotion]
+        name:
+            - groups: [concise, promotion]
+        url:
+            - groups: [concise, promotion]
+        icon:
+            - groups: [concise, promotion]
+        promotion:
+            - groups: [concise] 
+
+App\Entity\Role:
+    Attributes:
+        id:
+            - groups: [concise, profile, promotion]
+        name:
+            - groups: [concise, profile, promotion]
+        code:
+            - groups: [concise, profile, promotion]
+    
+App\Entity\Speciality:
+    Attributes:
+        id:
+            - groups: [concise, profile]
+        name:
+            - groups: [concise, profile]
+
+App\Entity\Support:
+    Attributes:
+        id:
+            - groups: [concise, bookmarks]
+        name:
+            - groups: [concise, bookmarks]
+        icon:
+            - groups: [concise, promotion, bookmarks]    
+
+App\Entity\WarningBookmark:
+    Attributes:
+        id:
+            groups: [concise]
+        message:
+            groups: ['concise']
+        bookmark:
+            groups: ['concise']        
+
+App\Entity\Announcement:
+    Attributes:
+        id:
+            - id: { groups: [concise, promotion] }
+        title:
+            - title: { groups: [concise] }
+        body:
+            - groups: [concise, promotion]
+        type:
+            - groups: [concise]        
+
+App\Entity\Bookmark:
+    Attributes:
+        id:
+            - groups: [concise, profile, bookmarks]
+        title:
+            - groups: [concise, bookmarks]
+        resume:
+            - groups: [concise]
+        url:
+            - groups: [concise, bookmarks]
+        published_at:
+            - groups: [bookmarks]
+        author:
+            - groups: [bookmarks]
+        support:
+            - groups: [bookmarks, bookmarks]    
+        difficulty:
+            - groups: [bookmarks]
+        user:
+            - groups: [bookmarks]
+        votes:
+            - groups: [bookmarks] 
+        faved_by:
+            - groups: [bookmarks]
+        certified_by:
+            - groups: [bookmarks]
+        tags:
+            - groups: [bookmarks]
+        locale:
+            - groups: [bookmarks]
+                                    
+App\Entity\Comment:
+    Attributes:
+        id:
+            - groups: [concise]
+        body:
+            - groups: [concise]
+
+App\Entity\Tag:
+    Attributes:
+        label:
+            - groups: [concise, bookmarks]
+        id:
+            - groups: [concise, bookmarks]
+
+App\Entity\User:
+    Attributes:   
+        id:
+            - groups: [concise , profile, promotion, bookmarks]
+        username:
+            - groups: [concise , profile, promotion, bookmarks]
+        first_name:
+            - groups: [concise , profile]
+        last_name:
+            - groups: [concise , profile]
+        email:
+            - groups: [concise , profile]
+        pseudo_github:
+            - groups: [profile]
+        zip:
+            - groups: [profile]
+        birthday:
+            - groups: [profile]
+        bookmarks:
+            - groups: [profile]
+        favorites:
+            - groups: [profile]
+        certified_bookmarks:
+            - groups: [profile]
+        speciality:
+            - groups: [profile]
+        votes:
+            - groups: [profile]
+        affectations:
+            - groups: [profile]
+        avatar:
+            - groups: [concise, profile]
+
+App\Entity\Vote:
+    Attributes:
+        id:
+            - groups: [concise , profile, bookmarks]
+        value:
+            - groups: [concise , bookmarks]
+        bookmark:
+            - groups: [concise]
+        

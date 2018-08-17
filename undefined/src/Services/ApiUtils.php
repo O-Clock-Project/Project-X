@@ -4,14 +4,16 @@ namespace App\Services;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\Common\Annotations\AnnotationReader;
+//use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+//use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+// Pour utiliser les annotations des entités en YAML, pour les groups
+use Symfony\Component\Serializer\Mapping\Loader\YamlFileLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 
@@ -30,7 +32,10 @@ class ApiUtils
         $num_pages = 1; // Page 1 par défaut
         $group = 'concise'; // Tous les détails par défaut
         $params['is_active'] = true; // Filtre sur is_active = true par défaut (pour éviter d'avoir à dire à chaque fois qu'on ne veut pas les inactifs)
-        $params['banned'] = false; 
+        
+        if(property_exists($object, 'banned')){
+            $params['banned'] = false; 
+        }
         
         // Pour chaque entrée dans le tableau query
         foreach($request->query as $key => $value){
@@ -112,12 +117,20 @@ class ApiUtils
     {
         // On cherche avec l'id grace au repo si on trouve l'objet correspondant
         $object = $repo->findOneById($id);
+        //dump($object);die;
         // Si $object est vide on retourne une erreur 404 et un message d'erreur
         if (empty($object)){
             return new JsonResponse(['error' => 'Item non trouvé'], Response::HTTP_NOT_FOUND);
         };
         // Si dans la requête on a la clé displayGroup on met sa value dans $group
-        $group = $request->query->get('displayGroup');
+        $group = 'concise'; //valeur par défaut de $group
+        // Si dans la requête on a la clé displayGroup on met sa value dans $group
+        foreach($request->query as $key => $value){
+            if($key === 'displayGroup'){
+                $group = $value;
+            }
+        }
+        
         // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
         $jsonContent = $this->handleSerialization($object, $group);
         // on crée une Réponse avec le code http 200 ("réussite")
@@ -210,7 +223,11 @@ class ApiUtils
     // Méthode qui permet de factoriser toute la partie redondante de sérialization
     {
         //On crée un ClassMetadataFactory qui va aller parcourir les annotations de nos entités
-        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        //$classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        
+        // Pour utiliser les annotations des entités en YAML, pour les groups 
+        $classMetadataFactory = new ClassMetadataFactory(new YamlFileLoader('config/serialization.yaml'));
+        
         //On crée un ObjectNormalizer en lui passant le ClassMetadataFactory 
         //nb: un normalizer est une classe qui est en charge de la transformation d'un objet en un tableau
         $objectNormalizer = new ObjectNormalizer($classMetadataFactory, new CamelCaseToSnakeCaseNameConverter( null , true));
