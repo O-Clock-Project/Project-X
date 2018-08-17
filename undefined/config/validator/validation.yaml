@@ -9,8 +9,10 @@ App\Entity\Announcement:
         body :
             - NotBlank:
                 message:  Veuillez entrer un contenu pour l'annonce.  
-            - Type: string      
-
+            - Type: string  
+        frozen : 
+            - Blank: ~
+            
 App\Entity\Bookmark:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
@@ -32,10 +34,13 @@ App\Entity\Bookmark:
             - Url: 
                 protocols: [http, https, ftp]
                 message: Cette url "{{ value }}" , n'est pas une url valide.           
-        # image :
+        image : 
+            - Blank: ~
         #     - NotBlank:
         #         message:  Veuillez entrer une image du bookmark.
-        #     - Image: ~  
+        #     - Image: ~ 
+        banned : 
+            - Blank: ~
         published_at:
             - NotBlank: 
                 message:  Veuillez entrer la date de creation du bookmark.
@@ -51,6 +56,8 @@ App\Entity\Comment:
             - NotBlank: 
                 message:  Veuillez entrer un contenu à votre commentaire.
             - Type: string
+        banned : 
+            - Blank: ~
 
 App\Entity\Tag:
     constraints:
@@ -71,6 +78,10 @@ App\Entity\User:
             errorPath: [ email, pseudo_github ]
             message: ' "{{ value }}" existe déjà !'           
     properties:
+        # username:
+        #     - NotBlank:
+        #         message: ' Veuillez entrer un pseudo'  
+        #     - Type: string 
         first_name:
             - NotBlank:
                 message: ' Veuillez entrer un nom '  
@@ -102,7 +113,7 @@ App\Entity\User:
             - Type: string  
         zip:
             - NotBlank:
-                message: ' Veuillez entrer un code postal ' 
+                message: ' Veuillez entrer un code postal '
             - Type: 
                 type: integer
                 message: Le code Postal, ' {{ value }} ' , n'est pas valide.
@@ -113,7 +124,7 @@ App\Entity\User:
                 type: string
             - Range:
                 max: 8
-                miaxMessage: Votre mot de passe doit comporter au maximum {{ limit }} caractères.
+                maxMessage: Votre mot de passe doit comporter au maximum {{ limit }} caractères.
                   
 App\Entity\Vote:
     # constraints:
@@ -121,7 +132,7 @@ App\Entity\Vote:
     properties:
         value:
             - NotBlank: 
-                message: ' Veuillez entrer une note' 
+                message:  Veuillez entrer une note
             - Type: integer
             
 

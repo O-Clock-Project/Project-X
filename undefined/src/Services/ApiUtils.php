@@ -4,12 +4,8 @@ namespace App\Services;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
-<<<<<<< HEAD
-//use Doctrine\Common\Annotations\AnnotationReader;
-=======
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Annotations\AnnotationReader;
->>>>>>> master
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -35,10 +31,6 @@ class ApiUtils
         $num_pages = 1; // Page 1 par défaut
         $group = 'concise'; // Tous les détails par défaut
         $params['is_active'] = true; // Filtre sur is_active = true par défaut (pour éviter d'avoir à dire à chaque fois qu'on ne veut pas les inactifs)
-<<<<<<< HEAD
-        
-=======
->>>>>>> master
         if(property_exists($object, 'banned')){
             $params['banned'] = false; 
         }
@@ -167,21 +159,11 @@ class ApiUtils
 
         $group = 'concise'; //valeur par défaut de $group
         // Si dans la requête on a la clé displayGroup on met sa value dans $group
-<<<<<<< HEAD
-        $group = 'concise'; //valeur par défaut de $group
-        // Si dans la requête on a la clé displayGroup on met sa value dans $group
-=======
->>>>>>> master
         foreach($request->query as $key => $value){
             if($key === 'displayGroup'){
                 $group = $value;
             }
         }
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> master
         // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
         $jsonContent = $this->handleSerialization($object, $group);
         // on crée une Réponse avec le code http 200 ("réussite")
