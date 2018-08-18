@@ -82,4 +82,25 @@ class AnnouncementTypeController extends AbstractController
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
+
+    /**
+     * @Route("/announcementTypes/{id}", name="updateAnnouncementType", requirements={"id"="\d+"}, methods="PUT")
+     */
+    public function updateAnnouncementType ($id, Request $request, EntityManagerInterface $em, AnnouncementTypeRepository $announcementTypeRepo)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        $announcementType = $announcementTypeRepo->findOnebyId($id);
+
+        // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
+        // Cf le fichier config/validator/validation.yaml pour les contraintes
+        $form = $this->createForm(AnnouncementTypeType::class, $announcementType);
+
+        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+                               //puis la mise en forme de la réponse reçue au format json
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->updateItem($announcementType, $form, $request, $em);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
 }

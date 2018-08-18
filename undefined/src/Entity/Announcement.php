@@ -100,6 +100,7 @@ class Announcement
     {
         $this->comments = new ArrayCollection();
         $this->promotions = new ArrayCollection();
+        $this->frozen = false;
     }
 
     public function getId()

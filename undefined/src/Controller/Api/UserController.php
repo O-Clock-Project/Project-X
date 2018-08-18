@@ -87,12 +87,12 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/{id}", name="upadateUser", requirements={"id"="\d+"}, methods="PUT")
+     * @Route("/users/{id}", name="updateUser", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateUser (Request $request, EntityManagerInterface $em, UserRepository $userRepo)
+    public function updateUser ($id, Request $request, EntityManagerInterface $em, UserRepository $userRepo)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $user = $userRepo->findbyId();
+        $user = $userRepo->findOnebyId($id);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
@@ -102,7 +102,7 @@ class UserController extends AbstractController
                                //puis la mise en forme de la réponse reçue au format json
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->postItem($user, $form, $request, $em);
+        $response = $utils->updateItem($user, $form, $request, $em);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }

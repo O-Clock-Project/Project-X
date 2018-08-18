@@ -218,20 +218,56 @@ class ApiUtils
 
     public function postItem($object, $form, $request, $em)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
+    // Et après avoir créé les relations passées dans la payload en json
     {
-
-        $form->submit($request->request->all()); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
-
-        // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
-        if(!$form->isValid()){
-            return new JsonResponse(['error' => 'Creation impossible'], Response::HTTP_BAD_REQUEST);
+        //Exemple de json à recevoir
+        // {        
+        //     "label": "Ruby on Rails",   <= champ simple de l'objet à créer
+        //     "add":[                      <= partie "ajout" de relation si besoin
+        //         {"id": 69,               <= id de l'objet enfant à rattacher à l'objet créé
+        //         "entity": "bookmark",    <= nom de classe de l'objet enfant à rattacher à l'objet créé (naturellement au singulier)
+        //         "property": "bookmark"   <= nom de la propriété de l'objet créé ("parent") qui réfère à l'objet enfant (mis au singulier)
+        //         },
+        //         {"id": 70,
+        //         "entity": "bookmark",
+        //         "property": "bookmark"
+        //         }]
+        // }
+        $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
+       
+        if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
+            $parametersAsArray = json_decode($content, true); //Et on decode en json
+        }
+        // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
+        // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
+        foreach($parametersAsArray as $key => $value){
+            if(!is_array($value) && strtotime($value) ) {
+                $value = new \Datetime($value);
+            }
+        }
+        if(isset($parametersAsArray['add'])){
+            $actionsAsArray = $this->prepareAddRelationsActions($object, $parametersAsArray, $em);
+            unset($parametersAsArray['add']);
         }
 
+        $form->submit($parametersAsArray); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
+        
+        // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
+        if(!$form->isValid()){
+
+            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_BAD_REQUEST);
+        }
+        //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
+        //Pour chaque action de notre tableau
+        foreach($actionsAsArray as $action){
+            $actionMethod = $action['method']; //On 
+            $actionChild = $action['child'];
+            $object->$actionMethod($actionChild);
+        }
         // Si le "form virtuel" est valide, on persiste l'objet en BDD
-        if($form->isValid()){
             $em->persist($object);
             $em->flush();
-
+            
             // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
             $jsonContent = $this->handleSerialization($object);
             // on crée une Réponse avec le code http 201 ("created")
@@ -241,11 +277,80 @@ class ApiUtils
             $response->headers->set('Access-Control-Allow-Origin', '*');
 
             return $response; //On renvoie la réponse
-        }
+        
     
     }
 
+    public function updateItem($object, $form, $request, $em)
+    // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
+    {
 
+        $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
+       
+        if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
+            $parametersAsArray = json_decode($content, true); //Et on decode en json
+        }
+        // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
+        // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
+        foreach($parametersAsArray as $key => $value){
+            if(!is_array($value) && strtotime($value) ) {
+                $value = new \Datetime($value);
+            }
+        }
+        if(isset($parametersAsArray['add'])){
+            $actionsAddAsArray = $this->prepareAddRelationsActions($object, $parametersAsArray, $em);
+            unset($parametersAsArray['add']);
+        }
+        if(isset($actionsAddAsArray['error'])){
+            return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_NOT_FOUND);
+        }
+        if(isset($parametersAsArray['remove'])){
+            $actionsRemoveAsArray = $this->prepareRemoveRelationsActions($object, $parametersAsArray, $em);
+            unset($parametersAsArray['remove']);
+        }
+        if(isset($actionsRemoveAsArray['error'])){
+            return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form->submit($parametersAsArray); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
+        
+        // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
+        if(!$form->isValid()){
+
+            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_BAD_REQUEST);
+        }
+        //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
+        //Pour chaque action de notre tableau
+        if(isset($actionsAddAsArray)){
+            foreach($actionsAddAsArray as $actionAdd){
+                $actionAddMethod = $actionAdd['method']; //On 
+                $actionAddChild = $actionAdd['child'];
+                $object->$actionAddMethod($actionAddChild);
+            }
+        }
+        if(isset($actionsRemoveAsArray)){
+            foreach($actionsRemoveAsArray as $actionRemove){
+                $actionRemoveMethod = $actionRemove['method']; //On 
+                $actionRemoveChild = $actionRemove['child'];
+                $object->$actionRemoveMethod($actionRemoveChild);
+            }
+        }
+        // Si le "form virtuel" est valide, on persiste l'objet en BDD
+            $em->persist($object);
+            $em->flush();
+            
+            // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
+            $jsonContent = $this->handleSerialization($object);
+            // on crée une Réponse avec le code http 201 ("created")
+            $response =  new Response($jsonContent, Response::HTTP_CREATED);
+            // On set le header Content-Type sur json et utf-8
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+
+            return $response; //On renvoie la réponse
+    
+    
+    }
 
     
 
@@ -282,4 +387,78 @@ class ApiUtils
         // On retourne le contenu sérialisé en json
         return $jsonContent = $serializer->serialize($toSerialize, 'json', $options);
     }
+
+
+
+    public function prepareAddRelationsActions($object, $parametersAsArray, $em)
+
+    {
+        $parentClass = get_class($object); //on récupère la classe de l'objet créé
+        $classMethods = get_class_methods($parentClass); //et grace à ça la liste des méthodes de cette classe (on veut les setters et les adders)
+
+        $actionsAsArray = []; //On prépare un array pour recevoir la décomposition des actions sur les relations de l'objet créé
+       
+            foreach($parametersAsArray['add'] as $addParameter){ //pour chaque paramètres dans le "sac" add
+                $id = $addParameter['id']; //on récupère l'id de l'objet qui va être en relation
+                $childClass= "App\Entity\\".ucfirst($addParameter['entity']); //on récupère la classe (complete path) pour instancier le repo ensuite
+                $property= $addParameter['property']; //on récupère la propriété sur laquelle est basée la relation (au singulier, sans le s, ex: difficulty)
+                
+                $method = 'set'.ucfirst($property); //On construit la méthode utilisée pour créer la relation, d'abord avec set
+                if(!in_array($method, $classMethods)){ //On vérifie que cette méthode setPropriété existe bien dans les méthodes de la classe parente
+                    $method = 'add'.ucfirst($property); //Si non, on construit addPropriété
+                    if(!in_array($method, $classMethods)){ // On reteste
+                        $actionsAddAsArray['error'][] = ['error'=>$property.' non trouvée']; //Si toujours pas, on envoie un message d'erreur
+                    }
+                }
+                $childRepo = $em->getRepository($childClass); //On va chercher le repository de la classe "enfante"
+                $childObject = $childRepo->findOneById($id); // On va chercher l'objet correspondant à l'id donnée
+                if(null===$childObject){ //Si on trouve pas d'objet avec l'id passé, on retourne un message d'erreur
+                    $actionsAddAsArray['error'][] = ['error'=>$childClass . ' id '. $id. ' non trouvée'];
+                }
+                //On remplit notre tableau d'actions pour chaque relation à faire avec l'objet trouvé et la méthode à appliquer pour l'ajouter à l'objet parent
+                $actionsAddAsArray[] = array(
+                    'child' => $childObject, //Un object instancié
+                    'method' => $method, //Un setter/adder
+                );
+            }
+            //On vide notre array de paramètres reçus par la requête de la partie "ajout de relation" 
+            // pour que le form puisse correctement être validé pour les autres champs "simples"
+
+        return $actionsAddAsArray;
+    }
+
+    public function prepareRemoveRelationsActions($object, $parametersAsArray, $em)
+
+    {
+        $parentClass = get_class($object); //on récupère la classe de l'objet créé
+        $classMethods = get_class_methods($parentClass); //et grace à ça la liste des méthodes de cette classe (on veut les setters et les adders)
+
+        $actionsRemoveAsArray = []; //On prépare un array pour recevoir la décomposition des actions sur les relations de l'objet créé
+       
+            foreach($parametersAsArray['remove'] as $removeParameter){ //pour chaque paramètres dans le "sac" add
+                $id = $removeParameter['id']; //on récupère l'id de l'objet qui va être en relation
+                $childClass= "App\Entity\\".ucfirst($removeParameter['entity']); //on récupère la classe (complete path) pour instancier le repo ensuite
+                $property= $removeParameter['property']; //on récupère la propriété sur laquelle est basée la relation (au singulier, sans le s, ex: difficulty)
+                
+                $method = 'remove'.ucfirst($property); //On construit la méthode utilisée pour créer la relation avec le mot clé remove
+                if(!in_array($method, $classMethods)){ //On vérifie que cette méthode setPropriété existe bien dans les méthodes de la classe parente
+                    $actionsRemoveAsArray['error'][] = ['error'=>$property.' non trouvée']; //Si la méhode n'existe pas, on envoie un message d'erreur
+                }
+                $childRepo = $em->getRepository($childClass); //On va chercher le repository de la classe "enfante"
+                $childObject = $childRepo->findOneById($id); // On va chercher l'objet correspondant à l'id donnée
+                if(null===$childObject){ //Si on trouve pas d'objet avec l'id passé, on retourne un message d'erreur
+                    $actionsRemoveAsArray['error'][] = ['error'=>$childClass . ' id '. $id. ' non trouvée'];
+                }
+                //On remplit notre tableau d'actions pour chaque relation à faire avec l'objet trouvé et la méthode à appliquer pour l'ajouter à l'objet parent
+                $actionsRemoveAsArray[] = array(
+                    'child' => $childObject, //Un object instancié
+                    'method' => $method, //Un setter/adder
+                );
+            }
+            //On vide notre array de paramètres reçus par la requête de la partie "ajout de relation" 
+            // pour que le form puisse correctement être validé pour les autres champs "simples"
+
+        return $actionsRemoveAsArray;
+    }
+    
 }

@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BookmarkRepository")
@@ -65,7 +67,7 @@ class Bookmark
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({  "bookmark" })
-     */
+      */
     private $image;
 
     /**
@@ -159,6 +161,7 @@ class Bookmark
         $this->faved_by = new ArrayCollection();
         $this->certified_by = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->banned = false;
     }
 
     public function getId()
