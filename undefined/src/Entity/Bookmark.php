@@ -141,6 +141,10 @@ class Bookmark
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="bookmarks")
+     * @ORM\JoinTable(name="bookmark_tag",
+     * joinColumns={@ORM\JoinColumn(name="bookmark_id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
+     * )
      * @MaxDepth(1)
      * @Groups({ "bookmarks", "bookmark" })
      */

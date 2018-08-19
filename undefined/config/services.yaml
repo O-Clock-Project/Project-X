@@ -31,4 +31,3 @@ services:
     # please note that last definitions always *replace* previous ones
     ApiUtils:
         class: App\Services\ApiUtils
-        arguments: ["@doctrine.orm.default_entity_manager  "]
