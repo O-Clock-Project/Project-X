@@ -25,38 +25,32 @@ class Tag
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise", "bookmarks", "filters", "bookmark" })
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * 
      */
     private $is_active = true;
     
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({ "concise", "bookmarks", "filters", "bookmark" })
      */
     private $label;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Bookmark", mappedBy="tags")
      * @MaxDepth(1)
-     * 
      */
     private $bookmarks;
 

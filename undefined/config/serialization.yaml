@@ -1,0 +1,195 @@
+# Annotation pour les Entités appartenant à des groups #
+App\Entity\Affectation:
+    attributes:
+        id:
+            groups: ['concise', 'profile', 'promotion']
+        promotion:
+            groups: ['concise', 'profile']
+        role:
+            groups: ['concise', 'profile', 'promotion'] 
+        user:
+            groups: ['concise', 'promotion']
+
+App\Entity\Announcement:
+    attributes:
+        id:
+            groups: ['concise', 'promotion']
+        title:
+            groups: ['concise']
+        body:
+            groups: ['concise', 'promotion']
+        type:
+            groups: ['concise']    
+       
+App\Entity\AnnouncementType:
+    attributes:
+        id:
+            groups: ['concise', 'promotion']
+        name:
+            groups: ['concise', 'promotion'] 
+
+App\Entity\Bookmark:
+    attributes:
+        id:
+            groups: ['concise', 'profile', 'bookmarks', 'bookmark']
+        title:
+            groups: ['concise', 'bookmarks', 'bookmark']
+        resume:
+            groups: ['concise', "bookmark"]
+        url:
+            groups: ['concise', 'bookmarks', 'bookmark']
+        image:
+            groups: ['bookmark']
+        published_at:
+            groups: ['bookmarks', 'bookmark']
+        author:
+            groups: ['bookmarks', 'bookmark']
+        support:
+            groups: ['bookmarks', 'bookmark']    
+        difficulty:
+            groups: ['bookmarks', 'bookmark']
+        user:
+            groups: ['bookmarks', 'bookmark']
+        votes:
+            groups: ['bookmarks', 'bookmark'] 
+        faved_by:
+            groups: ['bookmarks', 'bookmark']
+        certified_by:
+            groups: ['bookmarks', 'bookmark']
+        tags:
+            groups: ['bookmarks', 'bookmark']
+        locale:
+            groups: ['bookmarks', 'bookmark']    
+                                    
+App\Entity\Comment:
+    attributes:
+        id:
+            groups: ['concise']
+        body:
+            groups: ['concise']
+
+App\Entity\Difficulty:
+    attributes:
+        id:
+            groups: ['concise', 'bookmarks', 'bookmark', 'filters']
+        name:
+            groups: ['concise', 'bookmarks', 'bookmark', 'filters']
+        level:
+            groups: ['concise', 'bookmarks', 'bookmark', 'filters']
+
+App\Entity\Locale:
+    attributes:
+        id:
+            groups: ['concise', 'bookmarks', 'bookmark', 'filters']
+        name:
+            groups: ['concise', 'bookmarks', 'bookmark', 'filters']
+
+App\Entity\Promotion:
+    attributes:
+        id:
+            groups: ['concise', 'profile', 'promotion']
+        name:
+            groups: ['concise', 'profile', 'promotion']
+        affectations:
+            groups: ['promotion']
+        announces:
+            groups: ['promotion']
+        links:
+            groups: ['promotion']      
+
+App\Entity\PromotionLink:
+    attributes:
+        id:
+            groups: ['concise', 'promotion']
+        name:
+            groups: ['concise', 'promotion']
+        url:
+            groups: ['concise', 'promotion']
+        icon:
+            groups: ['concise', 'promotion']
+        promotion:
+            groups: ['concise'] 
+
+App\Entity\Role:
+    attributes:
+        id:
+            groups: ['concise', 'profile', 'promotion']
+        name:
+            groups: ['concise', 'profile', 'promotion']
+        code:
+            groups: ['concise', 'profile', 'promotion']
+    
+App\Entity\Speciality:
+    attributes:
+        id:
+            groups: ['concise', 'profile']
+        name:
+            groups: ['concise', 'profile']
+
+App\Entity\Support:
+    attributes:
+        id:
+            groups: ['concise', 'bookmarks', 'bookmark', 'filters']
+        name:
+            groups: ['concise', 'bookmarks', 'bookmark', 'filters']
+        icon:
+            groups: ['concise', 'bookmarks', 'bookmark']    
+
+App\Entity\Tag:
+    attributes:
+        label:
+            groups: ['concise', 'bookmarks', 'bookmark', 'filters']
+        id:
+            groups: ['concise', 'bookmarks', 'bookmark', 'filters']
+
+App\Entity\User:
+    attributes:   
+        id:
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark']
+        username:
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark']
+        first_name:
+            groups: ['concise' , 'profile']
+        last_name:
+            groups: ['concise' , 'profile']
+        email:
+            groups: ['concise' , 'profile']
+        pseudo_github:
+            groups: ['profile']
+        zip:
+            groups: ['profile']
+        birthday:
+            groups: ['profile']
+        bookmarks:
+            groups: ['profile']
+        favorites:
+            groups: ['profile']
+        certified_bookmarks:
+            groups: ['profile']
+        speciality:
+            groups: ['profile']
+        votes:
+            groups: ['profile']
+        affectations:
+            groups: ['profile']
+        avatar:
+            groups: ['concise', 'profile']
+
+App\Entity\Vote:
+    attributes:
+        id:
+            groups: ['concise' , 'profile', 'bookmarks', 'bookmark']
+        value:
+            groups: ['concise' , 'bookmarks', 'bookmark']
+        bookmark:
+            groups: ['concise']
+
+App\Entity\WarningBookmark:
+    attributes:
+        id:
+            groups: ['concise']
+        message:
+            groups: ['concise']
+        bookmark:
+            groups: ['concise']        
+

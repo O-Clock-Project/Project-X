@@ -21,44 +21,37 @@ class Role
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "profile", "promotion"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * 
      */
     private $is_active = true;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise" , "profile", "promotion"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise" , "profile", "promotion"})
      */
     private $code;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="role", orphanRemoval=true)
      * @MaxDepth(1)
-     * 
      */
     private $affectations;
 

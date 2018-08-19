@@ -9,6 +9,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Mapping\Loader\YamlFileLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -18,15 +19,19 @@ use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
 
 
 class ApiUtilsTools
+//Service servant de boite à outils pour ApiUtils afin de n'y laisser que la partie gestion du CRUD pour les controllers
 {
-    public function handleRequestWithParams($object, $repo, $request, $id = null, $relation = null){
-
+    public function handleRequestWithParams($object, $repo, $request, $id = null, $relation = null)
+    //Méthode permettant de gérer de manière générique les demandes complexe GET (excepté pour GetItem qui passe simplement par un findOne)
+    //avec gestion des query string et des hiérarchies
+    {
         $params = [];
         $order = []; 
         $limit = 20; // 20 résultats retournés par défaut
         $num_pages = 1; // Page 1 par défaut
         $group = 'concise'; // Tous les détails par défaut
         $params['is_active'] = true; // Filtre sur is_active = true par défaut (pour éviter d'avoir à dire à chaque fois qu'on ne veut pas les inactifs)
+        //Si la propriété banned existe sur la classe traitée, on initialise le filtre à false par défaut (attention dans la query string, 0 ou 1 sont attendus)
         if(property_exists($object, 'banned')){
             $params['banned'] = false; 
         }
@@ -124,11 +129,12 @@ class ApiUtilsTools
         return array('objects' => $objects, 'group' => $group, 'error' => null);
     }
 
+
     public function handleSerialization($toSerialize, $group = 'concise')
     // Méthode qui permet de factoriser toute la partie redondante de sérialization
     {
         //On crée un ClassMetadataFactory qui va aller parcourir les annotations de nos entités
-        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $classMetadataFactory = new ClassMetadataFactory(new YamlFileLoader('../config/serialization.yaml'));
         //On crée un ObjectNormalizer en lui passant le ClassMetadataFactory 
         //nb: un normalizer est une classe qui est en charge de la transformation d'un objet en un tableau
         $objectNormalizer = new ObjectNormalizer($classMetadataFactory, new CamelCaseToSnakeCaseNameConverter( null , true));
@@ -161,7 +167,7 @@ class ApiUtilsTools
 
 
     public function prepareAddRelationsActions($object, $parametersAsArray, $em)
-
+    //Méthode qui prépare les créations de relation avec d'autres entités de l'objet créé/modifié (dispo en POST/PUT)
     {
         $parentClass = get_class($object); //on récupère la classe de l'objet créé
         $classMethods = get_class_methods($parentClass); //et grace à ça la liste des méthodes de cette classe (on veut les setters et les adders)
@@ -198,7 +204,7 @@ class ApiUtilsTools
     }
 
     public function prepareRemoveRelationsActions($object, $parametersAsArray, $em)
-
+    //Méthode qui prépare les retraits de relation avec d'autres entités de l'objet modifié/supprimé (dispo en PUT/DELETE)
     {
         $parentClass = get_class($object); //on récupère la classe de l'objet créé
         $classMethods = get_class_methods($parentClass); //et grace à ça la liste des méthodes de cette classe (on veut les setters et les adders)

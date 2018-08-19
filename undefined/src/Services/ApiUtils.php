@@ -137,7 +137,7 @@ class ApiUtils
         //     "label": "Ruby on Rails",   <= champ simple de l'objet à créer
         //     "add":[                      <= partie "ajout" de relation si besoin
         //         {"id": 69,               <= id de l'objet enfant à rattacher à l'objet créé
-        //         "entity": "bookmark",    <= nom de classe de l'objet enfant à rattacher à l'objet créé (naturellement au singulier)
+        //         "entity": "bookmark",    <= nom de classe de l'objet enfant à rattacher à l'objet créé (naturellement au singulier et sans majuscule)
         //         "property": "bookmark"   <= nom de la propriété de l'objet créé ("parent") qui réfère à l'objet enfant (mis au singulier)
         //         },
         //         {"id": 70,

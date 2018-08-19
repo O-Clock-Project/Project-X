@@ -25,80 +25,67 @@ class User implements UserInterface, \Serializable
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "profile", "promotion", "bookmarks", "bookmark"})
      */
     private $id;
     
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $created_at;
     
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $updated_at;
     
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * 
      */
     private $is_active = true;
     
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({ "concise" , "profile", "promotion", "bookmarks", "bookmark"})
      */
     private $username;
     
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({ "concise" , "profile"})
      */
     private $first_name;
 
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({ "concise" , "profile"})
      */
     private $last_name;
 
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({ "concise" , "profile"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({  "profile"})
      */
     private $pseudo_github;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({  "profile"})
      */
     private $zip;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({  "profile"})
      */
     private $birthday;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Bookmark", mappedBy="user")
      * @MaxDepth(1)
-     * @Groups({  "profile"})
      */
     private $bookmarks;
 
@@ -106,7 +93,6 @@ class User implements UserInterface, \Serializable
      * @ORM\ManyToMany(targetEntity="App\Entity\Bookmark", mappedBy="faved_by")
      * @ORM\JoinTable(name="bookmark_faved")
      * @MaxDepth(1)
-     * @Groups({  "profile"})
      */
     private $favorites;
 
@@ -114,55 +100,47 @@ class User implements UserInterface, \Serializable
      * @ORM\ManyToMany(targetEntity="App\Entity\Bookmark", mappedBy="certified_by")
      * @ORM\JoinTable(name="bookmark_certified")
      * @MaxDepth(1)
-     * @Groups({  "profile"})
      */
     private $certified_bookmarks;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
      * @MaxDepth(1)
-     * 
      */
     private $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Speciality", inversedBy="students")
      * @MaxDepth(1)
-     * @Groups({  "profile"})
      */
     private $speciality;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="voter")
      * @MaxDepth(1)
-     * @Groups({  "profile"})
      */
     private $votes;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\WarningBookmark", mappedBy="author")
      * @MaxDepth(1)
-     * 
      */
     private $bookmarks_warned;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Announcement", mappedBy="author")
      * @MaxDepth(1)
-     * 
      */
     private $announces;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="user", orphanRemoval=true)
      * @MaxDepth(1)
-     * @Groups({  "profile"})
      */
     private $affectations;
 
     /**
      * @SerializedName("avatar")
-     * @Groups({ "concise" , "profile"})
      */
     public $avatar;
 
