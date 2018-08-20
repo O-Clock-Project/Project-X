@@ -1,9 +1,34 @@
+# Les Forms fictif pour recevoir les réponses des requêtes envoyés du front #
+
+App\Entity\Announcement:
+    properties:
+        title :
+            - NotBlank: 
+                message:  Veuillez entrer un titre.  
+            - Type: string 
+        body :
+            - NotBlank:
+                message:  Veuillez entrer un contenu pour l'annonce.  
+            - Type: string  
+
+
+App\Entity\Comment:
+    properties:
+        body:
+            - NotBlank: 
+                message:  Veuillez entrer un contenu à votre commentaire.
+            - Type: string
+
 App\Entity\Tag:
     constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: label
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: label
+            errorPath: label
+            message: 'Ce tag existe déjà !'
     properties:
         label:
-            - NotBlank: ~
+            - NotBlank:
+                message:  Veuillez entrer un nom de tag.
             - Type: string
             - Length:
                 min: 2
@@ -15,10 +40,13 @@ App\Entity\Tag:
 App\Entity\Bookmark:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
-            fields: [url, title]
+            fields: [url , title ]
+            errorPath: url
+            message: 'Cette url existe déjà !'
     properties:
         title:
-            - NotBlank: ~
+            - NotBlank:
+                message:  Veuillez entrer un titre.  
             - Type: string
             - Length:
                 min: 10
@@ -26,7 +54,8 @@ App\Entity\Bookmark:
                 minMessage: 'Votre titre est trop court (10 caractères minimum)'
                 maxMessage: 'Votre titre est trop long (50 caractères maximum)'
         resume:
-            - NotBlank: ~
+            - NotBlank:
+                message:  Veuillez entrer un resumé détaillant ce Bookmark.  
             - Type: string
             - Length:
                 min: 10
@@ -34,21 +63,94 @@ App\Entity\Bookmark:
                 minMessage: 'Votre titre est trop court (10 caractères minimum)'
                 maxMessage: 'Votre titre est trop long (560 caractères maximum)'
         url:
-            - NotBlank : ~
+            - NotBlank :
+                message:  Veuillez entrer un lien vers ce bookmark.  
             - Url:
-                { checkDNS: 'ANY' }
+                protocols: [http, https, ftp]
+                checkDNS: 'ANY' 
+                message: Cette url "{{ value }}" , n'est pas une url valide.
+            # - Regex:
+            #     pattern: '/(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/i'
         image:
             - Url:
-                { checkDNS: 'ANY' }
-        published_at: 
+                checkDNS: 'ANY'
+                message: Cette url d'image "{{ value }}" , n'est pas valide.
+        published_at:
+            - NotBlank: 
+                message:  Veuillez entrer la date de création du bookmark. 
             - DateTime: 
                 format: yyyy-MM-dd
-
         author:
+            - NotBlank:
+                message:  Veuillez entrer le nom de l'auteur (ou provenance) du bookmark.
             - Type: string
 
 App\Entity\User:
+    constraints:
+        # - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+        #     fields: [ email, pseudo_github ]
+        #     errorPath: [ email, pseudo_github ]
+        #     message: ' "{{ value }}" existe déjà !'           
     properties:
-        birthday: 
+        first_name:
+            - NotBlank:
+                message: ' Veuillez entrer un nom '  
+            - Type: string 
+            - Length:
+                min: 2
+                minMessage: Votre nom doit comporter au moins {{ limit }} caractères.
+        last_name:
+            - NotBlank: 
+                message: ' Veuillez entrer un prénom ' 
+            - Type: string
+            - Length:
+                min: 2
+                minMessage: Votre prénom doit comporter au moins {{ limit }} caractères.
+        email:
+            - NotBlank: 
+                message: ' Veuillez entrer un email ' 
+            - Email: 
+                message: Le email "{{ value }}" , n'est pas un email valide.
+                checkMX: true
+                # !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
+        birthday:
+            - NotBlank:
+                message: ' Veuillez entrer une date de naissance ' 
             - DateTime: 
                 format: yyyy-MM-dd
+                message: La date de naissance "{{ value }}" , n'est pas valide.
+        pseudo_github:
+            - NotBlank:
+                message: ' Veuillez entrer un pseudo Github ' 
+            - Type: string  
+        zip:
+            - NotBlank:
+                message: ' Veuillez entrer un code postal '
+            - Type: 
+                type: integer
+                message: Le code Postal, ' {{ value }} ' , n'est pas valide.
+        # password:
+        #     - Symfony\Component\Security\Core\Validator\Constraints\UserPassword:
+        #         message: Votre ancien mot de passe n'est pas le bon 
+        #     - Type: 
+        #         type: string
+        #     - Range:
+        #         max: 8
+        #         maxMessage: Votre mot de passe doit comporter au maximum {{ limit }} caractères.
+                  
+App\Entity\Vote:
+    # constraints:
+    #      - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+    properties:
+        value:
+            - NotBlank: 
+                message:  Veuillez entrer une note
+            - Type: integer
+            - Range:
+                min: 0
+                max: 1
+                minMessage: Votre note ne doit pas être en dessous de 0.
+                maxMessage: Votre note ne doit pas dépasser 1.
+            
+
+        
