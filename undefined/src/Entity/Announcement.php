@@ -285,6 +285,20 @@ class Announcement
         }
     }
 
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function closingTimestamps()
+    {
+        $endDate = '+1 month';
+
+        if ($this->getClosingAt() == null) {
+            $this->setClosingAt(new \DateTime($endDate));
+        }
+    }
+
     public function __toString()
     {
         return $this->getTitle();
