@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Services\ApiUtilsTools;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -15,87 +17,36 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 
+
 class ApiUtils
 // Service qui me permet de factoriser tout le code qui serait redondant dans mes controllers
 {
+    private $tools;
+
+    public function __construct(){
+        $this->tools = new ApiUtilsTools; //à l'instanciation de ApiUtils j'instancie également le service "boite à outils" qui va avec
+    }
 
 
     public function getItems($object, $repo, $request )
     // Méthode qui permet de récupérer tous les items d'une entité, avec filtres, ordre, pagination et niveau de détails configurables
     {
 
-        $params = [];
-        $order = []; 
-        $limit = 20; // 20 résultats retournés par défaut
-        $num_pages = 1; // Page 1 par défaut
-        $group = 'concise'; // Les détails minimum par défaut
-        $params['is_active'] = true; // Filtre sur is_active = true par défaut (pour éviter d'avoir à dire à chaque fois qu'on ne veut pas les inactifs)
-        if(property_exists($object, 'banned')){
-            $params['banned'] = false;
-        }
-        
-        // Pour chaque entrée dans le tableau query
-        foreach($request->query as $key => $value){
-            // Si la clé est sortType, tu sors de ce tour de boucle car cette clé ne sert qu'associé à la clé orderField (donc on évite tous les tests inutiles)
-            if($key === 'sortType'){
-                continue;
-            }
-            // 
-            else if ( $key ==='bearer'){
-                continue;
-            }
-            // Si la clé est OrderField et que sortType n'est pas nul, alors on met dans l'array $order sur quel champ trier et on utilise sortType pour le sens de tri
-            else if( $key === 'orderField' ){
-                $order[$value] = !empty($request->query->get('sortType'))? $request->query->get('sortType') : 'ASC'; //si sortType non renseigné : ASC par défaut
-                continue;
-            }
-            // Si la clé est rowsByPage on change la valeur par défaut de $limit par celle indiquée
-            else if($key === 'rowsByPage'){
-                $limit = $value;
-                continue;
-            }
-            // Si la clé est pageNumber on change la valeur par défaut du numéro de page et on met la page indiquée
-            else if($key === 'pageNumber'){
-                $num_pages = $value;
-                continue;
-            }
-            // Si la clé est displayGroup on change la valeur par défaut du niveau de détails affiché par la valeur demandée
-            else if($key === 'displayGroup'){
-                $group = $value;
-                continue;
-            }
-            // Si la clé correspond à une propriété existante dans l'entité demandée, alors on alimente le tableau $params avec le champ
-            // sur lequel on veut filtrer et la valeur recherchée
-            else if(property_exists($object, $key)){
-                $params[$key] = $value;
-            }
-            // Si la clé ne correspond à rien d'attendu alors on renvoie un message d'erreur avec le header "mauvaise requête"
-            else{
-                return new JsonResponse(['error' => 'Un critère n\'a pas été trouvé'], Response::HTTP_BAD_REQUEST);
-            }
-        }
-        
-        // Si $order est toujours vide après l'analyse de la requête alors on triera sur created_at en DESC par défaut
-        if(empty($order)) {
-            $order['created_at'] = 'DESC';
-        }
+        // je passe les paramètres nécessaires au traitement de la requête et des paramètres demandés
+        $result = $this->tools->handleRequestWithParams($object, $repo, $request);
 
-        // On envoie la demande au Repo avec tous nos critères
-        $objects = $repo->findBy(
-            $params, //critères de filtre
-            $order, //critères de tri/ordre
-            intval($limit), // limite de résultats
-            intval($limit * ($num_pages - 1)) // numéro de "page" demandé (pour le décalage/offset)
-        );
+        // je vérifie si j'ai eu une erreur en retour, si oui je la return au controller
+        if($result['error'] !== null ){
+            return $result['error'];
+        }
+        // si pas d'erreur je récupère les objets retournés par la requête et le groupe de sérialization
+        $objects = $result['objects'];
+        $group = $result['group'];
+        
 
-        // Si $objects est vide, on renvoie une erreur 404 et un mesage d'erreur
-        if (empty($objects)){
-            return new JsonResponse(['error' => 'Items non trouvés'], Response::HTTP_NOT_FOUND);
-        };
-              
         // On passe les objets reçus à la méthode handleSerialization qui s'occupe de transformer tout ça en json
-        $jsonContent = $this->handleSerialization($objects, $group);
-        $response = $this->createResponse($jsonContent, Response::HTTP_OK);
+        $jsonContent = $this->tools->handleSerialization($objects, $group);
+        $response = $this->tools->createResponse($jsonContent, Response::HTTP_OK);
 
         return $response; //On renvoie la réponse
     }
@@ -113,129 +64,193 @@ class ApiUtils
         if (empty($object)){
             return new JsonResponse(['error' => 'Item non trouvé'], Response::HTTP_NOT_FOUND);
         };
+
+        $group = 'concise'; //valeur par défaut de $group
         // Si dans la requête on a la clé displayGroup on met sa value dans $group
-        $group = $request->query->get('displayGroup');
-        // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
-        $jsonContent = $this->handleSerialization($object, $group);
-        // on crée une Réponse avec le code http 200 ("réussite")
-        $response = $this->createResponse($jsonContent, Response::HTTP_OK);
-
-        return $response; //On renvoie la réponse
-    }
-
-
-
-
-
-
-
-
-    
-
-    public function getItemRelations($repo, $id, $request, $relation )
-    //Méthode qui permet de trouver un item par son id passé dans l'url et d'aller chercher les éléments de la relation spécifiée
-    {
-        // On cherche avec l'id grace au repo si on trouve l'objet correspondant
-        $object = $repo->findOneById($id);
-        // Si $object est vide on retourne une erreur 404 et un message d'erreur
-        if (empty($object)){
-            return new JsonResponse(['error' => 'Item non trouvé'], Response::HTTP_NOT_FOUND);
-        };
-
-        $_classMethods = get_class_methods(get_class($object));
-        $method = 'get' . ucfirst($relation);
-        if (!in_array($method, $_classMethods)) {
-            $method = substr($method, 0, -1);
-            if (!in_array($method, $_classMethods)){
-                return new JsonResponse(['error' => 'Relation non trouvée'], Response::HTTP_NOT_FOUND);
+        foreach($request->query as $key => $value){
+            if($key === 'displayGroup'){
+                $group = $value;
             }
         }
-        else{
-            $relationItems = $object->$method();
-        }
 
-        // Si dans la requête on a la clé displayGroup on met sa value dans $group
-        $group = $request->query->get('displayGroup');
         // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
-        $jsonContent = $this->handleSerialization($relationItems, $group);
-        $response = $this->createResponse($jsonContent, Response::HTTP_OK);
+        $jsonContent = $this->tools->handleSerialization($object, $group);
+        // on crée une Réponse avec le code http 200 ("réussite")
+        $response = $this->tools->createResponse($jsonContent, Response::HTTP_OK);
 
         return $response; //On renvoie la réponse
     }
+
+
+  
+
+    public function getItemRelations($id, $child, $relation, $em, $request )
+    //Méthode qui permet de trouver un item par son id passé dans l'url et d'aller chercher les éléments de la relation spécifiée (avec filtres, etc comme getItems)
+    {
+        $childClass= substr(ucfirst($child),0,-1); //On trouve la classe des objets enfants en enlevant la dernière lettre (s) et en mettant la première lettre en majuscule
+        if(substr($childClass,-2) === 'ie'){ //Si la classe ci-dessus finie par ie une fois mise au singulier, on remplace ie par y 
+            $childClass = substr($childClass, 0, -2).'y'; //cas de (difficulties/Difficulty) et (specialities/Speciality)
+        }
+        //On va chercher la classe de l'entité-enfant reçue
+        $childClass = 'App\Entity\\' .$childClass; //on met la première lettre en majuscule et on enlève le s à la fin
+        $childObject = new $childClass; // On instancie un objet vide à partir 
+        $childObjectRepo = $em->getRepository($childClass); // On récupère le repo correspondant à l'entité-enfant pour faire la requête
+
+
+        //On passe à la méthode handleRequestWithParams ce qu'elle a besoin pour nous ramener les éléments demandés dans la requête
+        $result = $this->tools->handleRequestWithParams($childObject, $childObjectRepo, $request, $id, $relation);
+        
+
+        // je vérifie si j'ai eu une erreur en retour, si oui je la return au controller
+        if($result['error'] !== null ){
+            return $result['error'];
+        }
+        // si pas d'erreur je récupère les objets retournés par la requête et le groupe de sérialization
+        $objects = $result['objects'];
+        $group = $result['group'];
+        
+
+
+        // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
+        $jsonContent = $this->tools->handleSerialization($objects, $group);
+        $response = $this->tools->createResponse($jsonContent, Response::HTTP_OK);
+
+        return $response; //On renvoie la réponse
+    }
+
+
 
     public function postItem($object, $form, $request, $em)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
+    // Et après avoir créé les relations passées dans la payload en json
     {
+        //Exemple de json à recevoir
+        // {        
+        //     "label": "Ruby on Rails",   <= champ simple de l'objet à créer
+        //     "add":[                      <= partie "ajout" de relation si besoin
+        //         {"id": 69,               <= id de l'objet enfant à rattacher à l'objet créé
+        //         "entity": "bookmark",    <= nom de classe de l'objet enfant à rattacher à l'objet créé (naturellement au singulier et sans majuscule)
+        //         "property": "bookmark"   <= nom de la propriété de l'objet créé ("parent") qui réfère à l'objet enfant (mis au singulier)
+        //         },
+        //         {"id": 70,
+        //         "entity": "bookmark",
+        //         "property": "bookmark"
+        //         }]
+        // }
+        $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
+       
+        if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
+            $parametersAsArray = json_decode($content, true); //Et on decode en json
+        }
+        // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
+        // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
+        foreach($parametersAsArray as $key => $value){
+            if(!is_array($value) && strtotime($value) ) {
+                $value = new \Datetime($value);
+            }
+        }
+        if(isset($parametersAsArray['add'])){
+            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray, $em);
+            unset($parametersAsArray['add']);
+        }
 
-        $form->submit($request->request->all()); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
-
+        $form->submit($parametersAsArray); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
+        
         // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
         if(!$form->isValid()){
-            return new JsonResponse(['error' => 'Creation impossible'], Response::HTTP_BAD_REQUEST);
-        }
 
+            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_BAD_REQUEST);
+        }
+        //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
+        //Pour chaque action de notre tableau
+        if(isset($actionsAddAsArray)){
+            foreach($actionsAddAsArray as $action){
+                $actionMethod = $action['method']; //On 
+                $actionChild = $action['child'];
+                $object->$actionMethod($actionChild);
+            }
+        }
         // Si le "form virtuel" est valide, on persiste l'objet en BDD
-        if($form->isValid()){
             $em->persist($object);
             $em->flush();
-
+            
             // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
-            $jsonContent = $this->handleSerialization($object);
-            $response = $this->createResponse($jsonContent, Response::HTTP_CREATED);
+            $jsonContent = $this->tools->handleSerialization($object);
+            // on crée une Réponse avec le code http 201 ("created")
+            $response = $this->tools->createResponse($jsonContent, Response::HTTP_CREATED);
 
             return $response; //On renvoie la réponse
+        
+    
+    }
+
+    public function updateItem($object, $form, $request, $em)
+    // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
+    {
+
+        $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
+       
+        if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
+            $parametersAsArray = json_decode($content, true); //Et on decode en json
         }
+        // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
+        // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
+        foreach($parametersAsArray as $key => $value){
+            if(!is_array($value) && strtotime($value) ) {
+                $value = new \Datetime($value);
+            }
+        }
+        if(isset($parametersAsArray['add'])){
+            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray, $em);
+            unset($parametersAsArray['add']);
+        }
+        if(isset($actionsAddAsArray['error'])){
+            return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_NOT_FOUND);
+        }
+        if(isset($parametersAsArray['remove'])){
+            $actionsRemoveAsArray = $this->tools->prepareRemoveRelationsActions($object, $parametersAsArray, $em);
+            unset($parametersAsArray['remove']);
+        }
+        if(isset($actionsRemoveAsArray['error'])){
+            return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form->submit($parametersAsArray); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
+        
+        // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
+        if(!$form->isValid()){
+
+            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_BAD_REQUEST);
+        }
+        //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
+        //Pour chaque action de notre tableau
+        if(isset($actionsAddAsArray)){
+            foreach($actionsAddAsArray as $actionAdd){
+                $actionAddMethod = $actionAdd['method']; //On 
+                $actionAddChild = $actionAdd['child'];
+                $object->$actionAddMethod($actionAddChild);
+            }
+        }
+        if(isset($actionsRemoveAsArray)){
+            foreach($actionsRemoveAsArray as $actionRemove){
+                $actionRemoveMethod = $actionRemove['method']; //On 
+                $actionRemoveChild = $actionRemove['child'];
+                $object->$actionRemoveMethod($actionRemoveChild);
+            }
+        }
+        // Si le "form virtuel" est valide, on persiste l'objet en BDD
+            $em->persist($object);
+            $em->flush();
+            
+            // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
+            $jsonContent = $this->tools->handleSerialization($object);
+            // on crée une Réponse avec le code http 201 ("created")
+            $response = $this->tools->createResponse($jsonContent, Response::HTTP_CREATED);
+
+            return $response; //On renvoie la réponse
     
     }
 
 
 
-
-
-    public function handleSerialization($toSerialize, $group = 'concise')
-    // Méthode qui permet de factoriser toute la partie redondante de sérialization
-    {
-        //On crée un ClassMetadataFactory qui va aller parcourir les annotations de nos entités
-        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-        //On crée un ObjectNormalizer en lui passant le ClassMetadataFactory 
-        //nb: un normalizer est une classe qui est en charge de la transformation d'un objet en un tableau
-        $objectNormalizer = new ObjectNormalizer($classMetadataFactory, new CamelCaseToSnakeCaseNameConverter( null , true));
-
-        
-        // On dit au normalizer comment gérer les références circulaires (ici en substituant un json {'id': id } à l'objet entier)
-        $objectNormalizer->setCircularReferenceHandler(function ($reference) {
-            return ['id' => $reference->getId()];
-        });
-        
-        // On prépare l'array $options en lui rajoutant l'option de tenir compte des MaxDepth en annotations
-        $options = array(
-            'enable_max_depth' => true
-        );
-        // Si $group n'est pas vide (il est sur "full" par défaut de tt manière) alors on rajoute l'option de filtre sur les groupes avec l'option correspondante
-        if(!empty($group)){
-            $options['groups'] =  array($group);
-        }
-        
-        // On crée le sérializer en lui passant les normalizers (DateTimeNormalizer en premier pour qu'il puisse prendre la main en priorité sur les dates)
-        // et les encoders (on utilise pour le moment seulement JsonEncoder)
-        //nb: un encoder est une classe qui est en charge de la transformation de la donnée normalisée (tableau) en une chaîne de caractères (json/xml).
-        //nb: un serializer est une classe qui gère des normalizers et des encoders pour réaliser la transformation totale dans un sens ou l'autre
-        $serializer = new Serializer(array(new DateTimeNormalizer, $objectNormalizer), array(new JsonEncoder()));
-
-        // On retourne le contenu sérialisé en json
-        return $jsonContent = $serializer->serialize($toSerialize, 'json', $options);
-    }
-
-
-
-    public function createResponse($jsonContent, $codeHttp){
-
-        // on crée une Réponse avec le code http 201 ("created")
-        $response =  new Response($jsonContent, $codeHttp);
-        // On set le header Content-Type sur json et utf-8
-        $response->headers->set('Content-Type', 'application/json');
-        $response->headers->set('Access-Control-Allow-Origin', '*');
-
-        return $response;
-    }
 }

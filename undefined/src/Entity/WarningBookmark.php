@@ -19,31 +19,26 @@ class WarningBookmark
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" })
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * 
      */
     private $is_active = true;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({ "concise" })
      */
     private $message;
 
@@ -51,14 +46,12 @@ class WarningBookmark
      * @ORM\ManyToOne(targetEntity="App\Entity\Bookmark", inversedBy="warnings")
      * @ORM\JoinColumn(nullable=false)
      * @MaxDepth(1)
-     * @Groups({ "concise" })
      */
     private $bookmark;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookmarks_warned")
      * @MaxDepth(1)
-     * 
      */
     private $author;
 

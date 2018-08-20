@@ -19,31 +19,26 @@ class Vote
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "profile", "bookmarks"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $updated_at;
     
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * 
      */
     private $is_active = true;
     
     /**
      * @ORM\Column(type="integer")
-     * @Groups({ "concise", "bookmarks" })
      */
     private $value;
     
@@ -51,14 +46,12 @@ class Vote
      * @ORM\ManyToOne(targetEntity="App\Entity\Bookmark", inversedBy="votes")
      * @ORM\JoinColumn(nullable=false)
      * @MaxDepth(1)
-     * @Groups({ "concise" })
      */
     private $bookmark;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="votes")
      * @MaxDepth(1)
-     * 
      */
     private $voter;
 

@@ -19,43 +19,36 @@ class PromotionLink
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "promotion"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * 
      */
     private $is_active = true;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise" , "promotion"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "concise" , "promotion"})
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "concise" , "promotion"})
      */
     private $icon;
 
@@ -63,7 +56,6 @@ class PromotionLink
      * @ORM\ManyToOne(targetEntity="App\Entity\Promotion", inversedBy="links")
      * @ORM\JoinColumn(nullable=false)
      * @MaxDepth(1)
-     * @Groups({ "concise" })
      */
     private $promotion;
 

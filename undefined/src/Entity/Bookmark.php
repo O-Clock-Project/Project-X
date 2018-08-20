@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BookmarkRepository")
@@ -22,102 +24,86 @@ class Bookmark
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "profile", "bookmarks"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * 
      */
     private $is_active = true;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "concise", "bookmarks" })
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({ "concise" })
      */
     private $resume;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "concise", "bookmarks" })
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=255)
-     *
-     */
+      */
     private $image;
 
     /**
      * @ORM\Column(type="boolean", options={"default":false})
-     *
      */
     private $banned;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({ "bookmarks" })
      */
     private $published_at;
 
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({ "bookmarks" })
      */
     private $author;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\WarningBookmark", mappedBy="bookmark", orphanRemoval=true)
      * @MaxDepth(1)
-     *
      */
     private $warnings;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Support", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * @Groups({ "bookmarks", "bookmarks" })
      */
     private $support;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Difficulty", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * @Groups({ "bookmarks" })
      */
     private $difficulty;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * @Groups({ "bookmarks" })
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Vote", mappedBy="bookmark", orphanRemoval=true)
      * @MaxDepth(1)
-     * @Groups({ "bookmarks" })
      */
     private $votes;
 
@@ -125,7 +111,6 @@ class Bookmark
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="favorites")
      * @ORM\JoinTable(name="bookmark_faved")
      * @MaxDepth(1)
-     * @Groups({ "bookmarks" })
      */
     private $faved_by;
 
@@ -133,21 +118,22 @@ class Bookmark
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="certified_bookmarks")
      * @ORM\JoinTable(name="bookmark_certified")
      * @MaxDepth(1)
-     * @Groups({ "bookmarks" })
      */
     private $certified_by;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="bookmarks")
+     * @ORM\JoinTable(name="bookmark_tag",
+     * joinColumns={@ORM\JoinColumn(name="bookmark_id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
+     * )
      * @MaxDepth(1)
-     * @Groups({ "bookmarks" })
      */
     private $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Locale", inversedBy="bookmarks")
      * @MaxDepth(1)
-     * @Groups({ "bookmarks" })
      */
     private $locale;
 
@@ -159,6 +145,7 @@ class Bookmark
         $this->faved_by = new ArrayCollection();
         $this->certified_by = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->banned = false;
     }
 
     public function getId()

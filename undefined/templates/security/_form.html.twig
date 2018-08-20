@@ -1,0 +1,91 @@
+{{ form_start(form, {'attr': {'id': 'signup-form', 'autocomplete':"off"}}) }}      
+      {# {{ form_widget(form) }} #}
+   
+    <div class="signup-form-section">
+      <div class="signup-form-category">
+        {{ form_label(form.username, 'Pseudo',{
+          'label_attr': {'class': 'signup-form-label '} }) }}
+          {{ form_widget(form.username, {
+          'input_attr': {'class': 'signup-form-input '} }) }}
+      </div>  
+    </div> 
+
+    <div class="signup-form-section">
+      <div class="signup-form-category">
+        {{ form_label(form.email, 'Email (celui où tu as reçu le lien)',{
+          'label_attr': {'class': 'signup-form-label '} }) }}
+        {{ form_widget(form.email, {
+          'input_attr': {'class': 'signup-form-input '} }) }}
+       </div>
+    </div>
+    
+    <div class="signup-form-section">
+      <div class="signup-form-category">
+        {{ form_label(form.password.first, 'Mot de Passe',{
+          'label_attr': {'class': 'signup-form-label '} }) }}
+        {{ form_widget(form.password.first, {
+          'input_attr': {'class': 'signup-form-input '} }) }}
+     </div>
+    </div>
+
+     <div class="signup-form-section">
+      <div class="signup-form-category">
+        {{ form_label(form.password.second, 'Confirmer mot de passe',{
+          'label_attr': {'class': 'signup-form-label '} }) }}
+        {{ form_widget(form.password.second, {
+          'input_attr': {'class': 'signup-form-input '} }) }}
+     </div>
+    </div>
+
+     <div class="signup-form-section">
+      <div class="signup-form-category">
+        {{ form_label(form.firstname, 'Prénom',{
+          'label_attr': {'class': 'signup-form-label '} }) }}
+        {{ form_widget(form.firstname, {
+          'input_attr': {'class': 'signup-form-input '} }) }}
+      </div>
+    </div>
+
+    <div class="signup-form-section">
+      <div class="signup-form-category">
+       {{ form_label(form.lastname, 'Nom',{
+         'label_attr': {'class': 'signup-form-label '} }) }}
+       {{ form_widget(form.lastname, {
+         'input_attr': {'class': 'signup-form-input '} }) }}
+      </div>
+    </div>
+
+    <div class="signup-form-section">
+      <div class="signup-form-category">
+        {{ form_label(form.birthday, 'Date de naissance',{
+          'label_attr': {'class': 'signup-form-label '} }) }}
+        {{ form_widget(form.birthday.year, {
+          'attr': {'class': 'signup-form-input ', 'placeholder': 'année' } }) }}
+        {{ form_widget(form.birthday.month, {
+          'attr': {'class': 'signup-form-input '} }) }}
+        {{ form_widget(form.birthday.day, {
+          'attr': {'class': 'signup-form-input '} }) }}
+      </div>
+    </div>
+
+    <div class="signup-form-section">
+      <div class="signup-form-category">
+        {{ form_label(form.zip, 'Code postal',{
+          'label_attr': {'class': 'signup-form-label '} }) }}
+        {{ form_widget(form.zip, {
+          'input_attr': {'class': 'signup-form-input '} }) }}
+      </div>
+    </div>
+
+    <div class="signup-form-section">
+      <div class="signup-form-category">
+        {{ form_label(form.pseudogithub, 'Pseudo Github',{
+          'label_attr': {'class': 'signup-form-label '} }) }}
+        {{ form_widget(form.pseudogithub, {
+          'input_attr': {'class': 'signup-form-input '} }) }}
+      </div> 
+    </div>
+
+    <button class="btn signup-form-btn">{{ button_label|default('S\'inscrire') }}</button>
+    
+{{ form_end(form) }}

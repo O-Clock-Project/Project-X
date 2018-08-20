@@ -21,7 +21,6 @@ class AnnouncementType
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" })
      */
     private $id;
 
@@ -45,7 +44,6 @@ class AnnouncementType
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise" })
      */
     private $name;
 

@@ -277,7 +277,7 @@ class AppFixtures extends Fixture
             shuffle($tags);
             shuffle($users);
             $bookmark->__construct();
-            for ( $i=0 ; $i<$faker->numberBetween(1,6) ; $i++){
+            for ( $i=0 ; $i<$faker->numberBetween(1,3) ; $i++){
                 $bookmark->addTag($tags[$i]);
             }
             for ( $i=0 ; $i<$faker->numberBetween(1,10) ; $i++){

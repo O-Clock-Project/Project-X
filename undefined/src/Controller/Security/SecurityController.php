@@ -2,10 +2,15 @@
 
 namespace App\Controller\Security;
 
+use App\Entity\User;
+use App\Form\UserType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class SecurityController extends Controller
 {
@@ -30,4 +35,34 @@ class SecurityController extends Controller
         ));
     }
 
+    /**
+     * @Route("/register", name="register", methods="GET|POST")
+     */
+    public function new(Request $request, UserPasswordEncoderInterface $encoder): Response
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /* 
+                L'encoder permet d'encoder le nouveau MDP de l'utilisateur
+                le type d'encodage est pasé sur la section encoders + entité definie dans security.yml
+                L'encodage sert à verifier l'egalité d'un mot de passe stocké en base sur un encryptage pprecis avec celui saisie l'ors du login
+                mais aussi pour creer un nouveau mdp
+             */
+            // je recupère le mot de passe encodé de mon nouvel utilisateur
+            $encoded = $encoder->encodePassword($user, $user->getPassword());
+            // et je le set à mon objet user 
+            $user->setPassword($encoded);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            return $this->redirectToRoute('app');
+        }
+        return $this->render('security/signup.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
 }

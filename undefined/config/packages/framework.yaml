@@ -8,7 +8,9 @@ framework:
     # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: ~
-
+    serializer: { enabled: true }
+    property_info:
+            enabled: true
     #esi: true
     #fragments: true
     php_errors:

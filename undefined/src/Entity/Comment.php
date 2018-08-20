@@ -19,7 +19,6 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" })
      */
     private $id;
 
@@ -43,7 +42,6 @@ class Comment
     
     /**
      * @ORM\Column(type="text")
-     * @Groups({ "concise" })
      * 
      */
     private $body;

@@ -21,52 +21,44 @@ class Promotion
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "profile", "promotion"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * 
      */
     private $is_active = true;
     
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise" , "profile", "promotion"})
      */
     private $name;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Affectation", mappedBy="promotion", orphanRemoval=true)
      * @MaxDepth(1)
-     * @Groups({  "promotion"})
      */
     private $affectations;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Announcement", inversedBy="promotions")
      * @MaxDepth(1)
-     * @Groups({  "promotion"})
      */
     private $announces;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\PromotionLink", mappedBy="promotion", orphanRemoval=true)
      * @MaxDepth(1)
-     * @Groups({  "promotion"})
      */
     private $links;
 

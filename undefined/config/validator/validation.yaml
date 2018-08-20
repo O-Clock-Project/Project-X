@@ -5,4 +5,45 @@ App\Entity\Tag:
         label:
             - NotBlank: ~
             - Type: string
+            - Length:
+                min: 2
+                max: 15
+                minMessage: 'Votre label est trop court (2 caractères minimum)'
+                maxMessage: 'Votre label est trop long (15 caractères maximum)'
+        
+
+App\Entity\Bookmark:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: [url, title]
+    properties:
+        title:
+            - NotBlank: ~
+            - Type: string
+            - Length:
+                min: 10
+                max: 50
+                minMessage: 'Votre titre est trop court (10 caractères minimum)'
+                maxMessage: 'Votre titre est trop long (50 caractères maximum)'
+        resume:
+            - NotBlank: ~
+            - Type: string
+            - Length:
+                min: 10
+                max: 560
+                minMessage: 'Votre titre est trop court (10 caractères minimum)'
+                maxMessage: 'Votre titre est trop long (560 caractères maximum)'
+        url:
+            - NotBlank : ~
+            - Url:
+                { checkDNS: 'ANY' }
+        image:
+            - Url:
+                { checkDNS: 'ANY' }
+        published_at: 
+            - DateTime: 
+                format: yyyy-MM-dd
+
+        author:
+            - Type: string
 

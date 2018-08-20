@@ -21,37 +21,31 @@ class Support
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise", "bookmarks" })
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean", options={"default":true})
-     * 
      */
     private $is_active = true;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise" , "bookmarks"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "concise" , "promotion", "bookmarks"})
      */
     private $icon;
 
@@ -59,7 +53,6 @@ class Support
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Bookmark", mappedBy="support")
      * @MaxDepth(1)
-     * 
      */
     private $bookmarks;
 

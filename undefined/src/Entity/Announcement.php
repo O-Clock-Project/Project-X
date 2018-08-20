@@ -21,7 +21,6 @@ class Announcement
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "promotion"})
      */
     private $id;
 
@@ -45,13 +44,11 @@ class Announcement
     
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "concise" })
      */
     private $title;
     
     /**
      * @ORM\Column(type="text")
-     * @Groups({ "concise" })
      */
     private $body;
 
@@ -91,7 +88,6 @@ class Announcement
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AnnouncementType", inversedBy="announces")
      * @MaxDepth(1)
-     * @Groups({ "concise" })
      */
     private $type;
 
@@ -100,6 +96,7 @@ class Announcement
     {
         $this->comments = new ArrayCollection();
         $this->promotions = new ArrayCollection();
+        $this->frozen = false;
     }
 
     public function getId()

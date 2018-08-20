@@ -21,7 +21,6 @@ class Difficulty
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "bookmarks"})
      */
     private $id;
 
@@ -45,13 +44,11 @@ class Difficulty
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({ "concise" , "bookmarks"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({ "concise" , "bookmarks"})
      */
     private $level;
 
