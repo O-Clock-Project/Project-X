@@ -9,6 +9,7 @@ use App\Entity\Bookmark;
 use App\Entity\Difficulty;
 use App\Form\BookmarkType;
 use App\Services\ApiUtils;
+use App\Services\ApiUtilsTools;
 use App\Controller\Api\TagController;
 use App\Repository\BookmarkRepository;
 use App\Controller\Api\LocaleController;
@@ -140,11 +141,11 @@ class BookmarkController extends AbstractController
             'tags' => $tags
         );
         
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
+        $utilsTools = new ApiUtilsTools; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
         //puis la mise en forme de la réponse reçue au format json
 
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $jsonContent = $utils->handleSerialization($filters, "filters");
+        $jsonContent = $utilsTools->handleSerialization($filters, "filters");
 
 
       
