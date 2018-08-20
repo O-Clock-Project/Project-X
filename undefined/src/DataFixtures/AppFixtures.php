@@ -184,7 +184,7 @@ class AppFixtures extends Fixture
                 return $faker->sentence($nbWords = 6, $variableNbWords = true); 
             },
             'resume' => function() use ($faker) { 
-                return $faker->paragraph($nbSentences = 3, $variableNbSentences = true); 
+                return $faker->paragraph($nbSentences = 10, $variableNbSentences = true); 
             },
             'url' => function() use ($faker) { 
                 return $faker->url(); 
