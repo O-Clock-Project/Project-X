@@ -91,7 +91,7 @@ class CommentController extends AbstractController
     public function updateComment ($id, Request $request, EntityManagerInterface $em, CommentRepository $commentRepo)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $comment = $commentRepo->findOnebyId($id);
+        $comment = $commentRepo->findOneById($id);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes

@@ -237,6 +237,7 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\PostLoad
+     * @ORM\PreUpdate
      */
     public function setAvatar(): self
     {

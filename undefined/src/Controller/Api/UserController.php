@@ -121,7 +121,7 @@ class UserController extends AbstractController
     public function updateUser ($id, Request $request, EntityManagerInterface $em, UserRepository $userRepo)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $user = $userRepo->findOnebyId($id);
+        $user = $userRepo->findOneById($id);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes

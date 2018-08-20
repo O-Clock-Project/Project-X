@@ -21,6 +21,10 @@
         <env name="JWT_PUBLIC_KEY" value="%kernel.project_dir%/config/jwt/public.pem"/>
         <env name="JWT_PASSPHRASE" value="46443aaf6ea79341d5c3af353f1d4216"/>
         <!-- ###- lexik/jwt-authentication-bundle ### -->
+        
+        <!-- ###+ nelmio/cors-bundle ### -->
+        <env name="CORS_ALLOW_ORIGIN" value="^https?://localhost(:[0-9]+)?$"/>
+        <!-- ###- nelmio/cors-bundle ### -->
     </php>
 
     <testsuites>

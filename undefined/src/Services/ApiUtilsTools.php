@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Repository\BookmarkRepository;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -83,14 +84,14 @@ class ApiUtilsTools
         if(empty($order)) {
             $order['created_at'] = 'DESC';
         }
-
+      
         //On crée un queryBuilder à partir du Repo reçu (donc de la bonne entité)
         $qb = $repo->createQueryBuilder('obj');
         //Pour chaque item dans $params on ajoute une condition de filtre
         if(isset($params)){
             foreach($params as $key => $value){
                 $qb->andWhere('obj.'.$key.' = :filterParam'.$key)
-                ->setParameter('filterParam'.$key, $value);
+                   ->setParameter('filterParam'.$key, $value);
             }
         }
         //Pour chaque item dans $arrayParams on ajoute une condition de filtre qui va vérifier 
@@ -98,13 +99,27 @@ class ApiUtilsTools
         if(isset($arrayParams)){
             foreach($arrayParams as $key => $value){
                 $qb->andWhere(':filterParams'.$key.' MEMBER OF obj.'.$key)
-                ->setParameter('filterParams'.$key, $value);
+                   ->setParameter('filterParams'.$key, $value);
             }
         }
         //Pour chaque item dans $order on ajoute un critère de tri
         if(isset($order)){
             foreach($order as $key => $value){
+                if($key === 'faved_by'){
+                    $qb->addselect('COUNT(u) AS HIDDEN favedBy')
+                    ->leftJoin('obj.'.$key, 'u')
+                    ->orderBy('favedBy', $value)
+                    ->groupBy('obj');
+                }
+                else if ($key === 'votes'){
+                    $qb->addselect('SUM(v.value) AS HIDDEN votes')
+                    ->leftJoin('obj.'.$key, 'v')
+                    ->orderBy('votes', $value)
+                    ->groupBy('obj');
+                }
+                else{
                 $qb->orderBy('obj.'.$key, $value );
+                }
             }
         }
         // Si on a une id reçue (donc !null), c'est qu'on a une jointure à faire
@@ -122,7 +137,7 @@ class ApiUtilsTools
 
         // Si $objects est vide, on renvoie une erreur 404 et un mesage d'erreur
         if (empty($objects)){
-            return array('error' => new JsonResponse(['error' => 'Items non trouvés'], Response::HTTP_NOT_FOUND));
+            return array('error' => $this->handleSerialization(['error' => 'Items non trouvés']));
         };
         
         // Si tout va bien, on envoie un array avec les résultats de la requêtes ($objects), le groupe d'affichage ($group) et error à vide puisque ça a marché

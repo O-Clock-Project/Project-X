@@ -4,12 +4,13 @@ namespace App\Controller\Security;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\UserSecurityType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 
 class SecurityController extends Controller
@@ -41,7 +42,7 @@ class SecurityController extends Controller
     public function new(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserSecurityType::class, $user);
         
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

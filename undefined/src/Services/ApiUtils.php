@@ -37,7 +37,7 @@ class ApiUtils
 
         // je vérifie si j'ai eu une erreur en retour, si oui je la return au controller
         if($result['error'] !== null ){
-            return $result['error'];
+            return new Response($result['error'], Response::HTTP_OK);
         }
         // si pas d'erreur je récupère les objets retournés par la requête et le groupe de sérialization
         $objects = $result['objects'];
@@ -187,12 +187,15 @@ class ApiUtils
     public function updateItem($object, $form, $request, $em)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
     {
-
-        $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
+        
+         $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
        
         if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
+
             $parametersAsArray = json_decode($content, true); //Et on decode en json
         }
+        
+    
         // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
         // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
         foreach($parametersAsArray as $key => $value){
@@ -214,9 +217,8 @@ class ApiUtils
         if(isset($actionsRemoveAsArray['error'])){
             return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_NOT_FOUND);
         }
-
+     
         $form->submit($parametersAsArray); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
-        
         // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
         if(!$form->isValid()){
 

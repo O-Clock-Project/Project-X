@@ -177,14 +177,14 @@ class AppFixtures extends Fixture
             'label' => function() use ($faker) { return $faker->unique()->tagName(); },
         ]);
 
-        $populator->addEntity('App\Entity\Bookmark', 20, array(
+        $populator->addEntity('App\Entity\Bookmark', 50, array(
             'is_active' => 1,
             'banned' => 0,
             'title' => function() use ($faker) { 
                 return $faker->sentence($nbWords = 6, $variableNbWords = true); 
             },
             'resume' => function() use ($faker) { 
-                return $faker->paragraph($nbSentences = 3, $variableNbSentences = true); 
+                return $faker->paragraph($nbSentences = 10, $variableNbSentences = true); 
             },
             'url' => function() use ($faker) { 
                 return $faker->url(); 
@@ -236,10 +236,10 @@ class AppFixtures extends Fixture
             },
         ]);
 
-        $populator->addEntity('App\Entity\Vote',20 ,[
+        $populator->addEntity('App\Entity\Vote',150 ,[
             'is_active' => 1,
             'value' => function() use ($faker) { 
-                return $faker->numberBetween($min = 0, $max = 1);
+                return $faker->randomElement($array = array (-1,1));
             },
         ]);
 
