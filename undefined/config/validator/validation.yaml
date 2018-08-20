@@ -47,3 +47,8 @@ App\Entity\Bookmark:
         author:
             - Type: string
 
+App\Entity\User:
+    properties:
+        birthday: 
+            - DateTime: 
+                format: yyyy-MM-dd
