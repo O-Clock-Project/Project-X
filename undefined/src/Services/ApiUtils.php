@@ -31,7 +31,7 @@ class ApiUtils
     public function getItems($object, $repo, $request )
     // Méthode qui permet de récupérer tous les items d'une entité, avec filtres, ordre, pagination et niveau de détails configurables
     {
-
+      
         // je passe les paramètres nécessaires au traitement de la requête et des paramètres demandés
         $result = $this->tools->handleRequestWithParams($object, $repo, $request);
 
