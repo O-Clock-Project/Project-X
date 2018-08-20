@@ -122,7 +122,7 @@ class ApiUtilsTools
 
         // Si $objects est vide, on renvoie une erreur 404 et un mesage d'erreur
         if (empty($objects)){
-            return array('error' => new JsonResponse(['error' => 'Items non trouvés'], Response::HTTP_NOT_FOUND));
+            return array('error' => $this->handleSerialization(['error' => 'Items non trouvés']));
         };
         
         // Si tout va bien, on envoie un array avec les résultats de la requêtes ($objects), le groupe d'affichage ($group) et error à vide puisque ça a marché

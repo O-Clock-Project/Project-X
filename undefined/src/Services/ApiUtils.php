@@ -37,7 +37,7 @@ class ApiUtils
 
         // je vérifie si j'ai eu une erreur en retour, si oui je la return au controller
         if($result['error'] !== null ){
-            return $result['error'];
+            return new Response($result['error'], Response::HTTP_NOT_FOUND);
         }
         // si pas d'erreur je récupère les objets retournés par la requête et le groupe de sérialization
         $objects = $result['objects'];
