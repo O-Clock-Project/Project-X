@@ -44,13 +44,13 @@ class UserSecurityType extends AbstractType
                     ]
                 ],
                 'required' => true,
-                 'first_options'  => [
+                'first_options'  => [
                      'label' => 'Votre mot de passe'
-                 ],
-                 'second_options' => [
+                ],
+                'second_options' => [
                      'label' => 'Confirmer mot de passe'
-                 ],
-                'required' => false
+                ],
+
             ])
             // ->add('code')
             ->add('firstname', TextType::class, [
