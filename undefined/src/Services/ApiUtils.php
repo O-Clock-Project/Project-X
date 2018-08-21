@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 
@@ -171,10 +172,13 @@ class ApiUtils
         }
         //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
         //Pour chaque action de notre tableau
-        foreach($actionsAsArray as $action){
-            $actionMethod = $action['method']; //On 
-            $actionChild = $action['child'];
-            $object->$actionMethod($actionChild);
+        if(isset($actionsAsArray)){
+            foreach($actionsAsArray as $action){
+                dump($action);exit;
+                $actionMethod = $action['method']; //On 
+                $actionChild = $action['child'];
+                $object->$actionMethod($actionChild);
+            }
         }
         // Si le "form virtuel" est valide, on persiste l'objet en BDD
             $em->persist($object);
@@ -193,18 +197,17 @@ class ApiUtils
     
     }
 
-    public function updateItem($object, $form, $request, $em)
+    public function updateItem($object, $form, $request, $em, $encoder)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
     {
+        // dump($object->getPassword());exit;
+        $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
         
-         $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
-       
         if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
 
             $parametersAsArray = json_decode($content, true); //Et on decode en json
+            
         }
-        
-    
         // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
         // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
         foreach($parametersAsArray as $key => $value){
@@ -212,8 +215,16 @@ class ApiUtils
                 $value = new \Datetime($value);
             }
         }
+
+        if(isset($parametersAsArray["password"])){
+            // si l'utilisateur veut changer de mot de passe, je le récupère et l'encode directement
+            $newPassword = $encoder->encodePassword($object, $parametersAsArray["password"]);
+            unset($parametersAsArray["password"]);
+                             
+        }
+
         if(isset($parametersAsArray['add'])){
-            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray, $em);
+            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray, $em);       
             unset($parametersAsArray['add']);
         }
         if(isset($actionsAddAsArray['error'])){
@@ -242,10 +253,17 @@ class ApiUtils
                 $object->$actionAddMethod($actionAddChild);
             }
         }
+
+        if(isset($parametersAsArray)){
+            // J'enregiste le nouveau mot de passe en bdd
+            $object->setPassword($newPassword);
+        }
+
         if(isset($actionsRemoveAsArray)){
             foreach($actionsRemoveAsArray as $actionRemove){
                 $actionRemoveMethod = $actionRemove['method']; //On 
                 $actionRemoveChild = $actionRemove['child'];
+                dump($actionRemoveChild);exit;
                 $object->$actionRemoveMethod($actionRemoveChild);
             }
         }
