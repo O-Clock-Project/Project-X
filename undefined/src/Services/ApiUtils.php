@@ -38,7 +38,7 @@ class ApiUtils
 
         // je vérifie si j'ai eu une erreur en retour, si oui je la return au controller
         if($result['error'] !== null ){
-            return new Response($result['error'], Response::HTTP_NOT_FOUND);
+            return new Response($result['error'], Response::HTTP_OK);
         }
         // si pas d'erreur je récupère les objets retournés par la requête et le groupe de sérialization
         $objects = $result['objects'];
@@ -242,7 +242,7 @@ class ApiUtils
         // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
         if(!$form->isValid()){
 
-            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_OK);
         }
         //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
         //Pour chaque action de notre tableau
