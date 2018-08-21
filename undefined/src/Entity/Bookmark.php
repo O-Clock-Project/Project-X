@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\SerializedName;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -136,6 +137,13 @@ class Bookmark
      * @MaxDepth(1)
      */
     private $locale;
+
+   /**
+     * @SerializedName("voteScore")
+     */
+    public $voteScore;
+
+
 
 
     public function __construct()
@@ -457,6 +465,19 @@ class Bookmark
     public function setLocale(?Locale $locale): self
     {
         $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PostLoad
+     * @ORM\PreUpdate
+     */
+    public function setVoteScore(): self
+    {
+        foreach($this->votes as $vote){
+            $this->voteScore += $vote->getValue();
+        }
 
         return $this;
     }

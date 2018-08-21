@@ -106,15 +106,15 @@ class ApiUtilsTools
         if(isset($order)){
             foreach($order as $key => $value){
                 if($key === 'faved_by'){
-                    $qb->addselect('COUNT(u) AS HIDDEN favedBy')
+                    $qb->addselect('COUNT(u) AS HIDDEN favScore')
                     ->leftJoin('obj.'.$key, 'u')
-                    ->orderBy('favedBy', $value)
+                    ->orderBy('favScore', $value)
                     ->groupBy('obj');
                 }
                 else if ($key === 'votes'){
-                    $qb->addselect('SUM(v.value) AS HIDDEN votes')
+                    $qb->addselect('SUM(v.value) AS HIDDEN votesScore')
                     ->leftJoin('obj.'.$key, 'v')
-                    ->orderBy('votes', $value)
+                    ->orderBy('votesScore', $value)
                     ->groupBy('obj');
                 }
                 else{
