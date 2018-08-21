@@ -13,13 +13,17 @@ App\Entity\Affectation:
 App\Entity\Announcement:
     attributes:
         id:
-            groups: ['concise', 'promotion']
+            groups: ['concise', 'promotion', 'announcement', 'announcements']
         title:
-            groups: ['concise']
+            groups: ['concise', 'announcement', 'announcements']
         body:
-            groups: ['concise', 'promotion']
+            groups: ['concise', 'promotion', 'announcement', 'announcements']
         type:
-            groups: ['concise']    
+            groups: ['concise', 'announcement', 'announcements'] 
+        frozen:
+            groups: ['announcement', 'announcements']              
+        author:
+            groups: ['announcement', 'announcements']   
        
 App\Entity\AnnouncementType:
     attributes:
@@ -64,9 +68,13 @@ App\Entity\Bookmark:
 App\Entity\Comment:
     attributes:
         id:
-            groups: ['concise']
+            groups: ['concise', 'announcement']
         body:
-            groups: ['concise']
+            groups: ['concise', 'announcement']
+        banned:
+            groups: ['announcement']
+        author:
+            groups: ['announcement']
 
 App\Entity\Difficulty:
     attributes:
