@@ -101,8 +101,8 @@ class UserController extends AbstractController
 
         $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
                                //puis la mise en forme de la réponse reçue au format json
-        
-        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+
+         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->updateItem($user, $form, $request, $em, $encoder);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)

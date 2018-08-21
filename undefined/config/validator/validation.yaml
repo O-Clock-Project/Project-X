@@ -109,7 +109,7 @@ App\Entity\User:
                 message: L'email {{ value }} , n'est pas un email valide.
                 checkMX: true
             # - Regex:
-            #     pattern: [!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i]
+            #     pattern: '!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i]'
         birthday:
             - NotBlank:
                 message: ' Veuillez entrer une date de naissance ' 
@@ -126,7 +126,7 @@ App\Entity\User:
             - Type: 
                 type: integer
                 message: Le code Postal, {{ value }} , n'est pas valide.
-        # password:
+        #password:
         #     - Symfony\Component\Security\Core\Validator\Constraints\UserPassword:
         #         message: Votre ancien mot de passe n'est pas le bon 
         #     - Type: 

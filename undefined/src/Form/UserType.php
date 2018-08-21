@@ -19,8 +19,8 @@ class UserType extends AbstractType
             ->add('first_name')
             ->add('last_name')
             ->add('email')
-            // ->add('password', PasswordType::class)
-            ->add('pseudo_github')
+            //->add('password', PasswordType::class)
+            ->add('pseudo_github')       
             ->add('zip')
             ->add('birthday', DateType::class, [
                 'widget' => 'single_text',
