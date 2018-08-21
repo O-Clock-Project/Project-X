@@ -60,8 +60,6 @@ App\Entity\Bookmark:
             groups: ['bookmarks', 'bookmark']
         locale:
             groups: ['bookmarks', 'bookmark']    
-        voteScore:
-            groups: ['bookmarks', 'bookmark']
                                     
 App\Entity\Comment:
     attributes:

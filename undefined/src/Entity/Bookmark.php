@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Locale;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PreFlush;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\Common\Collections\Collection;
@@ -137,11 +138,6 @@ class Bookmark
      * @MaxDepth(1)
      */
     private $locale;
-
-   /**
-     * @SerializedName("voteScore")
-     */
-    public $voteScore;
 
 
 
@@ -469,19 +465,7 @@ class Bookmark
         return $this;
     }
 
-    /**
-     * @ORM\PostLoad
-     * @ORM\PreUpdate
-     */
-    public function setVoteScore(): self
-    {
-        foreach($this->votes as $vote){
-            $this->voteScore += $vote->getValue();
-        }
-
-        return $this;
-    }
-
+    
     /**
      *
      * @ORM\PrePersist

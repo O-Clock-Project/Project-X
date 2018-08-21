@@ -60,8 +60,8 @@ App\Entity\Bookmark:
             - Length:
                 min: 10
                 max: 560
-                minMessage: 'Votre titre est trop court (10 caractères minimum)'
-                maxMessage: 'Votre titre est trop long (560 caractères maximum)'
+                minMessage: 'Votre résumé est trop court (10 caractères minimum)'
+                maxMessage: 'Votre résumé est trop long (560 caractères maximum)'
         url:
             - NotBlank :
                 message:  Veuillez entrer un lien vers ce bookmark.  
@@ -71,10 +71,6 @@ App\Entity\Bookmark:
                 message: Cette url "{{ value }}" , n'est pas une url valide.
             # - Regex:
             #     pattern: '/(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/i'
-        image:
-            - Url:
-                checkDNS: 'ANY'
-                message: Cette url d'image "{{ value }}" , n'est pas valide.
         published_at:
             - NotBlank: 
                 message:  Veuillez entrer la date de création du bookmark. 
