@@ -159,7 +159,7 @@ class AppFixtures extends Fixture
                 return $faker->email(); 
             },
             'password' => function() use ($faker) { 
-                return $faker->word(); 
+                return $faker->password(); 
             },
             'pseudo_github' => function() use ($faker) { 
                 return $faker->userName(); 
