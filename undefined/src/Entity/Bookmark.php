@@ -252,6 +252,7 @@ class Bookmark
         return $this;
     }
 
+
     public function getPublishedAt(): ?\DateTimeInterface
     {
         return $this->published_at;

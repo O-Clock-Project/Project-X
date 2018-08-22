@@ -3,12 +3,11 @@
 namespace App\Security;
 
 use App\Entity\User;
-use App\Entity\Bookmark;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
-class BookmarkVoter extends Voter
+class ProfileVoter extends Voter
 {
     // these strings are just invented: you can use anything
     const VIEW = 'view';
@@ -30,7 +29,7 @@ class BookmarkVoter extends Voter
         }
 
         // only vote on Bookmark objects inside this voter
-        if (!$subject instanceof Bookmark) {
+        if (!$subject instanceof User) {
             return false;
         }
 
@@ -39,47 +38,42 @@ class BookmarkVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $user = $token->getUser();
+        $askingUser = $token->getUser();
 
-        if (!$user instanceof User) {
+        if (!$askingUser instanceof User) {
             // the user must be logged in; if not, deny access
             return false;
         }
 
-        if ($this->decisionManager->decide($token, array('ROLE_TEACHER'))) {
+        if ($this->decisionManager->decide($token, array('ROLE_ADMINISTRATOR'))) {
             return true;
         }
 
         // you know $subject is a Bookmark object, thanks to supports
-        /** @var Bookmark $bookmark */
-        $bookmark = $subject;
+        /** @var User $user */
+        $user = $subject;
 
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($bookmark, $user);
+                return $this->canView($user, $askingUser);
             case self::EDIT:
-                return $this->canEdit($bookmark, $user);
+                return $this->canEdit($user, $askingUser);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(Bookmark $bookmark, User $user)
+    private function canView(User $user, User $askingUser)
     {
-        // if they can edit, they can view
-        if ($this->canEdit($bookmark, $user)) {
-            return true;
-        }
 
-
-        return !$bookmark->getBanned();
+        return true;
     }
 
-    private function canEdit(Bookmark $bookmark, User $user)
+    private function canEdit(User $user, User $askingUser)
     {
         // this assumes that the data object has a getUser() method
         // to get the entity of the user who owns this data object
 
-        return $user === $bookmark->getUser();
+        return $askingUser === $user;
     }
 }

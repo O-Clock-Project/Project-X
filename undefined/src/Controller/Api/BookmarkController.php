@@ -49,6 +49,10 @@ class BookmarkController extends AbstractController
     public function getBookmark(BookmarkRepository $bookmarkRepo, $id, Request $request)
     //Méthode permettant de renvoyer l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
+        $bookmark = $bookmarkRepo->findOneById($id);
+
+        $this->denyAccessUnlessGranted('view', $bookmark);
+
         $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
                                //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
@@ -63,6 +67,9 @@ class BookmarkController extends AbstractController
     public function getBookmarkRelations(BookmarkRepository $bookmarkRepo, $id, $relation, $child, Request $request, EntityManagerInterface $em)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
+        $bookmark = $bookmarkRepo->findOneById($id);
+
+        $this->denyAccessUnlessGranted('view', $bookmark);
         
         $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
                                //puis la mise en forme de la réponse reçue au format json
