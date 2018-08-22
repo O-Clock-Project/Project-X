@@ -32,6 +32,8 @@ App\Entity\Bookmark:
     attributes:
         id:
             groups: ['concise', 'profile', 'bookmarks', 'bookmark']
+        created_at:
+            groups: ['bookmarks', 'bookmark']
         title:
             groups: ['concise', 'bookmarks', 'bookmark']
         resume:
