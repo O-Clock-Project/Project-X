@@ -151,6 +151,11 @@ class User implements UserInterface, \Serializable
      */
     public $bestRole;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Invitation", mappedBy="sender")
+     */
+    private $invitations;
+
 
     public function __construct()
     {
@@ -162,6 +167,7 @@ class User implements UserInterface, \Serializable
         $this->bookmarks_warned = new ArrayCollection();
         $this->announces = new ArrayCollection();
         $this->affectations = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
 
 
@@ -691,6 +697,37 @@ class User implements UserInterface, \Serializable
     // A chaque fois que l'user est chargé, on sette son bestRole dans sa propriété
     {
         $this->bestRole = $this->getBestRole();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Invitation[]
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(Invitation $invitation): self
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations[] = $invitation;
+            $invitation->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(Invitation $invitation): self
+    {
+        if ($this->invitations->contains($invitation)) {
+            $this->invitations->removeElement($invitation);
+            // set the owning side to null (unless already changed)
+            if ($invitation->getSender() === $this) {
+                $invitation->setSender(null);
+            }
+        }
 
         return $this;
     }
