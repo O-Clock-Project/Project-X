@@ -20,12 +20,12 @@ class SpaController extends Controller
      * @Route("/", name="app")
      * @Method("GET")
      */
-    public function homepage(EntityManagerInterface $manager)
+    public function homepage(EntityManagerInterface $manager, JWTUtils $JWTUtils)
     {
 
         $user = $this->getUser();
-        $JWTUtils = new JWTUtils;
-        $token = $JWTUtils->generateToken($user, $this->container->get('lexik_jwt_authentication.jwt_manager'));
+    
+        $token = $JWTUtils->generateToken($user);
 
         $response = new Response(
             $this->renderView('app/app.html.twig',

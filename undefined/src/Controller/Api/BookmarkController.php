@@ -109,7 +109,7 @@ class BookmarkController extends AbstractController
     {
         $bookmark = $bookmarkRepo->findOneById($id);
 
-        $this->denyAccessUnlessGranted('edit', $bookmark);
+        // $this->denyAccessUnlessGranted('edit', $bookmark);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes

@@ -185,10 +185,10 @@ class ApiUtils
     
     }
 
-    public function updateItem($object, $form, $request, $em, $encoder)
+    public function updateItem($object, $form, $request, $em, $encoder=null)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
     {
-
+        
         $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
         
         if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
