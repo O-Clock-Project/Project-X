@@ -174,8 +174,7 @@ class ApiUtils
         //Pour chaque action de notre tableau
         if(isset($actionsAsArray)){
             foreach($actionsAsArray as $action){
-                dump($action);exit;
-                $actionMethod = $action['method']; //On 
+                 $actionMethod = $action['method']; //On 
                 $actionChild = $action['child'];
                 $object->$actionMethod($actionChild);
             }
@@ -276,7 +275,6 @@ class ApiUtils
             foreach($actionsRemoveAsArray as $actionRemove){
                 $actionRemoveMethod = $actionRemove['method']; //On 
                 $actionRemoveChild = $actionRemove['child'];
-                dump($actionRemoveChild);exit;
                 $object->$actionRemoveMethod($actionRemoveChild);
             }
         }

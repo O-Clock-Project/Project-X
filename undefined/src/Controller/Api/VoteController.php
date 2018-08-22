@@ -104,4 +104,5 @@ class VoteController extends AbstractController
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
+
 }

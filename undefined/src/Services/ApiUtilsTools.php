@@ -133,6 +133,7 @@ class ApiUtilsTools
             $qb->setMaxResults( $limit ); //on applique la limite
             $qb->setFirstResult($limit * ($num_pages - 1)); //Et l'offset pour la pagination
         }
+
         $objects = $qb->getQuery() //On crée la requête en SQL
                        ->execute(); //Et on l'éxécute
 
