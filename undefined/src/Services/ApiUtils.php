@@ -219,17 +219,17 @@ class ApiUtils
         
         // si l'utilisateur veut changer de mot de passe, je le récupère et l'encode directement
         if(isset($parametersAsArray["password"])){
-            if(isset($parametersAsArray["old_password"])){
-                if (!$encoder->isPasswordValid($object, $parametersAsArray["old_password"])){
-                    return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST);
+            if(isset($parametersAsArray["old_password"])){ //Pour accepter le changement je dois recevoir aussi l'ancien mdp
+                if (!$encoder->isPasswordValid($object, $parametersAsArray["old_password"])){ //je teste que l'ancien mdp reçu correspond à celui en BDD
+                    return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST); //sinon erreur
                 }
             }
             else{
-                return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST);//si pas d'ancien mdp reçu: error aussi
             }
-            $newPassword = $encoder->encodePassword($object, $parametersAsArray["password"]);
-            unset($parametersAsArray["old_password"]);
-            unset($parametersAsArray["password"]);
+            $newPassword = $encoder->encodePassword($object, $parametersAsArray["password"]);//si tout est ok: on encode le nouveau mdp
+            unset($parametersAsArray["old_password"]); //On unsette la clé ancien mdp pour ne pas l'envoyer au form
+            unset($parametersAsArray["password"]); //On unsette la clé nouveau mdp pour ne pas l'envoyer au form
         }
         
         
@@ -256,7 +256,7 @@ class ApiUtils
             return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_OK);
         }
 
-        if(isset($newPassword)){
+        if(isset($newPassword)){ //Si on a créé un nouveau mdp (déjà encodé) on le set au User
             // J'enregiste le nouveau mot de passe en bdd
             $object->setPassword($newPassword);
         }

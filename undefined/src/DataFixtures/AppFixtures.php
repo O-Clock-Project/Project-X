@@ -180,6 +180,9 @@ class AppFixtures extends Fixture
         $populator->addEntity('App\Entity\Bookmark', 50, array(
             'is_active' => 1,
             'banned' => 0,
+            'created_at' => function() use ($faker) { 
+                return $faker->dateTime(); 
+            },
             'title' => function() use ($faker) { 
                 return $faker->sentence($nbWords = 6, $variableNbWords = true); 
             },
@@ -193,7 +196,7 @@ class AppFixtures extends Fixture
                 return $faker->imageUrl($width = 640, $height = 480); 
             },
             'published_at' => function() use ($faker) { 
-                return $faker->dateTime(); 
+                return $faker->dateTimeThisDecade(); 
             },
             'author' => function() use ($faker) { 
                 return $faker->Name(); 
