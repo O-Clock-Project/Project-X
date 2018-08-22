@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller\Spa;
+
 use App\Services\JWTUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Security\SecurityController;
@@ -18,7 +20,7 @@ class SpaController extends Controller
      * @Route("/", name="app")
      * @Method("GET")
      */
-    public function homepage()
+    public function homepage(EntityManagerInterface $manager)
     {
 
         $user = $this->getUser();

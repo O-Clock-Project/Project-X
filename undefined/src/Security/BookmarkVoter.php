@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Security;
+namespace App\Security;
 
 use App\Entity\User;
 use App\Entity\Bookmark;

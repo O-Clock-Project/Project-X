@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 
@@ -37,7 +38,7 @@ class ApiUtils
 
         // je vérifie si j'ai eu une erreur en retour, si oui je la return au controller
         if($result['error'] !== null ){
-            return new Response($result['error'], Response::HTTP_OK);
+            return new Response($result['error'], Response::HTTP_NOT_FOUND);
         }
         // si pas d'erreur je récupère les objets retournés par la requête et le groupe de sérialization
         $objects = $result['objects'];
@@ -184,18 +185,18 @@ class ApiUtils
     
     }
 
-    public function updateItem($object, $form, $request, $em)
+    public function updateItem($object, $form, $request, $em, $encoder)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
     {
+
+        $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
         
-         $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
-       
         if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
 
             $parametersAsArray = json_decode($content, true); //Et on decode en json
         }
-        
-    
+            
+
         // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
         // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
         foreach($parametersAsArray as $key => $value){
@@ -203,8 +204,26 @@ class ApiUtils
                 $value = new \Datetime($value);
             }
         }
+        
+        // si l'utilisateur veut changer de mot de passe, je le récupère et l'encode directement
+        if(isset($parametersAsArray["password"])){
+            if(isset($parametersAsArray["old_password"])){ //Pour accepter le changement je dois recevoir aussi l'ancien mdp
+                if (!$encoder->isPasswordValid($object, $parametersAsArray["old_password"])){ //je teste que l'ancien mdp reçu correspond à celui en BDD
+                    return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST); //sinon erreur
+                }
+            }
+            else{
+                return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST);//si pas d'ancien mdp reçu: error aussi
+            }
+            $newPassword = $encoder->encodePassword($object, $parametersAsArray["password"]);//si tout est ok: on encode le nouveau mdp
+            unset($parametersAsArray["old_password"]); //On unsette la clé ancien mdp pour ne pas l'envoyer au form
+            unset($parametersAsArray["password"]); //On unsette la clé nouveau mdp pour ne pas l'envoyer au form
+        }
+        
+        
+
         if(isset($parametersAsArray['add'])){
-            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray, $em);
+            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray, $em);       
             unset($parametersAsArray['add']);
         }
         if(isset($actionsAddAsArray['error'])){
@@ -222,8 +241,14 @@ class ApiUtils
         // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
         if(!$form->isValid()){
 
-            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_OK);
         }
+
+        if(isset($newPassword)){ //Si on a créé un nouveau mdp (déjà encodé) on le set au User
+            // J'enregiste le nouveau mot de passe en bdd
+            $object->setPassword($newPassword);
+        }
+
         //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
         //Pour chaque action de notre tableau
         if(isset($actionsAddAsArray)){
@@ -233,10 +258,13 @@ class ApiUtils
                 $object->$actionAddMethod($actionAddChild);
             }
         }
+
+
         if(isset($actionsRemoveAsArray)){
             foreach($actionsRemoveAsArray as $actionRemove){
                 $actionRemoveMethod = $actionRemove['method']; //On 
                 $actionRemoveChild = $actionRemove['child'];
+                dump($actionRemoveChild);exit;
                 $object->$actionRemoveMethod($actionRemoveChild);
             }
         }

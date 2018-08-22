@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Locale;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PreFlush;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\Common\Collections\Collection;
@@ -136,6 +137,8 @@ class Bookmark
      * @MaxDepth(1)
      */
     private $locale;
+
+
 
 
     public function __construct()
@@ -461,6 +464,7 @@ class Bookmark
         return $this;
     }
 
+    
     /**
      *
      * @ORM\PrePersist
