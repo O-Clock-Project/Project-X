@@ -200,14 +200,15 @@ class ApiUtils
     public function updateItem($object, $form, $request, $em, $encoder)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
     {
-        // dump($object->getPassword());exit;
+
         $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
         
         if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
 
             $parametersAsArray = json_decode($content, true); //Et on decode en json
-            
         }
+            
+
         // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
         // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
         foreach($parametersAsArray as $key => $value){
@@ -215,13 +216,23 @@ class ApiUtils
                 $value = new \Datetime($value);
             }
         }
-
+        
+        // si l'utilisateur veut changer de mot de passe, je le récupère et l'encode directement
         if(isset($parametersAsArray["password"])){
-            // si l'utilisateur veut changer de mot de passe, je le récupère et l'encode directement
+            if(isset($parametersAsArray["old_password"])){
+                if (!$encoder->isPasswordValid($object, $parametersAsArray["old_password"])){
+                    return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST);
+                }
+            }
+            else{
+                return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST);
+            }
             $newPassword = $encoder->encodePassword($object, $parametersAsArray["password"]);
+            unset($parametersAsArray["old_password"]);
             unset($parametersAsArray["password"]);
-                             
         }
+        
+        
 
         if(isset($parametersAsArray['add'])){
             $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray, $em);       
@@ -244,6 +255,12 @@ class ApiUtils
 
             return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_OK);
         }
+
+        if(isset($newPassword)){
+            // J'enregiste le nouveau mot de passe en bdd
+            $object->setPassword($newPassword);
+        }
+
         //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
         //Pour chaque action de notre tableau
         if(isset($actionsAddAsArray)){
@@ -254,10 +271,6 @@ class ApiUtils
             }
         }
 
-        if(isset($parametersAsArray)){
-            // J'enregiste le nouveau mot de passe en bdd
-            $object->setPassword($newPassword);
-        }
 
         if(isset($actionsRemoveAsArray)){
             foreach($actionsRemoveAsArray as $actionRemove){

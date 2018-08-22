@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping\PreFlush;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\Common\Collections\Collection;
-use JMS\Serializer\Annotation\SerializedName;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
