@@ -66,4 +66,41 @@ class SecurityController extends Controller
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+    * @Route("/email/register", name="email_register", methods="GET|POST")
+    */
+    public function sendEmailRegister(Request $request, \Swift_Mailer $mailer)
+    {   
+        $user = New User;
+        $message = (new \Swift_Message('Hello Email'))
+            ->setFrom('send@example.com')
+            ->setTo('recipient@example.com')
+            ->setBody(
+                $this->renderView(
+                    // templates/emails/registration.html.twig
+                    'security/registration.html.twig',
+                    array('name' => $user)
+                ),
+                'text/html'
+            )
+           
+            /* If you also want to include a plaintext version of the message*/
+            /*->addPart(
+                $this->renderView(
+                    'emails/registration.txt.twig',
+                    array('firstname' => $user)
+                ),
+                'text/plain'
+            )*/
+            
+        ;
+
+        $mailer->send($message);
+
+        return $this->render('security/registration.html.twig', [
+            'name' => $user,
+            // 'form' => $form->createView(),
+        ]);
+    }
 }

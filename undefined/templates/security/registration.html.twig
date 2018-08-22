@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mail d'inscription{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/reset.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+    <div id="login">
+
+        <img id= "login-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
+        <h2 id="signup-subtitle">Pré'Inscription des éléves</h2>
+        <h3>
+           Page permettant l'envoie d'email aux éléves pour l'inscription.
+        </h3>
+        {{ include('security/_form_registration.html.twig') }}
+    </div>
+
+{% endblock %}
