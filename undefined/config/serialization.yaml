@@ -23,14 +23,18 @@ App\Entity\Announcement:
         frozen:
             groups: ['announcement', 'announcements']              
         author:
-            groups: ['announcement', 'announcements']   
+            groups: ['announcement', 'announcements'] 
+        comments:
+            groups: ['announcement']          
+        # closing_at:
+        #     groups: ['announcement', 'announcements']  
        
 App\Entity\AnnouncementType:
     attributes:
         id:
-            groups: ['concise', 'promotion']
+            groups: ['concise', 'promotion', 'announcements']
         name:
-            groups: ['concise', 'promotion'] 
+            groups: ['concise', 'promotion', 'announcements'] 
 
 App\Entity\Bookmark:
     attributes:
@@ -153,9 +157,9 @@ App\Entity\Tag:
 App\Entity\User:
     attributes:   
         id:
-            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark']
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements', 'announcement']
         username:
-            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark']
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements', 'announcement']
         first_name:
             groups: ['concise' , 'profile']
         last_name:
@@ -181,7 +185,7 @@ App\Entity\User:
         affectations:
             groups: ['profile']
         avatar:
-            groups: ['concise', 'profile']
+            groups: ['concise', 'profile', 'announcements', 'announcement']
 
 App\Entity\Vote:
     attributes:

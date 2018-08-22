@@ -217,7 +217,7 @@ class ApiUtils
         }
 
         if(isset($parametersAsArray["password"])){
-            // si l'utilisateur veut changer de mot de passe, je le récupère et l'encode directement
+            // si l'utilisateur veut changer de mot de passe, je le récupère et l'encode directementphp bin
             $newPassword = $encoder->encodePassword($object, $parametersAsArray["password"]);
             unset($parametersAsArray["password"]);
                              
@@ -255,6 +255,7 @@ class ApiUtils
         }
 
         if(isset($parametersAsArray)){
+            dump($parametersAsArray);exit;
             // J'enregiste le nouveau mot de passe en bdd
             $object->setPassword($newPassword);
         }
