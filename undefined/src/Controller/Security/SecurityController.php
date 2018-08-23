@@ -3,8 +3,12 @@
 namespace App\Controller\Security;
 
 use App\Entity\User;
+use App\Entity\Invitation;
+use App\Entity\Promotion;
 use App\Form\UserType;
 use App\Form\UserSecurityType;
+use App\Form\InvitationType;
+use App\Services\ApiUtilsTools;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -61,6 +65,7 @@ class SecurityController extends Controller
             $em->flush();
             return $this->redirectToRoute('app');
         }
+
         return $this->render('security/signup.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
@@ -68,39 +73,65 @@ class SecurityController extends Controller
     }
 
     /**
-    * @Route("/email/register", name="email_register", methods="GET|POST")
+    * @Route("/registration", name="registration", methods="GET|POST")
     */
-    public function sendEmailRegister(Request $request, \Swift_Mailer $mailer)
-    {   
-        $user = New User;
-        $message = (new \Swift_Message('Hello Email'))
-            ->setFrom('send@example.com')
-            ->setTo('recipient@example.com')
-            ->setBody(
-                $this->renderView(
-                    // templates/emails/registration.html.twig
-                    'security/registration.html.twig',
-                    array('name' => $user)
-                ),
-                'text/html'
-            )
-           
-            /* If you also want to include a plaintext version of the message*/
-            /*->addPart(
-                $this->renderView(
-                    'emails/registration.txt.twig',
-                    array('firstname' => $user)
-                ),
-                'text/plain'
-            )*/
-            
-        ;
+    public function emailRegistration(Request $request,\Swift_Mailer $mailer)
+    {    
+        // J'instancie promotion pour récuperer toute les promotion et afficher 
+        // dans la view le nom de celle-ci
+        $promotion = new Promotion;
+        $promotionRepo = $this->getDoctrine()->getRepository(Promotion::class);
+        $promotions = $promotionRepo->findAll();
 
-        $mailer->send($message);
+        if (!empty($_POST)) {
+             $email = isset($_POST['email']) ? $_POST['email'] : '';
+            //dump($email);exit; 
+        }
+        
 
         return $this->render('security/registration.html.twig', [
-            'name' => $user,
-            // 'form' => $form->createView(),
+            //'code' => $code_aleatoire,
+            'promotions' => $promotions
         ]);
+    }
+
+
+    /**
+    * @Route("/registration/sendEmail", name="sendEmailRegistration", methods="GET|POST")
+    */
+    public function sendEmailRegistration(Request $request)
+    {  
+
+        $characts = 'abcdefghijklmnopqrstuvwxyz'; 
+        $characts .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';	
+        $characts .= '1234567890'; 
+        $code_aleatoire = ''; 
+
+        for($i=0;$i < 8;$i++) 
+        { 
+            $code_aleatoire .= $characts[ rand() % strlen($characts) ]; 
+        } 
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $em = $this->getDoctrine()->getManager();
+            // $em->persist($invitation);
+            // $em->flush();
+            $message = (new \Swift_Message('Mail de validation d\'inscription'))
+            ->setFrom('hub.oclock@gmail.com')
+            ->setTo($invitation->getCreatedUser()->getEmail())
+            ->setBody(
+                $this->renderView(
+                    'security/emailType.html.twig',[
+                        'code' => $invitation->getSecretCode(),
+                        'email' => $invitation->getCreatedUser()->getEmail()
+                    ]
+                ),
+                'text/html'
+                );
+            $mailer->send($message);
+            return $this->redirectToRoute('app');
+            
+        }
+
     }
 }

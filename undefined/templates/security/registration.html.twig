@@ -9,14 +9,31 @@
 
 {% block body %}
 
-    <div id="login">
-
-        <img id= "login-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
+    <div id="signup">
+        <img id= "signup-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
         <h2 id="signup-subtitle">Pré'Inscription des éléves</h2>
-        <h3>
-           Page permettant l'envoie d'email aux éléves pour l'inscription.
-        </h3>
-        {{ include('security/_form_registration.html.twig') }}
+        
+        <form "{{ path("sendEmailRegistration")}}" method="POST" id="signup-form" action="" autocomplete="off">
+            
+            <div class="signup-form-category">
+                <label class="signup-form-label" for="email">Email</label>
+                <textarea class="signup-form-input" id="email" name="email">
+                </textarea>
+            </div>
+
+            <div class="signup-form-category">
+                
+                <label class="signup-form-label" for="promotion">Promotion</label>
+                <select class="signup-form-input" type="select" id="Promotion" name="Promotion">
+                {% for promotion in promotions %} 
+                    <option value={{ promotion.name|e}}>{{ promotion.name|e}}</option> 
+                {% endfor %}
+                </select> 
+            </div>
+            <button type="submit" class="signup-form-btn">Envoyer</button>
+        </form> 
+        
+    
     </div>
 
 {% endblock %}
