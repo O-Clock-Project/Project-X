@@ -48,6 +48,7 @@ class SecurityController extends Controller
         $user = new User();
         $form = $this->createForm(UserSecurityType::class, $user);
         $errors = [];
+        $email = "";
         if($request->get('email') !== null){
             $email = $request->get('email');
             $user->setEmail($email);
@@ -63,7 +64,7 @@ class SecurityController extends Controller
             // }
             // else{
             //     if (!$invit->getSecretCode() === $request->get('secret_code')){//je vérifie que le code secret est le bon
-            //         $errors[] = "Le code secret n'est pas le bon";
+            //         $errors[] = "Merci de bien utiliser le lien fourni dans le mail: il contient un code secret!";
             //     } 
             // }
             if (empty($error)){
@@ -76,6 +77,7 @@ class SecurityController extends Controller
             // $affectation->setPromotion($promotion);
             // $affectation->setRole($role);
             // $affectation->setUser($user);
+            // $invit->setUser($user);
             
             /* 
                 L'encoder permet d'encoder le nouveau MDP de l'utilisateur
@@ -96,7 +98,8 @@ class SecurityController extends Controller
         return $this->render('security/signup.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
-            'errors' => $errors
+            'errors' => $errors,
+            'email' => $email
         ]);
     }
 }

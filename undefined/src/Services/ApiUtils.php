@@ -257,7 +257,7 @@ class ApiUtils
             return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_NOT_FOUND);
         }
      
-        $form->submit($parametersAsArray); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
+        $form->submit($parametersAsArray, false); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
         // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
         if(!$form->isValid()){
             $errors = [];
