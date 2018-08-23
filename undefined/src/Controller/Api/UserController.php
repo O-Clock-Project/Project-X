@@ -21,13 +21,12 @@ class UserController extends AbstractController
     /**
      * @Route("/users", name="listUsers", methods="GET")
      */
-    public function getUsers(UserRepository $userRepo, Request $request )
+    public function getUsers(UserRepository $userRepo, Request $request, ApiUtils $utils )
     //Méthode permettant de renvoyer la liste de tous les items, avec filtres, ordre pagination et niveau de détail possible
     {
         
         $user = new User; // On instancie un nouvel item temporaire et vide pour disposer de la liste de tous les propriétés possibles
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItems($user, $userRepo, $request); 
 
@@ -37,11 +36,10 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}", name="showUser", requirements={"id"="\d+"}, methods="GET")
      */
-    public function _getUser(UserRepository $userRepo, $id, Request $request)
+    public function _getUser(UserRepository $userRepo, $id, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer l'item spécifié par l'id reçue et suivant un niveau de détail demandé (_get sinon conflit avec getUser)
     {
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItem($userRepo, $id, $request);
 
@@ -54,14 +52,13 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/{child}/{relation}", name="showUserRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getUserRelations(UserRepository $userRepo, $id, $relation, $child, Request $request, EntityManagerInterface $em)
+    public function getUserRelations(UserRepository $userRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->getItemRelations( $id,  $child, $relation, $em , $request);
+        $response = $utils->getItemRelations( $id,  $child, $relation , $request);
 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
@@ -69,7 +66,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users", name="postUser", methods="POST")
      */
-    public function postUser (Request $request, EntityManagerInterface $em)
+    public function postUser (Request $request, ApiUtils $utils)
     //Méthode permettant de persister un nouvel item à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
         $user = new User(); // On instancie un nouvel item qui va venir être hydraté par les informations fournies dans la requête
@@ -78,11 +75,10 @@ class UserController extends AbstractController
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(UserType::class, $user);
 
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->postItem($user, $form, $request, $em);
+        $response = $utils->postItem($user, $form, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
@@ -90,7 +86,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}", name="updateUser", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateUser ($id, Request $request, EntityManagerInterface $em, UserRepository $userRepo, UserPasswordEncoderInterface $encoder)
+    public function updateUser ($id, Request $request, UserRepository $userRepo, UserPasswordEncoderInterface $encoder, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
         $user = $userRepo->findOneById($id);
@@ -99,11 +95,10 @@ class UserController extends AbstractController
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(UserType::class, $user);
 
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
 
          // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->updateItem($user, $form, $request, $em, $encoder);
+        $response = $utils->updateItem($user, $form, $request, $encoder);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }

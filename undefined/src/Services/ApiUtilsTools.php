@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repository\BookmarkRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +23,14 @@ use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
 class ApiUtilsTools
 //Service servant de boite à outils pour ApiUtils afin de n'y laisser que la partie gestion du CRUD pour les controllers
 {
+
+    private $em;
+
+    public function __construct(EntityManagerInterface $em){
+   
+        $this->em = $em;
+    }
+
     public function handleRequestWithParams($object, $repo, $request, $id = null, $relation = null)
     //Méthode permettant de gérer de manière générique les demandes complexe GET (excepté pour GetItem qui passe simplement par un findOne)
     //avec gestion des query string et des hiérarchies
@@ -107,17 +116,17 @@ class ApiUtilsTools
             foreach($order as $key => $value){
                 if($key === 'faved_by'){
                     $qb->addSelect('COUNT(u) AS HIDDEN favScore')
-                    ->leftJoin('obj.'.$key, 'u')
-                    ->orderBy('favScore', $value)
-                    ->groupBy('obj');
+                        ->leftJoin('obj.'.$key, 'u')
+                        ->orderBy('favScore', $value)
+                        ->groupBy('obj');
                 }
                 else if ($key === 'votes'){
                     $qb->addSelect('SUM(CASE WHEN v.value IS NULL THEN :zero ELSE v.value END) AS HIDDEN votesScore')
-                    ->setParameter(':zero', 0)
-                    ->leftJoin('obj.'.$key, 'v')
-                    ->orderBy('votesScore', $value)
-                    ->groupBy('obj');
-                }
+                        ->setParameter(':zero', 0)
+                        ->leftJoin('obj.'.$key, 'v')
+                        ->orderBy('votesScore', $value)
+                        ->groupBy('obj');
+                    }
                 else{
                 $qb->orderBy('obj.'.$key, $value );
                 }
@@ -183,7 +192,7 @@ class ApiUtilsTools
 
 
 
-    public function prepareAddRelationsActions($object, $parametersAsArray, $em)
+    public function prepareAddRelationsActions($object, $parametersAsArray)
     //Méthode qui prépare les créations de relation avec d'autres entités de l'objet créé/modifié (dispo en POST/PUT)
     {
         $parentClass = get_class($object); //on récupère la classe de l'objet créé
@@ -203,7 +212,7 @@ class ApiUtilsTools
                         $actionsAddAsArray['error'][] = ['error'=>$property.' non trouvée']; //Si toujours pas, on envoie un message d'erreur
                     }
                 }
-                $childRepo = $em->getRepository($childClass); //On va chercher le repository de la classe "enfante"
+                $childRepo = $this->em->getRepository($childClass); //On va chercher le repository de la classe "enfante"
                 $childObject = $childRepo->findOneById($id); // On va chercher l'objet correspondant à l'id donnée
                 if(null===$childObject){ //Si on trouve pas d'objet avec l'id passé, on retourne un message d'erreur
                     $actionsAddAsArray['error'][] = ['error'=>$childClass . ' id '. $id. ' non trouvée'];
@@ -220,7 +229,7 @@ class ApiUtilsTools
         return $actionsAddAsArray;
     }
 
-    public function prepareRemoveRelationsActions($object, $parametersAsArray, $em)
+    public function prepareRemoveRelationsActions($object, $parametersAsArray)
     //Méthode qui prépare les retraits de relation avec d'autres entités de l'objet modifié/supprimé (dispo en PUT/DELETE)
     {
         $parentClass = get_class($object); //on récupère la classe de l'objet créé
@@ -237,7 +246,7 @@ class ApiUtilsTools
                 if(!in_array($method, $classMethods)){ //On vérifie que cette méthode setPropriété existe bien dans les méthodes de la classe parente
                     $actionsRemoveAsArray['error'][] = ['error'=>$property.' non trouvée']; //Si la méhode n'existe pas, on envoie un message d'erreur
                 }
-                $childRepo = $em->getRepository($childClass); //On va chercher le repository de la classe "enfante"
+                $childRepo = $this->em->getRepository($childClass); //On va chercher le repository de la classe "enfante"
                 $childObject = $childRepo->findOneById($id); // On va chercher l'objet correspondant à l'id donnée
                 if(null===$childObject){ //Si on trouve pas d'objet avec l'id passé, on retourne un message d'erreur
                     $actionsRemoveAsArray['error'][] = ['error'=>$childClass . ' id '. $id. ' non trouvée'];

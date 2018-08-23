@@ -30,13 +30,12 @@ class BookmarkController extends AbstractController
     /**
      * @Route("/bookmarks", name="listBookmarks", methods="GET")
      */
-    public function getBookmarks(BookmarkRepository $bookmarkRepo, Request $request )
+    public function getBookmarks(BookmarkRepository $bookmarkRepo, Request $request, ApiUtils $utils )
     //Méthode permettant de renvoyer la liste de tous les items, avec filtres, ordre pagination et niveau de détail possible
     {
         
         $bookmark = new Bookmark; // On instancie un nouvel item temporaire et vide pour disposer de la liste de tous les propriétés possibles
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItems($bookmark, $bookmarkRepo, $request); 
 
@@ -46,11 +45,10 @@ class BookmarkController extends AbstractController
     /**
      * @Route("/bookmarks/{id}", name="showBookmark", requirements={"id"="\d+"}, methods="GET")
      */
-    public function getBookmark(BookmarkRepository $bookmarkRepo, $id, Request $request)
+    public function getBookmark(BookmarkRepository $bookmarkRepo, $id, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItem($bookmarkRepo, $id, $request);
 
@@ -60,14 +58,13 @@ class BookmarkController extends AbstractController
     /**
      * @Route("/bookmarks/{id}/{child}/{relation}", name="showBookmarkRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getBookmarkRelations(BookmarkRepository $bookmarkRepo, $id, $relation, $child, Request $request, EntityManagerInterface $em)
+    public function getBookmarkRelations(BookmarkRepository $bookmarkRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->getItemRelations( $id,  $child, $relation, $em , $request);
+        $response = $utils->getItemRelations( $id,  $child, $relation , $request);
 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
@@ -76,7 +73,7 @@ class BookmarkController extends AbstractController
     /**
      * @Route("/bookmarks", name="postBookmark", methods="POST")
      */
-    public function postBookmark (Request $request, EntityManagerInterface $em)
+    public function postBookmark (Request $request, ApiUtils $utils)
     //Méthode permettant de persister un nouvel item à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
         $bookmark = new Bookmark(); // On instancie un nouvel item qui va venir être hydraté par les informations fournies dans la requête
@@ -85,11 +82,10 @@ class BookmarkController extends AbstractController
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(BookmarkType::class, $bookmark);
 
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->postItem($bookmark, $form, $request, $em);
+        $response = $utils->postItem($bookmark, $form, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
@@ -97,7 +93,7 @@ class BookmarkController extends AbstractController
     /**
      * @Route("/bookmarks/{id}", name="upadateBookmark", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateBookmark ($id, Request $request, EntityManagerInterface $em, BookmarkRepository $bookmarkRepo)
+    public function updateBookmark ($id, Request $request, BookmarkRepository $bookmarkRepo, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
         $bookmark = $bookmarkRepo->findOneById($id);
@@ -106,11 +102,10 @@ class BookmarkController extends AbstractController
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(BookmarkType::class, $bookmark);
 
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->updateItem($bookmark, $form, $request, $em);
+        $response = $utils->updateItem($bookmark, $form, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
@@ -118,7 +113,7 @@ class BookmarkController extends AbstractController
     /**
      * @Route("/filters", name="getFilters", methods="GET")
      */
-    public function getFilters (Request $request)
+    public function getFilters (Request $request,ApiUtilsTools $utilsTools)
     //
     {
         $support = new SupportController();
@@ -141,8 +136,7 @@ class BookmarkController extends AbstractController
             'tags' => $tags
         );
         
-        $utilsTools = new ApiUtilsTools; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-        //puis la mise en forme de la réponse reçue au format json
+
 
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $jsonContent = $utilsTools->handleSerialization($filters, "filters");

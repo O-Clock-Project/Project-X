@@ -52,7 +52,6 @@ class UserSecurityType extends AbstractType
                 ],
 
             ])
-            // ->add('code')
             ->add('firstname', TextType::class, [
                 'label' => 'Prenom', 
                 'attr' => [
@@ -92,7 +91,7 @@ class UserSecurityType extends AbstractType
                     'placeholder' => 'Pseudo Github'  
                 ],
             ])
-            //->add('isActive')
+
        
         ;
     }
