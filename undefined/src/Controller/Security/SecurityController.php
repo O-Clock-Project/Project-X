@@ -45,6 +45,20 @@ class SecurityController extends Controller
     public function new(Request $request, UserPasswordEncoderInterface $encoder, PromotionRepository $repoPromo, RoleRepository $repoRole): Response
     //A rajouter pour les invitations en injection de dépendances InvitationRepository $repoInvit
     {
+        $arrayEmail = [
+            'favouille@gmail.com',
+            'popo@gmail.com',
+            'kiki@gmail.com',
+            'yahoo@gmail.com'
+        ];
+        $arrayMailCode = [];
+
+        foreach($arrayEmail as $email) {
+            $code = crypt($email, 'itsatrap');
+            $arrayMailCode[$email] = $code;
+        }
+
+        dump($arrayMailCode);die;
 
 
         $user = new User();

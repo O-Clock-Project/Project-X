@@ -13,31 +13,31 @@ App\Entity\Affectation:
 App\Entity\Announcement:
     attributes:
         id:
-            groups: ['concise', 'promotion', 'announcements']
+            groups: ['concise', 'promotion', 'announcements', 'announcement']
         title:
-            groups: ['concise', 'announcements']
+            groups: ['concise', 'announcements', 'announcement']
         body:
-            groups: ['concise', 'announcements']
+            groups: ['concise', 'announcements', 'announcement']
         type:
-            groups: ['concise', 'announcements']    
+            groups: ['concise', 'announcements', 'announcement']    
         frozen:
-            groups: ['announcements']
+            groups: ['announcements', 'announcement']
         closing_at:
-            groups: ['announcements']
+            groups: ['announcements', 'announcement']
         author:
-            groups: ['announcements']
+            groups: ['announcements', 'announcement']
         comments:
-            groups: ['announcements']
+            groups: ['announcements', 'announcement']
         created_at:
-            groups: ['announcements']
+            groups: ['announcements', 'announcement']
         
        
 App\Entity\AnnouncementType:
     attributes:
         id:
-            groups: ['concise', 'promotion', 'announcements']
+            groups: ['concise', 'promotion', 'announcements', 'announcement']
         name:
-            groups: ['concise', 'announcements'] 
+            groups: ['concise', 'announcements', 'announcement'] 
 
 App\Entity\Bookmark:
     attributes:
