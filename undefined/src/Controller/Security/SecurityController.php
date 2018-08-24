@@ -45,14 +45,29 @@ class SecurityController extends Controller
     public function new(Request $request, UserPasswordEncoderInterface $encoder, PromotionRepository $repoPromo, RoleRepository $repoRole): Response
     //A rajouter pour les invitations en injection de dépendances InvitationRepository $repoInvit
     {
+
+
         $user = new User();
         $form = $this->createForm(UserSecurityType::class, $user);
         $errors = [];
-        $email = "";
-        if($request->get('email') !== null){
-            $email = $request->get('email');
-            $user->setEmail($email);
-            $form->get('email')->setData($email);
+        $message = "";
+        $email= "";
+
+        if($request->get('email') !== null && $request->get('code') !== null){
+            $received   = $request->get('code');
+            $correct  = crypt($request->get('email'), 'itsatrap');
+            // dump($correct);die;
+            if($received == $correct){
+                $email = $request->get('email');
+                $message = "Bienvenue dans ta nouvelle demeure, " . $email ." !";
+                $form->get('email')->setData($email);
+            }
+            else{
+                $message= "Bien tenté mais il va falloir faire mieux que ça...";
+            }
+        }
+        else{
+            $message = "Tu as besoin d'utiliser le lien d'inscription reçu par email pour pouvoir t'inscrire!";
         }
 
         $form->handleRequest($request);
@@ -99,7 +114,7 @@ class SecurityController extends Controller
             'user' => $user,
             'form' => $form->createView(),
             'errors' => $errors,
-            'email' => $email
+            'message' => $message
         ]);
     }
 }

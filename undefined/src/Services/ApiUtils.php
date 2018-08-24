@@ -182,10 +182,15 @@ class ApiUtils
         //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
         //Pour chaque action de notre tableau
         if(isset($actionsAsArray)){
-            foreach($actionsAsArray as $action){
-                 $actionMethod = $action['method']; //On 
-                $actionChild = $action['child'];
-                $object->$actionMethod($actionChild);
+            if(isset($actionsAsArray['error'])){
+                return new JsonResponse($actionsAsArray['error'], Response::HTTP_BAD_REQUEST);
+            }
+            else{
+                foreach($actionsAsArray as $action){
+                    $actionMethod = $action['method']; //On 
+                    $actionChild = $action['child'];
+                    $object->$actionMethod($actionChild);
+                }
             }
         }
         // Si le "form virtuel" est valide, on persiste l'objet en BDD

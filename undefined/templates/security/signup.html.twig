@@ -12,11 +12,9 @@
     <div id="signup">
         <img id= "login-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
         <h2 id="signup-subtitle">Inscription</h2>
-        {% if email == true %}
-        <h3 > Bienvenue {{ email }}</h3>
-        {% else %}
-        <h3 > Tu as besoin d'utiliser le lien d'inscription reçu par email pour pouvoir t'inscrire! </h3>
-        {% endif %}
+
+        <h3 > {{ message }}</h3>
+
 
         {{ include('security/_form.html.twig') }}
     <ul>

@@ -146,10 +146,14 @@ class ApiUtilsTools
         $objects = $qb->getQuery() //On crée la requête en SQL
                        ->execute(); //Et on l'éxécute
 
+                    
         // Si $objects est vide, on renvoie une erreur 404 et un mesage d'erreur
         if (empty($objects)){
             return array('error' => $this->handleSerialization(['error' => 'Items non trouvés']));
         };
+
+        
+
         
         // Si tout va bien, on envoie un array avec les résultats de la requêtes ($objects), le groupe d'affichage ($group) et error à vide puisque ça a marché
         return array('objects' => $objects, 'group' => $group, 'error' => null);
@@ -179,12 +183,12 @@ class ApiUtilsTools
         if(!empty($group)){
             $options['groups'] =  array($group);
         }
-        
         // On crée le sérializer en lui passant les normalizers (DateTimeNormalizer en premier pour qu'il puisse prendre la main en priorité sur les dates)
         // et les encoders (on utilise pour le moment seulement JsonEncoder)
         //nb: un encoder est une classe qui est en charge de la transformation de la donnée normalisée (tableau) en une chaîne de caractères (json/xml).
         //nb: un serializer est une classe qui gère des normalizers et des encoders pour réaliser la transformation totale dans un sens ou l'autre
         $serializer = new Serializer(array(new DateTimeNormalizer, $objectNormalizer), array(new JsonEncoder()));
+
 
         // On retourne le contenu sérialisé en json
         return $jsonContent = $serializer->serialize($toSerialize, 'json', $options);

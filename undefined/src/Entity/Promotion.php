@@ -148,7 +148,10 @@ class Promotion
      */
     public function getLinks(): Collection
     {
-        return $this->links;
+        return $this->links->filter(function(PromotionLink $link){
+            return $link->getIsActive() == true;
+        })
+        ;
     }
 
     public function addLink(PromotionLink $link): self

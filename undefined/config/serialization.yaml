@@ -28,6 +28,8 @@ App\Entity\Announcement:
             groups: ['announcements']
         comments:
             groups: ['announcements']
+        created_at:
+            groups: ['announcements']
         
        
 App\Entity\AnnouncementType:
@@ -194,6 +196,8 @@ App\Entity\Vote:
             groups: ['concise' , 'bookmarks', 'bookmark']
         bookmark:
             groups: ['concise', 'bookmarks']
+        voter:
+            groups: ['concise', 'bookmarks']           
 
 App\Entity\WarningBookmark:
     attributes:
