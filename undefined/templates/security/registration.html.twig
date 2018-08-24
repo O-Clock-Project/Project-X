@@ -13,6 +13,10 @@
         <img id= "signup-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
         <h2 id="signup-subtitle">Pré'Inscription des éléves</h2>
         
+        {% for message in app.flashes('notice') %}
+            <div > {{ message }}</div>
+        {% endfor %}
+        
         <form "{{ path("sendEmailRegistration")}}" method="POST" id="signup-form" action="" autocomplete="off">
             
             <div class="signup-form-category">

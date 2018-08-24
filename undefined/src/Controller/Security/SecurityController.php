@@ -23,6 +23,7 @@ class SecurityController extends Controller
 {
     /**
      * @Route("/login", name="login")
+     * Methode permettant la connection de l'user
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils)
     {
@@ -44,6 +45,7 @@ class SecurityController extends Controller
 
     /**
      * @Route("/register", name="register", methods="GET|POST")
+     * Methode permettant l'ajout d'un utilisateur (après reception du mail)
      */
     public function new(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
@@ -76,29 +78,30 @@ class SecurityController extends Controller
 
     /**
     * @Route("/registration", name="registration", methods="GET|POST")
+    * Methode permettant la pré-inscription par mail des élèves 
     */
     public function emailRegistration(Request $request,\Swift_Mailer $mailer, EntityManagerInterface $em, PromotionRepository $repoPromo)
     {    
-        // J'instancie promotion pour récuperer toute les promotion et afficher 
+        // On instancie promotion pour récupérer toutes les promotions et afficher 
         // dans la view le nom de celle-ci
         $promotion = new Promotion;
         $promotionRepo = $this->getDoctrine()->getRepository(Promotion::class);
         $promotions = $promotionRepo->findAll();
 
-        $invitation = new Invitation;
         // Si mon formulaire n'est pas vide je recupère les données du champs email
         if (!empty($_POST)) {
+    
             $emails = isset($_POST['email']) ? $_POST['email'] : '';
             
             // Tableau contenant tout les emails (en enlevant les ";")
             $arrayEmail = explode(";", $emails);
             
-            // On enlève chaque espace devant/derrière les mails
+            // On enlève chaque espace devant/derrière les mails en fessant une boucle
             $arrayEmail = array_map('trim', $arrayEmail);
             
             $arrayMailCode = [];
 
-            // On parcout le tableau, pour créer un tableau associatif, les mails (les keys) vont recevoir un code chacun
+            // On parcourt le tableau, pour créer un tableau associatif, les mails (= keys) vont recevoir un code chacun
             foreach($arrayEmail as $email) {
                 // On génère les codes aléatoires
                 $code = crypt($email, 'itsatrap');
@@ -107,28 +110,22 @@ class SecurityController extends Controller
 
             // On parcourt le tableau et on enregistre dans la table Invitation
             foreach($arrayMailCode as $email=>$code) {
-                // 
+                // On récupère le select du form
                 $promotionSelect = $_POST['Promotion'];
+                // On récupère la promo correspondante avec l'id
                 $promotion = $repoPromo->findOneById($promotionSelect);
                 
-                // On insert en Bdd
-                $newInvitation = new Invitation();
-                $newInvitation->setEmail($email);
-                $newInvitation->setSecretCode($code);
-                $newInvitation->setPromotion($promotion);
-                $newInvitation->setSender($this->getUser());
+                // On instancie Invitation puis on insert les données en BDD
+                $invitation = new Invitation();
+                $invitation->setEmail($email);
+                $invitation->setSecretCode($code);
+                $invitation->setPromotion($promotion);
+                $invitation->setSender($this->getUser());
                 //on persiste l'objet en BDD
-                $em->persist($newInvitation);
+                $em->persist($invitation);
                 $em->flush();
             }
-            
-            /*
-            * noemielej@yahoo.fr; noemielej@gmail.com
 
-                8/ Dans chaque email se trouve un lien d'inscription formatté comme suit; www.thehub.com/register?code=lecodesecret&email=emaildeletudiant@gmail.com
-                9/ Quand il clique sur le lien, ça l'envoie sur la page /register mais dans l'url, on a bien le code et l'email
-                9a/ Grace à l'email, on préremplie le champ email du formulaire d'inscription (User Friendly et évite les erreurs d'email)
-            */
             // On parcourt le tableau, pour envoyer une invitation à chaque mail saisie 
             foreach($arrayMailCode as $email=>$code) {
                 $message = (new \Swift_Message('Mail de validation d\'inscription'))
@@ -144,23 +141,25 @@ class SecurityController extends Controller
                         'text/html'
                         );
                     $mailer->send($message);
-                    //return $this->redirectToRoute('app');
                 }
+            // Flash Message si l'invitaion'c'est bien envoyé
+            $this->addFlash(
+                'notice',
+                'Votre invitation a bien été envoyé.'
+            );   
         }
-
+          
         return $this->render('security/registration.html.twig', [
             'promotions' => $promotions
         ]);
     }
 
-
     /**
     * @Route("/registration/sendEmail", name="sendEmailRegistration", methods="GET|POST")
+    * Methode permettant de récolter les informations après soumission du form 
     */
     public function sendEmailRegistration(Request $request)
     {  
-
-    
-
+  
     }
 }
