@@ -3,12 +3,14 @@
 namespace App\Controller\Security;
 
 use App\Entity\User;
-use App\Entity\Invitation;
-use App\Entity\Promotion;
 use App\Form\UserType;
-use App\Form\UserSecurityType;
+use App\Entity\Promotion;
+use App\Entity\Invitation;
 use App\Form\InvitationType;
+use App\Form\UserSecurityType;
 use App\Services\ApiUtilsTools;
+use App\Repository\PromotionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -75,7 +77,7 @@ class SecurityController extends Controller
     /**
     * @Route("/registration", name="registration", methods="GET|POST")
     */
-    public function emailRegistration(Request $request,\Swift_Mailer $mailer)
+    public function emailRegistration(Request $request,\Swift_Mailer $mailer, EntityManagerInterface $em, PromotionRepository $repoPromo)
     {    
         // J'instancie promotion pour récuperer toute les promotion et afficher 
         // dans la view le nom de celle-ci
@@ -102,30 +104,51 @@ class SecurityController extends Controller
                 $code = crypt($email, 'itsatrap');
                 $arrayMailCode[$email] = $code;
             }
+
+            // On parcourt le tableau et on enregistre dans la table Invitation
+            foreach($arrayMailCode as $email=>$code) {
+                // 
+                $promotionSelect = $_POST['Promotion'];
+                $promotion = $repoPromo->findOneById($promotionSelect);
+                
+                // On insert en Bdd
+                $newInvitation = new Invitation();
+                $newInvitation->setEmail($email);
+                $newInvitation->setSecretCode($code);
+                $newInvitation->setPromotion($promotion);
+                $newInvitation->setSender($this->getUser());
+                //on persiste l'objet en BDD
+                $em->persist($newInvitation);
+                $em->flush();
+            }
+            
             /*
             * noemielej@yahoo.fr; noemielej@gmail.com
-                6/ Sur le tableau associatif, on fait à nouveau un foreach et on crée pour chaque tour de boucle un enregistrement dans la table Invitation avec les champs : email / code / promotion_id / author (prof qui crée l'invit) / user (le compte créé quand l'invit est "consommée")
-                7/ Sur le tableau associatif, on fait une dernière fois un foreach et cette fois on envoie les emails avec.
+
                 8/ Dans chaque email se trouve un lien d'inscription formatté comme suit; www.thehub.com/register?code=lecodesecret&email=emaildeletudiant@gmail.com
                 9/ Quand il clique sur le lien, ça l'envoie sur la page /register mais dans l'url, on a bien le code et l'email
                 9a/ Grace à l'email, on préremplie le champ email du formulaire d'inscription (User Friendly et évite les erreurs d'email)
             */
-            $message = (new \Swift_Message('Mail de validation d\'inscription'))
-                ->setFrom('hub.oclock@gmail.com')
-                ->setTo($email)
-                ->setBody(
-                    $this->renderView(
-                        'security/emailType.html.twig',[
-                        ]
-                    ),
-                    'text/html'
-                    );
-            $mailer->send($message);
-            return $this->redirectToRoute('app');
+            // On parcourt le tableau, pour envoyer une invitation à chaque mail saisie 
+            foreach($arrayMailCode as $email=>$code) {
+                $message = (new \Swift_Message('Mail de validation d\'inscription'))
+                    ->setFrom('hub.oclock@gmail.com')
+                    ->setTo($email)
+                    ->setBody(
+                         $this->renderView(
+                            'security/emailType.html.twig',[
+                                'email' => $email,
+                                'code' => $code
+                            ]
+                        ),
+                        'text/html'
+                        );
+                    $mailer->send($message);
+                    //return $this->redirectToRoute('app');
+                }
         }
 
         return $this->render('security/registration.html.twig', [
-            //'code' => $code_aleatoire,
             'promotions' => $promotions
         ]);
     }
@@ -137,23 +160,7 @@ class SecurityController extends Controller
     public function sendEmailRegistration(Request $request)
     {  
 
-        $characts = 'abcdefghijklmnopqrstuvwxyz'; 
-        $characts .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';	
-        $characts .= '1234567890'; 
-        $code_aleatoire = ''; 
-
-        for($i=0;$i < 8;$i++) 
-        { 
-            $code_aleatoire .= $characts[ rand() % strlen($characts) ]; 
-        } 
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-            // $em = $this->getDoctrine()->getManager();
-            // $em->persist($invitation);
-            // $em->flush();
-           
-            
-        //}
+    
 
     }
 }

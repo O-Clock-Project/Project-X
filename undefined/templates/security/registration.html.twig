@@ -26,7 +26,7 @@
                 <label class="signup-form-label" for="promotion">Promotion</label>
                 <select class="signup-form-input" type="select" id="Promotion" name="Promotion">
                 {% for promotion in promotions %} 
-                    <option value={{ promotion.name|e}}>{{ promotion.name|e}}</option> 
+                    <option value={{ promotion.id|e}}>{{ promotion.name|e}}</option> 
                 {% endfor %}
                 </select> 
             </div>
