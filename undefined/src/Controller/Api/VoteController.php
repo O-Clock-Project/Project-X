@@ -81,7 +81,7 @@ class VoteController extends AbstractController
     }
 
     /**
-     * @Route("/votes/{id}", name="upadateVote", requirements={"id"="\d+"}, methods="PUT")
+     * @Route("/votes/{id}", name="updateVote", requirements={"id"="\d+"}, methods="PUT")
      */
     public function updateVote ($id, Request $request, VoteRepository $voteRepo, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
@@ -96,6 +96,22 @@ class VoteController extends AbstractController
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->updateItem($vote, $form, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+
+    /**
+     * @Route("/votes/{id}", name="deleteVote", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteVote ($id, Request $request, VoteRepository $voteRepo, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        $vote = $voteRepo->findOneById($id);
+
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($vote, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }

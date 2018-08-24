@@ -95,6 +95,21 @@ class AffectationController extends AbstractController
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
+
+    /**
+     * @Route("/affectations/{id}", name="deleteAffectation", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteAffectation ($id, Request $request, AffectationRepository $affectationRepo, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        $affectation = $affectationRepo->findOneById($id);
+
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($affectation, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
 }
 
 

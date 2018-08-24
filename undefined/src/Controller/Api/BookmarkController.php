@@ -152,6 +152,21 @@ class BookmarkController extends AbstractController
 
     }
 
+    /**
+     * @Route("/bookmarks/{id}", name="deleteBookmark", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteBookmark ($id, Request $request, BookmarkRepository $bookmarkRepo, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        $bookmark = $bookmarkRepo->findOneById($id);
+
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($bookmark, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
 
 
 }

@@ -282,20 +282,31 @@ class ApiUtils
 
         //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
         //Pour chaque action de notre tableau
+        
         if(isset($actionsAddAsArray)){
-            foreach($actionsAddAsArray as $actionAdd){
-                $actionAddMethod = $actionAdd['method']; //On 
-                $actionAddChild = $actionAdd['child'];
-                $object->$actionAddMethod($actionAddChild);
+            if(isset($actionsAddAsArray['error'])){
+                return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_BAD_REQUEST);
+            }
+            else{
+                foreach($actionsAddAsArray as $actionAdd){
+                    $actionAddMethod = $actionAdd['method']; //On 
+                    $actionAddChild = $actionAdd['child'];
+                    $object->$actionAddMethod($actionAddChild);
+                }
             }
         }
 
 
         if(isset($actionsRemoveAsArray)){
-            foreach($actionsRemoveAsArray as $actionRemove){
-                $actionRemoveMethod = $actionRemove['method']; //On 
-                $actionRemoveChild = $actionRemove['child'];
-                $object->$actionRemoveMethod($actionRemoveChild);
+            if(isset($actionsRemoveAsArray['error'])){
+                return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_BAD_REQUEST);
+            }
+            else{
+                foreach($actionsRemoveAsArray as $actionRemove){
+                    $actionRemoveMethod = $actionRemove['method']; //On 
+                    $actionRemoveChild = $actionRemove['child'];
+                    $object->$actionRemoveMethod($actionRemoveChild);
+                }
             }
         }
         // Si le "form virtuel" est valide, on persiste l'objet en BDD
@@ -306,6 +317,69 @@ class ApiUtils
             $jsonContent = $this->tools->handleSerialization($object);
             // on crée une Réponse avec le code http 201 ("created")
             $response =  new Response($jsonContent, Response::HTTP_CREATED);
+            // On set le header Content-Type sur json et utf-8
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+
+            return $response; //On renvoie la réponse
+    
+    }
+
+    public function deleteItem($object, $request)
+    // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
+    {
+
+        $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
+        
+        if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
+
+            $parametersAsArray = json_decode($content, true); //Et on decode en json
+        }
+            
+
+        // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
+        // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
+        foreach($parametersAsArray as $key => $value){
+            if(!is_array($value) && strtotime($value) ) {
+                $value = new \Datetime($value);
+            }
+        }
+        
+
+        if(isset($parametersAsArray['remove'])){
+            $actionsRemoveAsArray = $this->tools->prepareRemoveRelationsActions($object, $parametersAsArray);
+            unset($parametersAsArray['remove']);
+        }
+        if(isset($actionsRemoveAsArray['error'])){
+            return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_NOT_FOUND);
+        }
+     
+
+        //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
+        //Pour chaque action de notre tableau
+        
+
+        if(isset($actionsRemoveAsArray)){
+            if(isset($actionsRemoveAsArray['error'])){
+                return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_BAD_REQUEST);
+            }
+            else{
+                foreach($actionsRemoveAsArray as $actionRemove){
+                    $actionRemoveMethod = $actionRemove['method']; //On 
+                    $actionRemoveChild = $actionRemove['child'];
+                    $object->$actionRemoveMethod($actionRemoveChild);
+                }
+            }
+        }
+
+        // Si le "form virtuel" est valide, on persiste l'objet en BDD
+            $this->em->remove($object);
+            $this->em->flush();
+            
+            // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
+            $jsonContent = $this->tools->handleSerialization(array('success' => 'Item effacé'));
+            // on crée une Réponse avec le code http 201 ("created")
+            $response =  new Response($jsonContent, Response::HTTP_OK);
             // On set le header Content-Type sur json et utf-8
             $response->headers->set('Content-Type', 'application/json');
             $response->headers->set('Access-Control-Allow-Origin', '*');
