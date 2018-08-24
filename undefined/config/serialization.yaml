@@ -77,9 +77,13 @@ App\Entity\Bookmark:
 App\Entity\Comment:
     attributes:
         id:
-            groups: ['concise', 'announcements']
+            groups: ['concise', 'announcements', 'announcement']
         body:
-            groups: ['concise']
+            groups: ['concise', 'announcement']
+        author:
+            groups: ['concise', 'announcement']
+        created_at:
+            groups: ['announcement']
 
 App\Entity\Difficulty:
     attributes:
@@ -158,9 +162,9 @@ App\Entity\Tag:
 App\Entity\User:
     attributes:   
         id:
-            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements']
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements', 'announcement']
         username:
-            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements']
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements', 'announcement']
         first_name:
             groups: ['concise' , 'profile']
         last_name:
@@ -186,7 +190,7 @@ App\Entity\User:
         affectations:
             groups: ['profile']
         avatar:
-            groups: ['concise', 'profile', 'announcements']
+            groups: ['concise', 'profile', 'announcements', 'announcement']
 
 App\Entity\Vote:
     attributes:
