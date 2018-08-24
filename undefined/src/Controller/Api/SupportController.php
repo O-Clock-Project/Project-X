@@ -49,7 +49,7 @@ class SupportController extends AbstractController
     /**
      * @Route("/supports/{id}/{child}/{relation}", name="showSupportRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getSupportRelations(SupportRepository $supportRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getSupportRelations($id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -83,10 +83,9 @@ class SupportController extends AbstractController
     /**
      * @Route("/supports/{id}", name="updateSupport", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateSupport ($id, Request $request, SupportRepository $supportRepo, ApiUtils $utils)
+    public function updateSupport (Request $request, Support $support, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $support = $supportRepo->findOnebyId($id);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
@@ -99,4 +98,19 @@ class SupportController extends AbstractController
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
+
+    /**
+     * @Route("/supports/{id}", name="deleteSupport", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteSupport ( Request $request, Support $support, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($support, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    
 }

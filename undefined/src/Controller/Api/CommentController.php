@@ -49,7 +49,7 @@ class CommentController extends AbstractController
     /**
      * @Route("/comments/{id}/{child}/{relation}", name="showCommentRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getCommentRelations(CommentRepository $commentRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getCommentRelations( $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -84,11 +84,10 @@ class CommentController extends AbstractController
     /**
      * @Route("/comments/{id}", name="updateComment", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateComment ($id, Request $request, CommentRepository $commentRepo, ApiUtils $utils)
+    public function updateComment (Request $request, Comment $comment, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $comment = $commentRepo->findOneById($id);
-
+  
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(CommentType::class, $comment);
@@ -97,6 +96,20 @@ class CommentController extends AbstractController
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->updateItem($comment, $form, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/comments/{id}", name="deleteComment", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteComment ( Request $request, Comment $comment, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($comment, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }

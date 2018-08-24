@@ -48,7 +48,7 @@ class VoteController extends AbstractController
     /**
      * @Route("/votes/{id}/{child}/{relation}", name="showVoteRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getVoteRelations(VoteRepository $voteRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getVoteRelations( $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -83,10 +83,9 @@ class VoteController extends AbstractController
     /**
      * @Route("/votes/{id}", name="updateVote", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateVote ($id, Request $request, VoteRepository $voteRepo, ApiUtils $utils)
+    public function updateVote ( Request $request, Vote $vote, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $vote = $voteRepo->findOneById($id);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
@@ -104,11 +103,9 @@ class VoteController extends AbstractController
     /**
      * @Route("/votes/{id}", name="deleteVote", requirements={"id"="\d+"}, methods="DELETE")
      */
-    public function deleteVote ($id, Request $request, VoteRepository $voteRepo, ApiUtils $utils)
+    public function deleteVote ( Request $request, Vote $vote, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $vote = $voteRepo->findOneById($id);
-
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->deleteItem($vote, $request);

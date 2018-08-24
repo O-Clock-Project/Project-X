@@ -47,7 +47,7 @@ class AffectationController extends AbstractController
     /**
      * @Route("/affectations/{id}/{child}/{relation}", name="showAffectationRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getAffectationRelations(AffectationRepository $affectationRepo, $id, $relation, $child, Request $request,  ApiUtils $utils)
+    public function getAffectationRelations($id, $relation, $child, Request $request,  ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -80,11 +80,10 @@ class AffectationController extends AbstractController
     /**
      * @Route("/affectations/{id}", name="updateAffectation", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateAffectation ($id, Request $request,  AffectationRepository $affectationRepo, ApiUtils $utils)
+    public function updateAffectation (Request $request,  Affectation $affectation, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $affectation = $affectationRepo->findOnebyId($id);
-
+       
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(AffectationType::class, $affectation);
@@ -99,12 +98,10 @@ class AffectationController extends AbstractController
     /**
      * @Route("/affectations/{id}", name="deleteAffectation", requirements={"id"="\d+"}, methods="DELETE")
      */
-    public function deleteAffectation ($id, Request $request, AffectationRepository $affectationRepo, ApiUtils $utils)
+    public function deleteAffectation (Request $request, Affectation $affectation, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $affectation = $affectationRepo->findOneById($id);
-
-        
+               
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->deleteItem($affectation, $request);
 

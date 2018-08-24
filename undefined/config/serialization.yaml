@@ -30,6 +30,8 @@ App\Entity\Announcement:
             groups: ['announcements', 'announcement']
         created_at:
             groups: ['announcements', 'announcement']
+        promotions:
+            groups: ['announcement']
         
        
 App\Entity\AnnouncementType:
@@ -77,13 +79,13 @@ App\Entity\Bookmark:
 App\Entity\Comment:
     attributes:
         id:
-            groups: ['concise', 'announcements', 'comments']
+            groups: ['concise', 'announcements','announcement', 'comments']
         body:
             groups: ['concise', 'comments']
         author:
             groups: ['concise', 'comments']
         created_at:
-            groups: ['announcement', 'comments']
+            groups: [ 'comments']
 
 App\Entity\Difficulty:
     attributes:
@@ -104,7 +106,7 @@ App\Entity\Locale:
 App\Entity\Promotion:
     attributes:
         id:
-            groups: ['concise', 'profile', 'promotion']
+            groups: ['concise', 'profile', 'promotion', 'announcement']
         name:
             groups: ['concise', 'profile', 'promotion']
         affectations:

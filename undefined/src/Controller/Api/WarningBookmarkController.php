@@ -48,7 +48,7 @@ class WarningBookmarkController extends AbstractController
     /**
      * @Route("/warningBookmarks/{id}/{child}/{relation}", name="showWarningBookmarkRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getWarningBookmarkRelations(WarningBookmarkRepository $warningBookmarkRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getWarningBookmarkRelations( $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -82,10 +82,9 @@ class WarningBookmarkController extends AbstractController
     /**
      * @Route("/warningBookmarks/{id}", name="upadateWarningBookmark", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateWarningBookmark ($id, Request $request, WarningBookmarkRepository $warningBookmarkRepo, ApiUtils $utils)
+    public function updateWarningBookmark (Request $request, WarningBookmark $warningBookmark, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $warningBookmark = $warningBookmarRepo->findOneById($id);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
@@ -95,6 +94,20 @@ class WarningBookmarkController extends AbstractController
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->updateItem($warningBookmark, $form, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/warningBookmarks/{id}", name="deleteWarningBookmark", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteWarningBookmark ( Request $request, WarningBookmark $warningBookmark, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($warningBookmark, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }

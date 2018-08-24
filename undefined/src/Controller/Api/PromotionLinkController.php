@@ -48,7 +48,7 @@ class PromotionLinkController extends AbstractController
     /**
      * @Route("/promotionLinks/{id}/{child}/{relation}", name="showPromotionLinkRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getPromotionLinkRelations(PromotionLinkRepository $promotionLinkRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getPromotionLinkRelations( $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -82,10 +82,9 @@ class PromotionLinkController extends AbstractController
     /**
      * @Route("/promotionLinks/{id}", name="updatePromotionLink", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updatePromotionLink ($id, Request $request, PromotionLinkRepository $promotionLinkRepo, ApiUtils $utils)
+    public function updatePromotionLink (Request $request, PromotionLink $promotionLink, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $promotionLink = $promotionLinkRepo->findOnebyId($id);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
@@ -95,6 +94,19 @@ class PromotionLinkController extends AbstractController
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->updateItem($promotionLink, $form, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/promotionLinks/{id}", name="deletePromotionLink", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deletePromotionLink ( Request $request, PromotionLink $promotionLink, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($promotionLink, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }

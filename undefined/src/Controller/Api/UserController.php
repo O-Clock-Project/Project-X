@@ -52,7 +52,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/{child}/{relation}", name="showUserRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getUserRelations(UserRepository $userRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getUserRelations($id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -86,10 +86,9 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}", name="updateUser", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateUser ($id, Request $request, UserRepository $userRepo, UserPasswordEncoderInterface $encoder, ApiUtils $utils)
+    public function updateUser ( Request $request, User $user, UserPasswordEncoderInterface $encoder, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $user = $userRepo->findOneById($id);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
@@ -99,6 +98,20 @@ class UserController extends AbstractController
 
          // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->updateItem($user, $form, $request, $encoder);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/users/{id}", name="deleteUser", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteUser ( Request $request, User $user, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($user, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }

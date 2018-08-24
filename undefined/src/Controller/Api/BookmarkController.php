@@ -58,7 +58,7 @@ class BookmarkController extends AbstractController
     /**
      * @Route("/bookmarks/{id}/{child}/{relation}", name="showBookmarkRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getBookmarkRelations(BookmarkRepository $bookmarkRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getBookmarkRelations( $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -93,10 +93,10 @@ class BookmarkController extends AbstractController
     /**
      * @Route("/bookmarks/{id}", name="upadateBookmark", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateBookmark ($id, Request $request, BookmarkRepository $bookmarkRepo, ApiUtils $utils)
+    public function updateBookmark ( Request $request, Bookmark $bookmark, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $bookmark = $bookmarkRepo->findOneById($id);
+        
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
@@ -106,6 +106,20 @@ class BookmarkController extends AbstractController
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->updateItem($bookmark, $form, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/bookmarks/{id}", name="deleteBookmark", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteBookmark ( Request $request, Bookmark $bookmark, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+ 
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($bookmark, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
@@ -152,20 +166,7 @@ class BookmarkController extends AbstractController
 
     }
 
-    /**
-     * @Route("/bookmarks/{id}", name="deleteBookmark", requirements={"id"="\d+"}, methods="DELETE")
-     */
-    public function deleteBookmark ($id, Request $request, BookmarkRepository $bookmarkRepo, ApiUtils $utils)
-    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
-    {
-        $bookmark = $bookmarkRepo->findOneById($id);
 
-        
-        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->deleteItem($bookmark, $request);
-
-        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
-    }
 
 
 

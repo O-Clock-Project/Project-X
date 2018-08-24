@@ -46,7 +46,7 @@ class DifficultyController extends AbstractController
     /**
      * @Route("/difficulties/{id}/{child}/{relation}", name="showDifficultyRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getDifficultyRelations(DifficultyRepository $difficultyRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getDifficultyRelations( $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -78,10 +78,9 @@ class DifficultyController extends AbstractController
     /**
      * @Route("/difficulties/{id}", name="updateDifficulty", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateDifficulty ($id, Request $request, DifficultyRepository $difficultyRepo, ApiUtils $utils)
+    public function updateDifficulty (Request $request, Difficulty $difficulty, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $difficulty = $difficultyRepo->findOnebyId($id);
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
@@ -90,6 +89,20 @@ class DifficultyController extends AbstractController
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->updateItem($difficulty, $form, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/difficulties/{id}", name="deleteDifficulty", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteDifficulty ( Request $request, Difficulty $difficulty, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($difficulty, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }

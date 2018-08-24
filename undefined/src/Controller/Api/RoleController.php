@@ -48,7 +48,7 @@ class RoleController extends AbstractController
     /**
      * @Route("/roles/{id}/{child}/{relation}", name="showRoleRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getRoleRelations(RoleRepository $roleRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getRoleRelations($id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -82,11 +82,10 @@ class RoleController extends AbstractController
     /**
      * @Route("/roles/{id}", name="updateRole", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateRole ($id, Request $request, RoleRepository $roleRepo, ApiUtils $utils)
+    public function updateRole (Request $request, Role $role, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $role = $roleRepo->findOnebyId($id);
-
+   
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(RoleType::class, $role);
@@ -98,4 +97,18 @@ class RoleController extends AbstractController
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
+
+    /**
+     * @Route("/roles/{id}", name="deleteRole", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteRole ( Request $request, Role $role, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($role, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
 }

@@ -69,7 +69,7 @@ class Comment
 
     public function __construct()
     {
-
+        $this->banned=false;
     }
 
     public function getId()
@@ -174,6 +174,8 @@ class Comment
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
+
+    
 
     
     public function __toString()

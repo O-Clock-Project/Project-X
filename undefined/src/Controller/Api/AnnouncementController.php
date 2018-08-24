@@ -49,7 +49,7 @@ class AnnouncementController extends AbstractController
     /**
      * @Route("/announcements/{id}/{child}/{relation}", name="showAnnouncementRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getAnnouncementRelations(AnnouncementRepository $announcementRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getAnnouncementRelations( $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -84,10 +84,10 @@ class AnnouncementController extends AbstractController
     /**
      * @Route("/announcements/{id}", name="updateAnnouncement", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateAnnouncement ($id, Request $request, AnnouncementRepository $announcementRepo, ApiUtils $utils)
+    public function updateAnnouncement (Request $request, Announcement $announcement, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $announcement = $announcementRepo->findOnebyId($id);
+        
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
@@ -104,12 +104,10 @@ class AnnouncementController extends AbstractController
     /**
      * @Route("/announcements/{id}", name="deleteAnnouncement", requirements={"id"="\d+"}, methods="DELETE")
      */
-    public function deleteAnnouncement ($id, Request $request, AnnouncementRepository $announcementRepo, ApiUtils $utils)
+    public function deleteAnnouncement ( Request $request, Announcement $announcement, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $announcement = $announcementRepo->findOneById($id);
-
-        
+               
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->deleteItem($announcement, $request);
 

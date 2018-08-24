@@ -48,7 +48,7 @@ class AnnouncementTypeController extends AbstractController
     /**
      * @Route("/announcementTypes/{id}/{child}/{relation}", name="showAnnouncementTypeRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getAnnouncementTypeRelations(AnnouncementTypeRepository $announcementTypeRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
+    public function getAnnouncementTypeRelations($id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
@@ -82,11 +82,10 @@ class AnnouncementTypeController extends AbstractController
     /**
      * @Route("/announcementTypes/{id}", name="updateAnnouncementType", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateAnnouncementType ($id, Request $request, AnnouncementTypeRepository $announcementTypeRepo, ApiUtils $utils)
+    public function updateAnnouncementType (Request $request, AnnouncementType $announcementType, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
-        $announcementType = $announcementTypeRepo->findOnebyId($id);
-
+        
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(AnnouncementTypeType::class, $announcementType);
@@ -95,6 +94,21 @@ class AnnouncementTypeController extends AbstractController
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->updateItem($announcementType, $form, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/announcementTypes/{id}", name="deleteAnnouncementType", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteAnnouncementType (Request $request, AnnouncementType $announcementType, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+     
+
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($announcementType, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
