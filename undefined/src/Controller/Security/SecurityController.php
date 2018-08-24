@@ -83,11 +83,25 @@ class SecurityController extends Controller
         $promotionRepo = $this->getDoctrine()->getRepository(Promotion::class);
         $promotions = $promotionRepo->findAll();
 
+        $invitation = new Invitation;
+
         if (!empty($_POST)) {
-             $email = isset($_POST['email']) ? $_POST['email'] : '';
-            //dump($email);exit; 
+            $email = isset($_POST['email']) ? $_POST['email'] : '';
+            dump($email);exit; 
+            
+            $message = (new \Swift_Message('Mail de validation d\'inscription'))
+            ->setFrom('hub.oclock@gmail.com')
+            ->setTo($email)
+            ->setBody(
+                $this->renderView(
+                    'security/emailType.html.twig',[
+                    ]
+                ),
+                'text/html'
+                );
+            $mailer->send($message);
+            return $this->redirectToRoute('app');
         }
-        
 
         return $this->render('security/registration.html.twig', [
             //'code' => $code_aleatoire,
@@ -112,26 +126,13 @@ class SecurityController extends Controller
             $code_aleatoire .= $characts[ rand() % strlen($characts) ]; 
         } 
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        // if ($form->isSubmitted() && $form->isValid()) {
             // $em = $this->getDoctrine()->getManager();
             // $em->persist($invitation);
             // $em->flush();
-            $message = (new \Swift_Message('Mail de validation d\'inscription'))
-            ->setFrom('hub.oclock@gmail.com')
-            ->setTo($invitation->getCreatedUser()->getEmail())
-            ->setBody(
-                $this->renderView(
-                    'security/emailType.html.twig',[
-                        'code' => $invitation->getSecretCode(),
-                        'email' => $invitation->getCreatedUser()->getEmail()
-                    ]
-                ),
-                'text/html'
-                );
-            $mailer->send($message);
-            return $this->redirectToRoute('app');
+           
             
-        }
+        //}
 
     }
 }
