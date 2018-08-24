@@ -3,10 +3,10 @@
 namespace App\Controller\Security;
 
 use App\Entity\User;
-use App\Form\UserType;
+
 use App\Entity\Promotion;
 use App\Entity\Invitation;
-use App\Form\InvitationType;
+use App\Form\UserType;
 use App\Form\UserSecurityType;
 use App\Services\ApiUtilsTools;
 use App\Repository\PromotionRepository;

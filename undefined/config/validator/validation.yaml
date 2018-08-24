@@ -50,7 +50,7 @@ App\Entity\Bookmark:
             - Type: string
             - Length:
                 min: 10
-                max: 50
+                max: 500
                 minMessage: 'Votre titre est trop court (10 caractères minimum)'
                 maxMessage: 'Votre titre est trop long (50 caractères maximum)'
         resume:
@@ -59,7 +59,7 @@ App\Entity\Bookmark:
             - Type: string
             - Length:
                 min: 10
-                max: 560
+                max: 1000
                 minMessage: 'Votre résumé est trop court (10 caractères minimum)'
                 maxMessage: 'Votre résumé est trop long (560 caractères maximum)'
         url:

@@ -62,6 +62,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMINISTRATOR}
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: ^/registration, role: ROLE_TEACHER }
         - { path: ^/, roles: ROLE_STUDENT }
         
         
