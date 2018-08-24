@@ -84,21 +84,29 @@ class SecurityController extends Controller
         $promotions = $promotionRepo->findAll();
 
         $invitation = new Invitation;
-
+        // Si mon formulaire est valide je recupère les données du champs email
         if (!empty($_POST)) {
-            $email = isset($_POST['email']) ? $_POST['email'] : '';
-            dump($email);exit; 
+            $emails = isset($_POST['email']) ? $_POST['email'] : '';
             
+            // Tableau contenant tout les emails (en enlevant les ";")
+            $arrayEmail = explode(";", $emails);
+            //dump($arrayEmail);exit;
+            
+            foreach($arrayEmail as $email){
+                $emailTrim = trim($email);
+                //dump($emailTrim);exit;
+            }
+         
             $message = (new \Swift_Message('Mail de validation d\'inscription'))
-            ->setFrom('hub.oclock@gmail.com')
-            ->setTo($email)
-            ->setBody(
-                $this->renderView(
-                    'security/emailType.html.twig',[
-                    ]
-                ),
-                'text/html'
-                );
+                ->setFrom('hub.oclock@gmail.com')
+                ->setTo($email)
+                ->setBody(
+                    $this->renderView(
+                        'security/emailType.html.twig',[
+                        ]
+                    ),
+                    'text/html'
+                    );
             $mailer->send($message);
             return $this->redirectToRoute('app');
         }
