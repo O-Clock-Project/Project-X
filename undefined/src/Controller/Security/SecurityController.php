@@ -84,19 +84,32 @@ class SecurityController extends Controller
         $promotions = $promotionRepo->findAll();
 
         $invitation = new Invitation;
-        // Si mon formulaire est valide je recupère les données du champs email
+        // Si mon formulaire n'est pas vide je recupère les données du champs email
         if (!empty($_POST)) {
             $emails = isset($_POST['email']) ? $_POST['email'] : '';
             
             // Tableau contenant tout les emails (en enlevant les ";")
             $arrayEmail = explode(";", $emails);
-            //dump($arrayEmail);exit;
             
-            foreach($arrayEmail as $email){
-                $emailTrim = trim($email);
-                //dump($emailTrim);exit;
+            // On enlève chaque espace devant/derrière les mails
+            $arrayEmail = array_map('trim', $arrayEmail);
+            
+            $arrayMailCode = [];
+
+            // On parcout le tableau, pour créer un tableau associatif, les mails (les keys) vont recevoir un code chacun
+            foreach($arrayEmail as $email) {
+                // On génère les codes aléatoires
+                $code = crypt($email, 'itsatrap');
+                $arrayMailCode[$email] = $code;
             }
-         
+            /*
+            * noemielej@yahoo.fr; noemielej@gmail.com
+                6/ Sur le tableau associatif, on fait à nouveau un foreach et on crée pour chaque tour de boucle un enregistrement dans la table Invitation avec les champs : email / code / promotion_id / author (prof qui crée l'invit) / user (le compte créé quand l'invit est "consommée")
+                7/ Sur le tableau associatif, on fait une dernière fois un foreach et cette fois on envoie les emails avec.
+                8/ Dans chaque email se trouve un lien d'inscription formatté comme suit; www.thehub.com/register?code=lecodesecret&email=emaildeletudiant@gmail.com
+                9/ Quand il clique sur le lien, ça l'envoie sur la page /register mais dans l'url, on a bien le code et l'email
+                9a/ Grace à l'email, on préremplie le champ email du formulaire d'inscription (User Friendly et évite les erreurs d'email)
+            */
             $message = (new \Swift_Message('Mail de validation d\'inscription'))
                 ->setFrom('hub.oclock@gmail.com')
                 ->setTo($email)
