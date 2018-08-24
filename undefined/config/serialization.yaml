@@ -13,20 +13,29 @@ App\Entity\Affectation:
 App\Entity\Announcement:
     attributes:
         id:
-            groups: ['concise', 'promotion']
+            groups: ['concise', 'promotion', 'announcements']
         title:
-            groups: ['concise']
+            groups: ['concise', 'announcements']
         body:
-            groups: ['concise', 'promotion']
+            groups: ['concise', 'announcements']
         type:
-            groups: ['concise']    
+            groups: ['concise', 'announcements']    
+        frozen:
+            groups: ['announcements']
+        closing_at:
+            groups: ['announcements']
+        author:
+            groups: ['announcements']
+        comments:
+            groups: ['announcements']
+        
        
 App\Entity\AnnouncementType:
     attributes:
         id:
-            groups: ['concise', 'promotion']
+            groups: ['concise', 'promotion', 'announcements']
         name:
-            groups: ['concise', 'promotion'] 
+            groups: ['concise', 'announcements'] 
 
 App\Entity\Bookmark:
     attributes:
@@ -66,7 +75,7 @@ App\Entity\Bookmark:
 App\Entity\Comment:
     attributes:
         id:
-            groups: ['concise']
+            groups: ['concise', 'announcements']
         body:
             groups: ['concise']
 
@@ -147,9 +156,9 @@ App\Entity\Tag:
 App\Entity\User:
     attributes:   
         id:
-            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark']
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements']
         username:
-            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark']
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements']
         first_name:
             groups: ['concise' , 'profile']
         last_name:
@@ -175,7 +184,7 @@ App\Entity\User:
         affectations:
             groups: ['profile']
         avatar:
-            groups: ['concise', 'profile']
+            groups: ['concise', 'profile', 'announcements']
 
 App\Entity\Vote:
     attributes:

@@ -209,7 +209,7 @@ class AppFixtures extends Fixture
             'name' => function() use ($faker) { return $faker->unique()->announcementType(); },
         ]);
 
-        $populator->addEntity('App\Entity\Announcement',20 ,[
+        $populator->addEntity('App\Entity\Announcement',40 ,[
             'is_active' => 1,
             'frozen' => 0,
             'closing_at' => function() use ($faker) { 
@@ -299,18 +299,18 @@ class AppFixtures extends Fixture
             //Pour chaque promotion on ajoute de 1 à 3 annonces au hasard
             shuffle($announcements);
             $promotion->__construct();
-            for ( $i=0 ; $i<$faker->numberBetween(1,3) ; $i++){
+            for ( $i=0 ; $i<$faker->numberBetween(2,4)  ; $i++){
                 $promotion->addAnnounce($announcements[$i]);
-                for ( $i=0; $i<6; $i++){
-                    $link = new PromotionLink();
-                    $link->setName($faker->unique()->promotionLink());
-                    $link->setUrl($faker->url());
-                    $link->setIcon($faker->unique()->linkIcon());
-                    $faker->unique($reset = true);
-                    $manager->persist($link);
-                    $promotion->addLink($link);
-                    $manager->persist($promotion);
-                }
+            }
+            for ( $i=0; $i<3; $i++){
+                $link = new PromotionLink();
+                $link->setName($faker->unique()->promotionLink());
+                $link->setUrl($faker->url());
+                $link->setIcon($faker->unique()->linkIcon());
+                $faker->unique($reset = true);
+                $manager->persist($link);
+                $promotion->addLink($link);
+                $manager->persist($promotion);
             }
         }
 
