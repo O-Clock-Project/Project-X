@@ -1,0 +1,19 @@
+
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/reset.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="not_found">
+        <img class="not_found-logo" src={{"assets('images/logo_404.png')"}} alt="Erreur 404" />
+        <div class="not_found-message">
+        <p>"Ah non, ça c'est que nous.</p>
+        <p>Parce qu'il faut être capable de passer pour des cons en un temps record.</p>
+        <p>Ah non, là dessus on a une avance considérable."</p>
+        <p class="not_found-author">Arthur, Livre I, 20 - La Dent de Requin</p>
+        </div>
+    </div>
+{% endblock %}
