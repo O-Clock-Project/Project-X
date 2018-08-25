@@ -266,4 +266,20 @@ class ApiUtilsTools
 
         return $actionsRemoveAsArray;
     }
+
+
+    public function createResponse($jsonContent, $codeHttp){
+
+        // on crée une Réponse avec le code http reçu 
+        $response =  new Response($jsonContent, $codeHttp);
+        // On set le header Content-Type sur json et utf-8
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Methods', 'HEAD, GET, POST, PUT, PATCH, DELETE');
+        $response->headers->set('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
+        
+
+
+        return $response;
+    }
 }

@@ -3,6 +3,9 @@
 namespace App\Controller\Security;
 
 use App\Entity\User;
+
+use App\Entity\Promotion;
+use App\Entity\Invitation;
 use App\Form\UserType;
 use App\Entity\Affectation;
 use App\Form\UserSecurityType;
@@ -20,6 +23,7 @@ class SecurityController extends Controller
 {
     /**
      * @Route("/login", name="login")
+     * Methode permettant la connection de l'user
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils)
     {
@@ -41,6 +45,7 @@ class SecurityController extends Controller
 
     /**
      * @Route("/register", name="register", methods="GET|POST")
+     * Methode permettant l'ajout d'un utilisateur (après reception du mail)
      */
     public function new(Request $request, UserPasswordEncoderInterface $encoder, PromotionRepository $repoPromo, RoleRepository $repoRole): Response
     //A rajouter pour les invitations en injection de dépendances InvitationRepository $repoInvit
@@ -116,5 +121,92 @@ class SecurityController extends Controller
             'errors' => $errors,
             'message' => $message
         ]);
+    }
+
+    /**
+    * @Route("/registration", name="registration", methods="GET|POST")
+    * Methode permettant la pré-inscription par mail des élèves 
+    */
+    public function emailRegistration(Request $request,\Swift_Mailer $mailer, EntityManagerInterface $em, PromotionRepository $repoPromo)
+    {    
+        // On instancie promotion pour récupérer toutes les promotions et afficher 
+        // dans la view le nom de celle-ci
+        $promotion = new Promotion;
+        $promotionRepo = $this->getDoctrine()->getRepository(Promotion::class);
+        $promotions = $promotionRepo->findAll();
+
+        // Si mon formulaire n'est pas vide je recupère les données du champs email
+        if (!empty($_POST)) {
+    
+            $emails = isset($_POST['email']) ? $_POST['email'] : '';
+            
+            // Tableau contenant tout les emails (en enlevant les ";")
+            $arrayEmail = explode(";", $emails);
+            
+            // On enlève chaque espace devant/derrière les mails en fessant une boucle
+            $arrayEmail = array_map('trim', $arrayEmail);
+            
+            $arrayMailCode = [];
+
+            // On parcourt le tableau, pour créer un tableau associatif, les mails (= keys) vont recevoir un code chacun
+            foreach($arrayEmail as $email) {
+                // On génère les codes aléatoires
+                $code = crypt($email, 'itsatrap');
+                $arrayMailCode[$email] = $code;
+            }
+
+            // On parcourt le tableau et on enregistre dans la table Invitation
+            foreach($arrayMailCode as $email=>$code) {
+                // On récupère le select du form
+                $promotionSelect = $_POST['Promotion'];
+                // On récupère la promo correspondante avec l'id
+                $promotion = $repoPromo->findOneById($promotionSelect);
+                
+                // On instancie Invitation puis on insert les données en BDD
+                $invitation = new Invitation();
+                $invitation->setEmail($email);
+                $invitation->setSecretCode($code);
+                $invitation->setPromotion($promotion);
+                $invitation->setSender($this->getUser());
+                //on persiste l'objet en BDD
+                $em->persist($invitation);
+                $em->flush();
+            }
+
+            // On parcourt le tableau, pour envoyer une invitation à chaque mail saisie 
+            foreach($arrayMailCode as $email=>$code) {
+                $message = (new \Swift_Message('Mail de validation d\'inscription'))
+                    ->setFrom('hub.oclock@gmail.com')
+                    ->setTo($email)
+                    ->setBody(
+                         $this->renderView(
+                            'security/emailType.html.twig',[
+                                'email' => $email,
+                                'code' => $code
+                            ]
+                        ),
+                        'text/html'
+                        );
+                    $mailer->send($message);
+                }
+            // Flash Message si l'invitaion'c'est bien envoyé
+            $this->addFlash(
+                'notice',
+                'Votre invitation a bien été envoyé.'
+            );   
+        }
+          
+        return $this->render('security/registration.html.twig', [
+            'promotions' => $promotions
+        ]);
+    }
+
+    /**
+    * @Route("/registration/sendEmail", name="sendEmailRegistration", methods="GET|POST")
+    * Methode permettant de récolter les informations après soumission du form 
+    */
+    public function sendEmailRegistration(Request $request)
+    {  
+  
     }
 }

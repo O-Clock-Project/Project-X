@@ -35,7 +35,7 @@ class ApiUtils
     public function getItems($object, $repo, $request )
     // Méthode qui permet de récupérer tous les items d'une entité, avec filtres, ordre, pagination et niveau de détails configurables
     {
-
+      
         // je passe les paramètres nécessaires au traitement de la requête et des paramètres demandés
         $result = $this->tools->handleRequestWithParams($object, $repo, $request);
 
@@ -50,14 +50,13 @@ class ApiUtils
 
         // On passe les objets reçus à la méthode handleSerialization qui s'occupe de transformer tout ça en json
         $jsonContent = $this->tools->handleSerialization($objects, $group);
-        // on crée une Réponse avec le code http 200 ("réussite")
-        $response =  new Response($jsonContent, 200);
-        // On set le header Content-Type sur json et utf-8
-        $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response = $this->tools->createResponse($jsonContent, Response::HTTP_OK);
 
         return $response; //On renvoie la réponse
     }
+
+
+    
 
 
     public function getItem($repo, $id, $request )
@@ -81,10 +80,7 @@ class ApiUtils
         // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
         $jsonContent = $this->tools->handleSerialization($object, $group);
         // on crée une Réponse avec le code http 200 ("réussite")
-        $response =  new Response($jsonContent, 200);
-        // On set le header Content-Type sur json et utf-8
-        $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response = $this->tools->createResponse($jsonContent, Response::HTTP_OK);
 
         return $response; //On renvoie la réponse
     }
@@ -121,11 +117,7 @@ class ApiUtils
 
         // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
         $jsonContent = $this->tools->handleSerialization($objects, $group);
-        // on crée une Réponse avec le code http 200 ("réussite")
-        $response =  new Response($jsonContent, 200);
-        // On set le header Content-Type sur json et utf-8
-        $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response = $this->tools->createResponse($jsonContent, Response::HTTP_OK);
 
         return $response; //On renvoie la réponse
     }
@@ -200,10 +192,7 @@ class ApiUtils
             // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
             $jsonContent = $this->tools->handleSerialization($object);
             // on crée une Réponse avec le code http 201 ("created")
-            $response =  new Response($jsonContent, Response::HTTP_CREATED);
-            // On set le header Content-Type sur json et utf-8
-            $response->headers->set('Content-Type', 'application/json');
-            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response = $this->tools->createResponse($jsonContent, Response::HTTP_CREATED);
 
             return $response; //On renvoie la réponse
         
@@ -316,10 +305,7 @@ class ApiUtils
             // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
             $jsonContent = $this->tools->handleSerialization($object);
             // on crée une Réponse avec le code http 201 ("created")
-            $response =  new Response($jsonContent, Response::HTTP_CREATED);
-            // On set le header Content-Type sur json et utf-8
-            $response->headers->set('Content-Type', 'application/json');
-            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response = $this->tools->createResponse($jsonContent, Response::HTTP_CREATED);
 
             return $response; //On renvoie la réponse
     
