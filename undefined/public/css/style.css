@@ -120,14 +120,10 @@ html, body, #register{
   border-bottom: 1px dashed #ccc;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin: 1rem 0;
   padding-bottom: .5rem;
 }
-
-.register-form-category:first-child{
-  height: 15rem;
-}
-
 
 .signup-form-section {
   margin-bottom: 3rem;
@@ -137,14 +133,15 @@ html, body, #register{
 .register-form-label{
   min-width: 50%;
   text-align: left;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   cursor: pointer;
   line-height: 1.4;
 }
 
 
 .signup-form-input,
-.register-form-input{
+.register-form-input,
+.register-form-textarea {
   width: 50%;
   background: 0 0;
   border: 0;
@@ -153,7 +150,13 @@ html, body, #register{
   color: #a58a55;
   font-family: Oclock;
   font-weight: 400;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
+  padding: .2rem .5rem;
+}
+
+.register-form-textarea {
+  min-width: 50%;
+  min-height: 10rem;
 }
 
 .register-form-input option, .register-form-input option{

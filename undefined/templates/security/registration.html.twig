@@ -11,7 +11,7 @@
 
     <div id="register">
         <img id= "register-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
-        <h2 id="register-subtitle">Pré-Inscription des éléves</h2>
+        <h2 id="register-subtitle">Pré-Inscription des élèves</h2>
         
         {% for message in app.flashes('notice') %}
             <div > {{ message }}</div>
@@ -20,8 +20,8 @@
         <form "{{ path("registration")}}" method="POST" id="register-form" action="" autocomplete="off">
             
             <div class="register-form-category">
-                <label class="register-form-label" for="email">Emails </label>
-                <textarea class="register-form-input" id="email" name="email" placeholder=" Plusieurs emails possibles en les séparant par des points-virgules "></textarea>
+                <label class="register-form-label" for="email">Emails</label>
+                <textarea class="register-form-textarea" id="email" name="email" placeholder="Plusieurs emails possibles en les séparant par des points-virgules "></textarea>
             </div>
 
             <div class="register-form-category">
