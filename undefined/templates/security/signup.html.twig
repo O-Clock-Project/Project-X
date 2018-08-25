@@ -12,16 +12,19 @@
     <div id="signup">
         <img id= "login-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
         <h2 id="signup-subtitle">Inscription</h2>
-
-        <h3 > {{ message }}</h3>
+           
+        
+        <h3> {{ message }}
+        </h3>
         <ul>
             {% for error in errors %}
                 <li>{{ error }}</li>
             {% endfor %}
         </ul>
 
-        <p>Tous les champs sont obligatoires</p>
-
+    <div class="signup-form-container">
+        <p id="signup-notice">Tous les champs sont obligatoires *</p>
         {{ include('security/_form.html.twig') }}
+    </div>
 
 {% endblock %}

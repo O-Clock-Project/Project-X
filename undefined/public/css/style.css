@@ -108,12 +108,37 @@ html, body, #register{
 
 #signup-form,
 #register-form{
-  width: 40%;
+
+  width: 80%;
   margin: auto;
   padding: 1rem 0;
   text-align: center;
-
 }
+
+#signup-notice{
+  position: absolute;
+  left: 0%;
+  top: -5%;
+  transform: translateX(-30%) rotate(-25deg);
+  font-size: 1.2rem;
+  padding: 1rem;
+  background-color:#033649;
+  z-index: -10;
+}
+#signup-notice:after{
+  top: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  position: absolute;
+}
+
+.signup-form-container{
+  max-width: 1000px;
+  width: 80%;
+  position: relative;
+}
+
 
 .signup-form-category,
 .register-form-category {
@@ -177,7 +202,9 @@ html, body, #register{
   font-size: 1rem;
   font-style: italic;
   position: absolute;
-  right: 5%;
+  right: -100%;
+  top: -2rem;
+
 }
 
 

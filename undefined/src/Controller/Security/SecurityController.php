@@ -221,7 +221,7 @@ class SecurityController extends Controller
                         // Flash Message si l'invitaion'c'est bien envoyé
                         $this->addFlash(
                             'notice',
-                            'Votre invitation a ' . $email.' bien été envoyée.'
+                            'Votre invitation à ' . $email.' a bien été envoyée.'
                         );   
                     }
             }

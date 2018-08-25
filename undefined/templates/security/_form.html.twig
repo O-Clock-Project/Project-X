@@ -59,12 +59,12 @@
       <div class="signup-form-category">
         {{ form_label(form.birthday, 'Date de naissance',{
           'label_attr': {'class': 'signup-form-label '} }) }}
-        {{ form_widget(form.birthday.year, {
-          'attr': {'class': 'signup-form-input ', 'placeholder': 'année' } }) }}
-        {{ form_widget(form.birthday.month, {
-          'attr': {'class': 'signup-form-input '} }) }}
         {{ form_widget(form.birthday.day, {
           'attr': {'class': 'signup-form-input '} }) }}
+        {{ form_widget(form.birthday.month, {
+          'attr': {'class': 'signup-form-input '} }) }}
+        {{ form_widget(form.birthday.year, {
+          'attr': {'class': 'signup-form-input ', 'placeholder': 'année' } }) }}
       </div>
     </div>
 

@@ -247,13 +247,6 @@ class ApiUtils
         
         
 
-        if(isset($parametersAsArray['add'])){
-            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray);       
-            unset($parametersAsArray['add']);
-        }
-        if(isset($actionsAddAsArray['error'])){
-            return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_NOT_FOUND);
-        }
         if(isset($parametersAsArray['remove'])){
             $actionsRemoveAsArray = $this->tools->prepareRemoveRelationsActions($object, $parametersAsArray);
             unset($parametersAsArray['remove']);
@@ -262,6 +255,13 @@ class ApiUtils
             return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_NOT_FOUND);
         }
      
+        if(isset($parametersAsArray['add'])){
+            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray);       
+            unset($parametersAsArray['add']);
+        }
+        if(isset($actionsAddAsArray['error'])){
+            return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_NOT_FOUND);
+        }
         $form->submit($parametersAsArray, false); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
         // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
         if(!$form->isValid()){
@@ -283,6 +283,20 @@ class ApiUtils
         //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
         //Pour chaque action de notre tableau
         
+        if(isset($actionsRemoveAsArray)){
+            if(isset($actionsRemoveAsArray['error'])){
+                return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_BAD_REQUEST);
+            }
+            else{
+                foreach($actionsRemoveAsArray as $actionRemove){
+                    $actionRemoveMethod = $actionRemove['method']; //On 
+                    $actionRemoveChild = $actionRemove['child'];
+                    $object->$actionRemoveMethod($actionRemoveChild);
+                }
+            }
+        }
+
+
         if(isset($actionsAddAsArray)){
             if(isset($actionsAddAsArray['error'])){
                 return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_BAD_REQUEST);
@@ -297,18 +311,6 @@ class ApiUtils
         }
 
 
-        if(isset($actionsRemoveAsArray)){
-            if(isset($actionsRemoveAsArray['error'])){
-                return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_BAD_REQUEST);
-            }
-            else{
-                foreach($actionsRemoveAsArray as $actionRemove){
-                    $actionRemoveMethod = $actionRemove['method']; //On 
-                    $actionRemoveChild = $actionRemove['child'];
-                    $object->$actionRemoveMethod($actionRemoveChild);
-                }
-            }
-        }
         // Si le "form virtuel" est valide, on persiste l'objet en BDD
             $this->em->persist($object);
             $this->em->flush();

@@ -5,8 +5,11 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
@@ -19,6 +22,9 @@ class UserSecurityType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
+                'constraints' => [ 
+                    New NotBlank()
+                ],
                 'label' => 'Pseudo', 
                 'attr' => [
                     'class' => 'signup-form-input',
@@ -26,7 +32,13 @@ class UserSecurityType extends AbstractType
                 ]
             ])
 
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
+                'constraints' => [ 
+                    New NotBlank(),
+                    new Email([
+                        'mode' => 'html5'
+                    ])
+                ],
                 'label' => 'Email', 
                 'attr' => [
                     'class' => 'signup-form-input',
@@ -35,6 +47,9 @@ class UserSecurityType extends AbstractType
                 
             ])
             ->add('password', RepeatedType::class, [
+                'constraints' => [ 
+                    New NotBlank()
+                ],
                 'type' => PasswordType::class,
                 'invalid_message' => 'Le mot de passe saisi n\'est pas le même',
                 'options' => [
@@ -53,6 +68,9 @@ class UserSecurityType extends AbstractType
 
             ])
             ->add('firstname', TextType::class, [
+                'constraints' => [ 
+                    New NotBlank()
+                ],
                 'label' => 'Prenom', 
                 'attr' => [
                     'class' => 'signup-form-input',
@@ -60,6 +78,9 @@ class UserSecurityType extends AbstractType
                 ],  
             ])
             ->add('lastname', TextType::class, [
+                'constraints' => [ 
+                    New NotBlank()
+                ],
                 'label' => 'Nom', 
                 'attr' => [
                     'class' => 'signup-form-input',
@@ -67,6 +88,9 @@ class UserSecurityType extends AbstractType
                 ], 
             ])
             ->add('birthday', BirthdayType::class, [
+                'constraints' => [ 
+                    New NotBlank()
+                ],
                 'widget' => 'choice',
                 'format' => 'dd-MM-yyyy',
                 'label' => 'Date de naissance',
@@ -77,6 +101,9 @@ class UserSecurityType extends AbstractType
             ])
          
             ->add('zip', NumberType::class, [
+                'constraints' => [ 
+                    New NotBlank()
+                ],
                 'label' => 'Code postal', 
                 'attr' => [
                     'class' => 'signup-form-input',
@@ -85,6 +112,9 @@ class UserSecurityType extends AbstractType
                 'invalid_message' => 'Le code postal saisi n\'est pas un chiffre',
             ])
             ->add('pseudogithub', TextType::class, [
+                'constraints' => [ 
+                    New NotBlank()
+                ],
                 'label' => 'Pseudo Github', 
                 'attr' => [
                     'class' => 'signup-form-input',
@@ -100,8 +130,7 @@ class UserSecurityType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
-            'attr' => ['novalidate' => 'novalidate']
+            'data_class' => User::class
         ]);
     }
 }
