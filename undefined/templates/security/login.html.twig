@@ -9,14 +9,6 @@
 
 {% block body %}
     
-<<<<<<< HEAD
-    {% for message in app.flashes('notice') %}
-        <div class="flash-notice alert alert-success">
-            {{ message }}
-        </div>
-    {% endfor %}
-=======
->>>>>>> master
 
 
     <div id="login">
@@ -32,9 +24,6 @@
             <input class="login-form-input" type="password" id="password" name="_password" placeholder="Mot de passe" />
 
             <button class="login-form-btn" type="submit">Se connecter</button>
-            {% if error %}
-                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-            {% endif %}
         </form>
 
     {% for message in app.flashes('notice') %}

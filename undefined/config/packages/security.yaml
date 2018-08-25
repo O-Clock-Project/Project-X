@@ -9,32 +9,16 @@ security:
         thehub_provider:
             entity:
                 class: App\Entity\User
-                property: username
+                #property: username
                 #property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        api:
-            provider: thehub_provider
-            pattern: ^/api/
-            lexik_jwt:
-                authorization_header: # check token in Authorization Header
-                    enabled: true
-                    prefix:  Bearer
-                query_parameter:      # check token in query string parameter
-                    enabled: true
-                    name:    bearer
-                cookie:               # check token in cookie
-                    enabled: false
-                    name:    BEARER
-                throw_exceptions:        false     # When an authentication failure occurs, return a 401 response immediately
-                create_entry_point:      true      # When no authentication details are provided, create a default entry point that returns a 401 response
-                authentication_provider: lexik_jwt_authentication.security.authentication.provider  
         main:
             # j'autorise les utilisateurs anonyme à consulter une partie de l'application (le login)
-            anonymous: true
-            pattern:  ^/
+            anonymous: ~
+            #pattern:    ^/
             provider: thehub_provider
             
             # https://symfony.com/doc/current/security/form_login_setup.html
@@ -44,7 +28,7 @@ security:
                 # route verification du login
                 check_path: login
                 # url de redirection apres login
-                default_target_path: /
+                default_target_path: /app
                 
             logout:
                 # url logout
@@ -53,22 +37,21 @@ security:
             
             # activate different ways to authenticate
 
-            #http_basic: true
+            http_basic: true
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+   
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMINISTRATOR}
+        - { path: ^/admin, roles: ROLE_TEACHER}
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { path: ^/registration, role: ROLE_TEACHER }
-        - { path: ^/, roles: ROLE_STUDENT }
         
         
 
     role_hierarchy:
         # role de la clef contient l'autre role
+        ROLE_STUDENT: ROLE_STUDENT
         ROLE_TEACHER: ROLE_STUDENT
-        ROLE_ADMINISTRATOR: ROLE_TEACHER
-        
+        ROLE_ADMINISTRATOR: [ROLE_STUDENT, ROLE_TEACHER]

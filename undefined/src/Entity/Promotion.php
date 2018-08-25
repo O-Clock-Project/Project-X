@@ -62,17 +62,11 @@ class Promotion
      */
     private $links;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Invitation", mappedBy="promotion")
-     */
-    private $invitations;
-
     public function __construct()
     {
         $this->affectations = new ArrayCollection();
         $this->announces = new ArrayCollection();
         $this->links = new ArrayCollection();
-        $this->invitations = new ArrayCollection();
     }
 
     public function getId()
@@ -236,37 +230,6 @@ class Promotion
     public function __toString()
     {
         return $this->getName();
-    }
-
-    /**
-     * @return Collection|Invitation[]
-     */
-    public function getInvitations(): Collection
-    {
-        return $this->invitations;
-    }
-
-    public function addInvitation(Invitation $invitation): self
-    {
-        if (!$this->invitations->contains($invitation)) {
-            $this->invitations[] = $invitation;
-            $invitation->setPromotion($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvitation(Invitation $invitation): self
-    {
-        if ($this->invitations->contains($invitation)) {
-            $this->invitations->removeElement($invitation);
-            // set the owning side to null (unless already changed)
-            if ($invitation->getPromotion() === $this) {
-                $invitation->setPromotion(null);
-            }
-        }
-
-        return $this;
     }
 
 }
