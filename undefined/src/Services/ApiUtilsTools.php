@@ -213,13 +213,13 @@ class ApiUtilsTools
                 if(!in_array($method, $classMethods)){ //On vérifie que cette méthode setPropriété existe bien dans les méthodes de la classe parente
                     $method = 'add'.ucfirst($property); //Si non, on construit addPropriété
                     if(!in_array($method, $classMethods)){ // On reteste
-                        $actionsAddAsArray['error'][] = ['error'=>$property.' non trouvée']; //Si toujours pas, on envoie un message d'erreur
+                        $actionsAddAsArray['error'][] = ['error'=>$property.' non trouvée pour l\'add']; //Si toujours pas, on envoie un message d'erreur
                     }
                 }
                 $childRepo = $this->em->getRepository($childClass); //On va chercher le repository de la classe "enfante"
                 $childObject = $childRepo->findOneById($id); // On va chercher l'objet correspondant à l'id donnée
                 if(null===$childObject){ //Si on trouve pas d'objet avec l'id passé, on retourne un message d'erreur
-                    $actionsAddAsArray['error'][] = ['error'=>$childClass . ' id '. $id. ' non trouvée'];
+                    $actionsAddAsArray['error'][] = ['error'=>$childClass . ' id '. $id. ' non trouvée pour l\'add'];
                 }
                 //On remplit notre tableau d'actions pour chaque relation à faire avec l'objet trouvé et la méthode à appliquer pour l'ajouter à l'objet parent
                 $actionsAddAsArray[] = array(
@@ -248,12 +248,12 @@ class ApiUtilsTools
                 
                 $method = 'remove'.ucfirst($property); //On construit la méthode utilisée pour créer la relation avec le mot clé remove
                 if(!in_array($method, $classMethods)){ //On vérifie que cette méthode setPropriété existe bien dans les méthodes de la classe parente
-                    $actionsRemoveAsArray['error'][] = ['error'=>$property.' non trouvée']; //Si la méhode n'existe pas, on envoie un message d'erreur
+                    $actionsRemoveAsArray['error'][] = ['error'=>$property.' non trouvée pour le remove']; //Si la méhode n'existe pas, on envoie un message d'erreur
                 }
                 $childRepo = $this->em->getRepository($childClass); //On va chercher le repository de la classe "enfante"
                 $childObject = $childRepo->findOneById($id); // On va chercher l'objet correspondant à l'id donnée
                 if(null===$childObject){ //Si on trouve pas d'objet avec l'id passé, on retourne un message d'erreur
-                    $actionsRemoveAsArray['error'][] = ['error'=>$childClass . ' id '. $id. ' non trouvée'];
+                    $actionsRemoveAsArray['error'][] = ['error'=>$childClass . ' id '. $id. ' non trouvée pour le remove'];
                 }
                 //On remplit notre tableau d'actions pour chaque relation à faire avec l'objet trouvé et la méthode à appliquer pour l'ajouter à l'objet parent
                 $actionsRemoveAsArray[] = array(
