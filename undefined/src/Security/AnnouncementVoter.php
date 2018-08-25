@@ -52,7 +52,7 @@ class AnnouncementVoter extends Voter
 
         // you know $subject is a Announcement object, thanks to supports
         /** @var Announcement $Announcement */
-        $Announcement = $subject;
+        $announcement = $subject;
 
         switch ($attribute) {
             case self::VIEW:
@@ -80,6 +80,6 @@ class AnnouncementVoter extends Voter
         // this assumes that the data object has a getUser() method
         // to get the entity of the user who owns this data object
 
-        return $user === $announcement->getUser();
+        return $user === $announcement->getAuthor();
     }
 }

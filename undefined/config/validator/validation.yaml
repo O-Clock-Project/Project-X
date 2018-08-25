@@ -23,7 +23,6 @@ App\Entity\Tag:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
             fields: label
-            errorPath: label
             message: 'Ce tag existe déjà !'
     properties:
         label:
@@ -40,9 +39,11 @@ App\Entity\Tag:
 App\Entity\Bookmark:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
-            fields: [url , title ]
-            errorPath: url
+            fields: url
             message: 'Cette url existe déjà !'
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: title
+            message: 'Ce titre existe déjà !'            
     properties:
         title:
             - NotBlank:
@@ -50,25 +51,25 @@ App\Entity\Bookmark:
             - Type: string
             - Length:
                 min: 10
-                max: 50
+                max: 100
                 minMessage: 'Votre titre est trop court (10 caractères minimum)'
-                maxMessage: 'Votre titre est trop long (50 caractères maximum)'
+                maxMessage: 'Votre titre est trop long (100 caractères maximum)'
         resume:
             - NotBlank:
                 message:  Veuillez entrer un resumé détaillant ce Bookmark.  
             - Type: string
             - Length:
                 min: 10
-                max: 560
+                max: 1000
                 minMessage: 'Votre résumé est trop court (10 caractères minimum)'
-                maxMessage: 'Votre résumé est trop long (560 caractères maximum)'
+                maxMessage: 'Votre résumé est trop long (1000 caractères maximum)'
         url:
             - NotBlank :
                 message:  Veuillez entrer un lien vers ce bookmark.  
             - Url:
                 protocols: [http, https, ftp]
                 checkDNS: 'ANY' 
-                message: Cette url "{{ value }}" , n'est pas une url valide.
+                message: Cette url "{{ value }}"  n'est pas une url valide.
             # - Regex:
             #     pattern: '/(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/i'
         published_at:
@@ -94,7 +95,7 @@ App\Entity\User:
             - Type: string 
             - Length:
                 min: 2
-                minMessage: Votre nom doit comporter au moins {{ limit }} caractères.
+                minMessage: 'Votre nom doit comporter au moins {{ limit }} caractères.'
         last_name:
             - NotBlank: 
                 message: ' Veuillez entrer un prénom ' 
@@ -115,7 +116,7 @@ App\Entity\User:
                 message: ' Veuillez entrer une date de naissance ' 
             - DateTime: 
                 format: yyyy-MM-dd
-                message: La date de naissance "{{ value }}" , n'est pas valide.
+                message: La date de naissance "{{ value }}" n'est pas valide.
         pseudo_github:
             - NotBlank:
                 message: ' Veuillez entrer un pseudo Github ' 
@@ -125,7 +126,7 @@ App\Entity\User:
                 message: ' Veuillez entrer un code postal '
             - Type: 
                 type: integer
-                message: Le code Postal, {{ value }} , n'est pas valide.
+                message: Le code Postal {{ value }}  n'est pas valide.
         #password:
         #     - Symfony\Component\Security\Core\Validator\Constraints\UserPassword:
         #         message: Votre ancien mot de passe n'est pas le bon 
@@ -144,9 +145,9 @@ App\Entity\Vote:
                 message:  Veuillez entrer une note
             - Type: integer
             - Range:
-                min: 0
+                min: -1
                 max: 1
-                minMessage: Votre note ne doit pas être en dessous de 0.
+                minMessage: Votre note ne doit pas être en dessous de -1.
                 maxMessage: Votre note ne doit pas dépasser 1.
             
 

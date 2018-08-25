@@ -10,10 +10,16 @@
 {% block body %}
     
     <div id="signup">
-       <img id= "login-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
-      <h2 id="signup-subtitle">Inscription</h2>
+        <img id= "login-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
+        <h2 id="signup-subtitle">Inscription</h2>
 
-      {{ include('security/_form.html.twig') }}
-    </div>
+        <h3 > {{ message }}</h3>
 
+
+        {{ include('security/_form.html.twig') }}
+    <ul>
+    {% for error in errors %}
+        <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}

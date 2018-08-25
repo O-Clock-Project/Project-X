@@ -46,10 +46,10 @@ class BookmarkVoter extends Voter
             return false;
         }
 
-        if ($this->decisionManager->decide($token, array('ROLE_TEACHER'))) {
-            return true;
-        }
-
+        // if ($this->decisionManager->decide($token, array('ROLE_TEACHER'))) {
+        //     return true;
+        // }
+  
         // you know $subject is a Bookmark object, thanks to supports
         /** @var Bookmark $bookmark */
         $bookmark = $subject;

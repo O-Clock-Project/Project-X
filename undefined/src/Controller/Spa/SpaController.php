@@ -31,10 +31,30 @@ class SpaController extends Controller
             $this->renderView('app/app.html.twig',
             array('token' => $token),200
           ));
-          $response->headers->setCookie(new Cookie('BEARER', $token));
+
       
           return $response;
+
+    }
   
+    /** @Route("/app/{string}/{integer}", name="spaRefresh")
+     * @Method("GET")
+     */
+    public function spaRefresh(EntityManagerInterface $manager, $string = 'foo', $integer = 1, JWTUtils $JWTUtils)
+    //string et integer avec des valeurs par défaut (sans importance) permettent de s'assurer que quelque soit la page dans React Router
+    // au refresh, ça recharge la page /app (et donc React)
+    {
+        $user = $this->getUser();
+    
+        $token = $JWTUtils->generateToken($user);
+
+        $response = new Response(
+            $this->renderView('app/app.html.twig',
+            array('token' => $token),200
+          ));
+
+      
+          return $response;
     }
 
 
