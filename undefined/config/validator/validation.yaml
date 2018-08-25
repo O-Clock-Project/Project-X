@@ -18,6 +18,11 @@ App\Entity\Comment:
             - NotBlank: 
                 message:  Veuillez entrer un contenu à votre commentaire.
             - Type: string
+            - Length:
+                min: 10
+                max: 1000
+                minMessage: 'Votre commentaire est trop court (10 caractères minimum)'
+                maxMessage: 'Votre commentaire est trop long (1000 caractères maximum)'
 
 App\Entity\Tag:
     constraints:
@@ -68,8 +73,10 @@ App\Entity\Bookmark:
                 message:  Veuillez entrer un lien vers ce bookmark.  
             - Url:
                 protocols: [http, https, ftp]
-                checkDNS: 'ANY' 
                 message: Cette url "{{ value }}"  n'est pas une url valide.
+            - Url: 
+                checkDNS: 'ANY'
+                message: "Le nom de domaine du lien vers la ressource semble incorrect / inexistant."
             # - Regex:
             #     pattern: '/(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/i'
         published_at:
