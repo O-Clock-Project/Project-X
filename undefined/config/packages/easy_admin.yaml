@@ -14,6 +14,7 @@ easy_admin:
             - { entity: 'Commentaire', label: 'Commentaire', icon: 'comment' }
             - { entity: 'Difficulte', label: 'Difficulte', icon: 'signal' }
             - { entity: 'Langue', label: 'Langue', icon: 'globe' }
+            - { entity: 'Invitation', label: 'Invitation', icon: 'envelope' }
             - { entity: 'Promotion',role: ROLE_TEACHER, label: 'Promotion', icon: 'graduation-cap' }
             - { entity: 'LienPromotion', label: 'Lien Promotion', icon: 'link' }
             - { entity: 'Role', role: ROLE_TEACHER, label: 'Role', icon: 'user' }
@@ -23,8 +24,10 @@ easy_admin:
             - { entity: 'User', label: 'User', icon: 'user' }
             - { entity: 'Vote', label: 'Vote', icon: 'thumbs-up' }
             - { entity: 'AlertBookmark', label: 'Alert Bookmark', icon: 'exclamation-triangle' }
+            # Permet d'aller sur la page des invitations
+            - { label: 'Envoi d''invitations', route: 'registration', icon: 'envelope'}
             # Permet le retour vers la home du site
-            - { label: 'Retour au site', route: 'app'}
+            - { label: 'Retour au site', route: 'app', icon: 'home'}
     # Rajoute la fonction show sur chaque objet
     list:
         actions: 
@@ -95,6 +98,7 @@ easy_admin:
                     - { property: 'body', label: 'Contenu' }
                     - { property: 'author', label: 'Auteur' }
                     - { property: 'promotions' , label: 'Promotion' }
+                    - { property: 'type', label: 'Type d''annonce' }  
                     - { property: 'frozen', label: 'Stopper l''ajout de commentaire', type: 'toggle' }                 
                     - { property: 'closing_at', label: 'Date de disparition de l''annonce' , type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
             # La view d'une annonce
@@ -110,6 +114,7 @@ easy_admin:
                     - { property: 'body', label: 'Contenu' }
                     - { property: 'author', label: 'Auteur' }
                     - { property: 'promotions' , label: 'Promotion' }
+                    - { property: 'type', label: 'Type d''annonce' }  
                     - { property: 'frozen', label: 'Stopper l''ajout de commentaire' }                 
                     - { property: 'closing_at', label: 'Date de disparition de l''annonce' , type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' }}
             # La view de modification d'une annonce    
@@ -121,7 +126,8 @@ easy_admin:
                     - { property: 'title', label: 'Titre' }
                     - { property: 'body', label: 'Contenu' }
                     - { property: 'author', label: 'Auteur' }
-                    - { property: 'promotions', label: 'Promotion', type_options: { 'by_reference': false } }  
+                    - { property: 'promotions', label: 'Promotion', type_options: { 'by_reference': false } } 
+                    - { property: 'type', label: 'Type d''annonce'}  
                     - { property: 'frozen', label: 'Stopper l''ajout de commentaire' }               
                     - { property: 'closing_at', label: 'Date de disparition de l''annonce' , type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' }}
             # La view d'ajout d'une annonce
@@ -134,8 +140,9 @@ easy_admin:
                     - { property: 'body', label: 'Contenu' }
                     - { property: 'author', label: 'Auteur' }
                     - { property: 'promotions', label: 'Promotion', type_options: { 'by_reference': false } }  
+                    - { property: 'type', label: 'Type d''annonce'}                      
                     - { property: 'frozen', label: 'Stopper l''ajout de commentaire' }               
-                    - { property: 'closing_at', label: 'Date de disparition de l''annonce' , type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } } 
+                    - { property: 'closing_at', label: 'Date de disparition de l''annonce' , type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }  
                                 
         AnnonceType:
             class: App\Entity\AnnouncementType
@@ -193,17 +200,17 @@ easy_admin:
                     - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'title', label: 'Titre' }
-                    - { property: 'resume', label: 'Résumé' }
                     - { property: 'author', label: 'Auteur' }
                     - { property: 'url', label: 'Url' }
                     - { property: 'image', label: 'Image' }
                     - { property: 'support', label: 'Support' }
                     - { property: 'difficulty', label: 'Difficulté' }
-                    - { property: 'votes', label: 'vote'}
+                    - { property: 'faved_by', label: 'Mis en favoris'}
                     - { property: 'user', label: 'Utilisateur' }
                     - { property: 'locale', label: 'Langue' }
+                    - { property: 'warnings', label: 'Alertes', type_options: { 'by_reference': false }}
                     - { property: 'banned' , label: 'Bannir', type: 'toggle' }
-                    - { property: 'published_at', label: 'Date de création de la ressource', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
+                    - { property: 'published_at', label: 'Date de publication', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
 
             # La view d'un Bookmark
             show:
@@ -221,7 +228,9 @@ easy_admin:
                     - { property: 'image', label: 'Image' }
                     - { property: 'support', label: 'Support' }
                     - { property: 'difficulty', label: 'Difficulté' }
-                    - { property: 'votes', label: 'vote', type_options: { 'by_reference': false }}
+                    - { property: 'votes', label: 'Votes', type_options: { 'by_reference': false }}
+                    - { property: 'faved_by', label: 'Mis en favoris', type_options: { 'by_reference': false }}
+                    - { property: 'warnings', label: 'Alertes', type_options: { 'by_reference': false }}
                     - { property: 'user', label: 'Utilisateur' }
                     - { property: 'locale', label: 'Langue' }
                     - { property: 'banned' , label: 'Bannir'}
@@ -239,9 +248,9 @@ easy_admin:
                     - { property: 'image', label: 'Image' }
                     - { property: 'support', label: 'Support' }
                     - { property: 'difficulty', label: 'Difficulté' }
-                    - { property: 'votes', label: 'vote', type_options: { 'by_reference': false }}
                     - { property: 'user', label: 'Utilisateur' }
                     - { property: 'locale', label: 'Langue' }
+                    - { property: 'warnings', label: 'Alertes', type_options: { 'by_reference': false }}
                     - { property: 'banned' , label: 'Bannir'}
                     - { property: 'published_at', label: 'Date de création de la ressource (officielle)', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
             # La view d'ajout d'un Bookmark 
@@ -362,6 +371,60 @@ easy_admin:
                     - { property: 'name' , label: 'Nom de la difficulté' }
                     - { property: 'level' , label: 'Niveau' }
                     - { property: 'bookmarks' , label: 'Bookmark associé', type_options: { 'by_reference': false } } 
+        Invitation:
+            class: App\Entity\Invitation
+            help: 'Voici toutes les invitations envoyées aux élèves OClock'
+            # La view de la liste des invitations
+            list:
+                title:  'Les invitations envoyées aux élèves OClock'
+                # Je determine la valeur (le type) de mes propriétes et également 
+                # les propriétés que je souhaite afficher sur mon interface Admin
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'sender', label: 'A l''origine de l''invitation' }
+                    - { property: 'promotion', label: 'Promotion' }
+                    - { property: 'secret_code', label: 'Code secret' }
+                    - { property: 'created_user', label: 'Compte crée' }
+                    - { property: 'email', label: 'Email' }
+                    
+            # La view d'une invitation
+            show:
+                title:  'Une invitation'
+                help: null
+                fields:
+                    - { property: 'id', label: 'Id' }
+                    - { property: 'created_at', label: 'Créer le', type: 'datetime' }
+                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'is_active',label: 'Activer', type: 'toggle' }
+                    - { property: 'sender', label: 'A l''origine de l''invitation' }
+                    - { property: 'promotion', label: 'Promotion' }
+                    - { property: 'secret_code', label: 'Code secret' }
+                    - { property: 'created_user', label: 'Compte crée' }
+                    - { property: 'email', label: 'Email' }
+            # La view d'une modification d'une invitation  
+            edit:
+                title:  'Mise à jour d''une invitation'
+                help: null
+                fields:
+                    - { property: 'is_active',label: 'Activer'}
+                    - { property: 'sender', label: 'Compte à l''origine de l''invitation' }
+                    - { property: 'promotion', label: 'Promotion' }
+                    - { property: 'secret_code', label: 'Code secret' }
+                    - { property: 'created_user', label: 'Compte crée' }
+                    - { property: 'email', label: 'Email' }
+            # La view d'un ajout d'une invitation
+            new:
+                title:  'Ajout d''une invitation'
+                help: 'Nous vous conseillons de passer plutôt par la section: Envoi d''invitations !!!'
+                fields:
+                    - { property: 'is_active',label: 'Activer' }
+                    - { property: 'sender', label: 'Compte à l''origine de l''invitation' }
+                    - { property: 'promotion', label: 'Promotion' }
+                    - { property: 'secret_code', label: 'Code secret' }
+                    - { property: 'email', label: 'Email' }
         Langue:
             class: App\Entity\Locale
             help: 'Voici la liste des langues des Bookmarks'
@@ -695,7 +758,7 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
+                    - { property: 'updated_at', label: 'Mis à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'username', label: 'Pseudo' }
                     - { property: 'first_name', label: 'Prénom' }
@@ -704,16 +767,11 @@ easy_admin:
                     - { property: 'pseudo_github', label: 'Pseudo Github' }
                     - { property: 'birthday', label: 'Date de naissance', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' }}
                     - { property: 'zip', label: 'Zip' }
-                    - { property: 'avatar', label: 'Avatar' }
                     - { property: 'speciality', label: 'Spécialité' }
-                    - { property: 'bookmarks', label: 'Bookmarks postés par l''utilisateur' }
-                    - { property: 'comments', label: 'Commentaires postés par l''utilisateur'  }
-                    - { property: 'votes', label: 'Votes postés par l''utilisateur' }
-                    - { property: 'favorites', label: 'Bookmarks favoris de l''utilisateur' }
-                    - { property: 'certified_bookmarks', label: 'Bookmarks certifié' }
-                    - { property: 'bookmarks_warned', label: 'Avertissement sur les Bookmarks' }
-                    - { property: 'announces', label: 'Annonces postées par l''utilisateur' }
-                    - { property: 'affectations', label: 'Droit de l''utilisateur' }
+                    - { property: 'bookmarks', label: 'Bookmarks' }
+                    - { property: 'comments', label: 'Commentaires'  }
+                    - { property: 'announces', label: 'Annonces' }
+                    - { property: 'affectations', label: 'Affectations' }
 
             # La view d'un user
             show:
@@ -752,7 +810,7 @@ easy_admin:
                     - { property: 'last_name', label: 'Nom' }
                     - { property: 'email', label: 'Email' }
                     - { property: 'pseudo_github', label: 'Pseudo Github' }
-                    - { property: 'birthday', label: 'Date de naissance', type_options: { widget: 'text', format: 'ddMMyyyy' } }
+                    - { property: 'birthday', type: 'date', label: 'Date de naissance', type_options: { widget: 'text', format: 'ddMMyyyy' } }
                     - { property: 'zip', label: 'Zip' }
                     - { property: 'avatar', label: 'Avatar' }
                     - { property: 'speciality', label: 'Spécialité' }
