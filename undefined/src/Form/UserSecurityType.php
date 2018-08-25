@@ -52,7 +52,6 @@ class UserSecurityType extends AbstractType
                 ],
 
             ])
-            // ->add('code')
             ->add('firstname', TextType::class, [
                 'label' => 'Prenom', 
                 'attr' => [
@@ -69,7 +68,7 @@ class UserSecurityType extends AbstractType
             ])
             ->add('birthday', BirthdayType::class, [
                 'widget' => 'choice',
-                'format' => 'yyyy-MM-dd',
+                'format' => 'dd-MM-yyyy',
                 'label' => 'Date de naissance',
                 'placeholder' => [
                     'year' => 'Année', 'month' => 'Mois', 'day' => 'Jour',
@@ -92,7 +91,7 @@ class UserSecurityType extends AbstractType
                     'placeholder' => 'Pseudo Github'  
                 ],
             ])
-            //->add('isActive')
+
        
         ;
     }

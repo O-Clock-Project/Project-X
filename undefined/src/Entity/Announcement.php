@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Comment;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
@@ -157,7 +158,10 @@ class Announcement
      */
     public function getComments(): Collection
     {
-        return $this->comments;
+        return $this->comments->filter(function(Comment $comment){
+            return $comment->getIsActive() == true;
+        })
+        ;
     }
 
     public function addComment(Comment $comment): self

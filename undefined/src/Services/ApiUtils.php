@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Services\ApiUtilsTools;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,9 +24,11 @@ class ApiUtils
 // Service qui me permet de factoriser tout le code qui serait redondant dans mes controllers
 {
     private $tools;
+    private $em;
 
-    public function __construct(){
-        $this->tools = new ApiUtilsTools; //à l'instanciation de ApiUtils j'instancie également le service "boite à outils" qui va avec
+    public function __construct(EntityManagerInterface $em, ApiUtilsTools $tools){
+        $this->tools = $tools; //à l'instanciation de ApiUtils j'instancie également le service "boite à outils" qui va avec
+        $this->em = $em;
     }
 
 
@@ -85,7 +88,7 @@ class ApiUtils
 
   
 
-    public function getItemRelations($id, $child, $relation, $em, $request )
+    public function getItemRelations($id, $child, $relation, $request )
     //Méthode qui permet de trouver un item par son id passé dans l'url et d'aller chercher les éléments de la relation spécifiée (avec filtres, etc comme getItems)
     {
         $childClass= substr(ucfirst($child),0,-1); //On trouve la classe des objets enfants en enlevant la dernière lettre (s) et en mettant la première lettre en majuscule
@@ -95,22 +98,22 @@ class ApiUtils
         //On va chercher la classe de l'entité-enfant reçue
         $childClass = 'App\Entity\\' .$childClass; //on met la première lettre en majuscule et on enlève le s à la fin
         $childObject = new $childClass; // On instancie un objet vide à partir 
-        $childObjectRepo = $em->getRepository($childClass); // On récupère le repo correspondant à l'entité-enfant pour faire la requête
+        $childObjectRepo = $this->em->getRepository($childClass); // On récupère le repo correspondant à l'entité-enfant pour faire la requête
 
 
         //On passe à la méthode handleRequestWithParams ce qu'elle a besoin pour nous ramener les éléments demandés dans la requête
         $result = $this->tools->handleRequestWithParams($childObject, $childObjectRepo, $request, $id, $relation);
         
+        
 
         // je vérifie si j'ai eu une erreur en retour, si oui je la return au controller
         if($result['error'] !== null ){
-            return $result['error'];
+            return new Response($result['error'], Response::HTTP_NOT_FOUND);
         }
         // si pas d'erreur je récupère les objets retournés par la requête et le groupe de sérialization
         $objects = $result['objects'];
         $group = $result['group'];
         
-
 
         // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
         $jsonContent = $this->tools->handleSerialization($objects, $group);
@@ -121,7 +124,7 @@ class ApiUtils
 
 
 
-    public function postItem($object, $form, $request, $em)
+    public function postItem($object, $form, $request)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
     // Et après avoir créé les relations passées dans la payload en json
     {
@@ -151,7 +154,7 @@ class ApiUtils
             }
         }
         if(isset($parametersAsArray['add'])){
-            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray, $em);
+            $actionsAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray);
             unset($parametersAsArray['add']);
         }
 
@@ -159,21 +162,32 @@ class ApiUtils
         
         // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
         if(!$form->isValid()){
-
-            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_BAD_REQUEST);
+            $errors = [];
+            foreach($form as $field => $error){
+                if ((string)$error->getErrors(true) !== ''){
+               $errors[$field] = substr(substr(((string)$error->getErrors(true)), 0, -1), 7);
+                }
+            }
+        
+            return new JsonResponse($errors, Response::HTTP_BAD_REQUEST);
         }
         //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
         //Pour chaque action de notre tableau
-        if(isset($actionsAddAsArray)){
-            foreach($actionsAddAsArray as $action){
-                $actionMethod = $action['method']; //On 
-                $actionChild = $action['child'];
-                $object->$actionMethod($actionChild);
+        if(isset($actionsAsArray)){
+            if(isset($actionsAsArray['error'])){
+                return new JsonResponse($actionsAsArray['error'], Response::HTTP_BAD_REQUEST);
+            }
+            else{
+                foreach($actionsAsArray as $action){
+                    $actionMethod = $action['method']; //On 
+                    $actionChild = $action['child'];
+                    $object->$actionMethod($actionChild);
+                }
             }
         }
         // Si le "form virtuel" est valide, on persiste l'objet en BDD
-            $em->persist($object);
-            $em->flush();
+            $this->em->persist($object);
+            $this->em->flush();
             
             // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
             $jsonContent = $this->tools->handleSerialization($object);
@@ -185,7 +199,7 @@ class ApiUtils
     
     }
 
-    public function updateItem($object, $form, $request, $em, $encoder)
+    public function updateItem($object, $form, $request, $encoder=null)
     // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
     {
 
@@ -223,25 +237,31 @@ class ApiUtils
         
 
         if(isset($parametersAsArray['add'])){
-            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray, $em);       
+            $actionsAddAsArray = $this->tools->prepareAddRelationsActions($object, $parametersAsArray);       
             unset($parametersAsArray['add']);
         }
         if(isset($actionsAddAsArray['error'])){
             return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_NOT_FOUND);
         }
         if(isset($parametersAsArray['remove'])){
-            $actionsRemoveAsArray = $this->tools->prepareRemoveRelationsActions($object, $parametersAsArray, $em);
+            $actionsRemoveAsArray = $this->tools->prepareRemoveRelationsActions($object, $parametersAsArray);
             unset($parametersAsArray['remove']);
         }
         if(isset($actionsRemoveAsArray['error'])){
             return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_NOT_FOUND);
         }
      
-        $form->submit($parametersAsArray); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
+        $form->submit($parametersAsArray, false); // Validation des données par les forms symfony (cf config/validator/validation.yaml et l'EntityType correspondant)
         // Si le "form virtuel" n'est pas valide on renvoie un code http bad request et un message d'erreur
         if(!$form->isValid()){
-
-            return new JsonResponse(array((string) $form->getErrors(true, false)), Response::HTTP_OK);
+            $errors = [];
+            foreach($form as $field => $error){
+                if ((string)$error->getErrors(true) !== ''){
+               $errors[$field] = substr(substr(((string)$error->getErrors(true)), 0, -1), 7);
+                }
+            }
+        
+            return new JsonResponse($errors, Response::HTTP_BAD_REQUEST);
         }
 
         if(isset($newPassword)){ //Si on a créé un nouveau mdp (déjà encodé) on le set au User
@@ -251,26 +271,36 @@ class ApiUtils
 
         //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
         //Pour chaque action de notre tableau
+        
         if(isset($actionsAddAsArray)){
-            foreach($actionsAddAsArray as $actionAdd){
-                $actionAddMethod = $actionAdd['method']; //On 
-                $actionAddChild = $actionAdd['child'];
-                $object->$actionAddMethod($actionAddChild);
+            if(isset($actionsAddAsArray['error'])){
+                return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_BAD_REQUEST);
+            }
+            else{
+                foreach($actionsAddAsArray as $actionAdd){
+                    $actionAddMethod = $actionAdd['method']; //On 
+                    $actionAddChild = $actionAdd['child'];
+                    $object->$actionAddMethod($actionAddChild);
+                }
             }
         }
 
 
         if(isset($actionsRemoveAsArray)){
-            foreach($actionsRemoveAsArray as $actionRemove){
-                $actionRemoveMethod = $actionRemove['method']; //On 
-                $actionRemoveChild = $actionRemove['child'];
-                dump($actionRemoveChild);exit;
-                $object->$actionRemoveMethod($actionRemoveChild);
+            if(isset($actionsRemoveAsArray['error'])){
+                return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_BAD_REQUEST);
+            }
+            else{
+                foreach($actionsRemoveAsArray as $actionRemove){
+                    $actionRemoveMethod = $actionRemove['method']; //On 
+                    $actionRemoveChild = $actionRemove['child'];
+                    $object->$actionRemoveMethod($actionRemoveChild);
+                }
             }
         }
         // Si le "form virtuel" est valide, on persiste l'objet en BDD
-            $em->persist($object);
-            $em->flush();
+            $this->em->persist($object);
+            $this->em->flush();
             
             // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
             $jsonContent = $this->tools->handleSerialization($object);
@@ -281,6 +311,67 @@ class ApiUtils
     
     }
 
+    public function deleteItem($object, $request)
+    // Méthode permettant de persister un nouvel objet en BDD après avoir fait les tests sur les datas reçus grace au validator des forms symfony
+    {
 
+        $parametersAsArray = []; //On prépare un array pour recevoir tous les paramètres de la requêtes sous forme php depuis le json
+        
+        if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
 
+            $parametersAsArray = json_decode($content, true); //Et on decode en json
+        }
+            
+
+        // Comme on veut que les dates qu'on reçoit dans le json en payload soient converti en Datetime on parcourt le tableau de paramètres
+        // Et on instancie un new DateTime si la string est au format date (et on évite les arrays car ils contiennent )
+        foreach($parametersAsArray as $key => $value){
+            if(!is_array($value) && strtotime($value) ) {
+                $value = new \Datetime($value);
+            }
+        }
+        
+
+        if(isset($parametersAsArray['remove'])){
+            $actionsRemoveAsArray = $this->tools->prepareRemoveRelationsActions($object, $parametersAsArray);
+            unset($parametersAsArray['remove']);
+        }
+        if(isset($actionsRemoveAsArray['error'])){
+            return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_NOT_FOUND);
+        }
+     
+
+        //L'objet parent étant maintenant correctement hydraté par le form symfony, on peut lui ajouter les relations voulues
+        //Pour chaque action de notre tableau
+        
+
+        if(isset($actionsRemoveAsArray)){
+            if(isset($actionsRemoveAsArray['error'])){
+                return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_BAD_REQUEST);
+            }
+            else{
+                foreach($actionsRemoveAsArray as $actionRemove){
+                    $actionRemoveMethod = $actionRemove['method']; //On 
+                    $actionRemoveChild = $actionRemove['child'];
+                    $object->$actionRemoveMethod($actionRemoveChild);
+                }
+            }
+        }
+
+        // Si le "form virtuel" est valide, on persiste l'objet en BDD
+            $this->em->remove($object);
+            $this->em->flush();
+            
+            // On passe l'objet reçu à la méthode handleSerialization qui s'occupe de transformer tout ça en json
+            $jsonContent = $this->tools->handleSerialization(array('success' => 'Item effacé'));
+            // on crée une Réponse avec le code http 201 ("created")
+            $response =  new Response($jsonContent, Response::HTTP_OK);
+            // On set le header Content-Type sur json et utf-8
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+
+            return $response; //On renvoie la réponse
+    
+    }
+    
 }

@@ -13,20 +13,31 @@ App\Entity\Affectation:
 App\Entity\Announcement:
     attributes:
         id:
-            groups: ['concise', 'promotion']
+            groups: ['concise', 'promotion', 'announcements', 'announcement']
         title:
-            groups: ['concise']
+            groups: ['concise', 'announcements', 'announcement']
         body:
-            groups: ['concise', 'promotion']
+            groups: ['concise', 'announcements', 'announcement']
         type:
-            groups: ['concise']    
+            groups: ['concise', 'announcements', 'announcement']    
+        frozen:
+            groups: ['announcements', 'announcement']
+        closing_at:
+            groups: ['announcements', 'announcement']
+        author:
+            groups: ['announcements', 'announcement']
+        comments:
+            groups: ['announcements', 'announcement']
+        created_at:
+            groups: ['announcements', 'announcement']
+        
        
 App\Entity\AnnouncementType:
     attributes:
         id:
-            groups: ['concise', 'promotion']
+            groups: ['concise', 'promotion', 'announcements', 'announcement']
         name:
-            groups: ['concise', 'promotion'] 
+            groups: ['concise', 'announcements', 'announcement'] 
 
 App\Entity\Bookmark:
     attributes:
@@ -66,9 +77,13 @@ App\Entity\Bookmark:
 App\Entity\Comment:
     attributes:
         id:
-            groups: ['concise']
+            groups: ['concise', 'announcements', 'comments']
         body:
-            groups: ['concise']
+            groups: ['concise', 'comments']
+        author:
+            groups: ['concise', 'comments']
+        created_at:
+            groups: ['announcement', 'comments']
 
 App\Entity\Difficulty:
     attributes:
@@ -147,9 +162,9 @@ App\Entity\Tag:
 App\Entity\User:
     attributes:   
         id:
-            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark']
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements', 'announcement', 'comments']
         username:
-            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark']
+            groups: ['concise' , 'profile', 'promotion', 'bookmarks', 'bookmark', 'announcements', 'announcement', 'comments']
         first_name:
             groups: ['concise' , 'profile']
         last_name:
@@ -175,7 +190,7 @@ App\Entity\User:
         affectations:
             groups: ['profile']
         avatar:
-            groups: ['concise', 'profile']
+            groups: ['concise', 'profile', 'announcements', 'announcement', 'comments']
 
 App\Entity\Vote:
     attributes:
@@ -184,7 +199,9 @@ App\Entity\Vote:
         value:
             groups: ['concise' , 'bookmarks', 'bookmark']
         bookmark:
-            groups: ['concise']
+            groups: ['concise', 'bookmarks']
+        voter:
+            groups: ['concise', 'bookmarks']           
 
 App\Entity\WarningBookmark:
     attributes:

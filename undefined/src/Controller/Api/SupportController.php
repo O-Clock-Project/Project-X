@@ -20,13 +20,12 @@ class SupportController extends AbstractController
     /**
      * @Route("/supports", name="listSupports", methods="GET")
      */
-    public function getSupports(SupportRepository $supportRepo, Request $request )
+    public function getSupports(SupportRepository $supportRepo, Request $request, ApiUtils $utils )
     //Méthode permettant de renvoyer la liste de tous les items, avec filtres, ordre pagination et niveau de détail possible
     {
         
         $support = new Support; // On instancie un nouvel item temporaire et vide pour disposer de la liste de tous les propriétés possibles
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItems($support, $supportRepo, $request); 
 
@@ -36,11 +35,10 @@ class SupportController extends AbstractController
     /**
      * @Route("/supports/{id}", name="showSupport", requirements={"id"="\d+"}, methods="GET")
      */
-    public function getSupport(SupportRepository $supportRepo, $id, Request $request)
+    public function getSupport(SupportRepository $supportRepo, $id, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItem($supportRepo, $id, $request);
 
@@ -51,14 +49,13 @@ class SupportController extends AbstractController
     /**
      * @Route("/supports/{id}/{child}/{relation}", name="showSupportRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getSupportRelations(SupportRepository $supportRepo, $id, $relation, $child, Request $request, EntityManagerInterface $em)
+    public function getSupportRelations(SupportRepository $supportRepo, $id, $relation, $child, Request $request, ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->getItemRelations( $id,  $child, $relation, $em , $request);
+        $response = $utils->getItemRelations( $id,  $child, $relation , $request);
 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
@@ -66,7 +63,7 @@ class SupportController extends AbstractController
     /**
      * @Route("/supports", name="postSupport", methods="POST")
      */
-    public function postSupport (Request $request, EntityManagerInterface $em)
+    public function postSupport (Request $request, ApiUtils $utils)
     //Méthode permettant de persister un nouvel item à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
         $support = new Support(); // On instancie un nouvel item qui va venir être hydraté par les informations fournies dans la requête
@@ -75,11 +72,10 @@ class SupportController extends AbstractController
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(SupportType::class, $support);
 
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->postItem($support, $form, $request, $em);
+        $response = $utils->postItem($support, $form, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
@@ -87,7 +83,7 @@ class SupportController extends AbstractController
     /**
      * @Route("/supports/{id}", name="updateSupport", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateSupport ($id, Request $request, EntityManagerInterface $em, SupportRepository $supportRepo)
+    public function updateSupport ($id, Request $request, SupportRepository $supportRepo, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
         $support = $supportRepo->findOnebyId($id);
@@ -96,11 +92,10 @@ class SupportController extends AbstractController
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(SupportType::class, $support);
 
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->updateItem($support, $form, $request, $em);
+        $response = $utils->updateItem($support, $form, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }

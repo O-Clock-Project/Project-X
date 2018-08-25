@@ -20,13 +20,12 @@ class AffectationController extends AbstractController
     /**
      * @Route("/affectations", name="listAffectations", methods="GET")
      */
-    public function getAffectations(AffectationRepository $affectationRepo, Request $request )
+    public function getAffectations(AffectationRepository $affectationRepo, Request $request, ApiUtils $utils )
     //Méthode permettant de renvoyer la liste de tous les items, avec filtres, ordre pagination et niveau de détail possible
     {
         
         $affectation = new Affectation; // On instancie un nouvel item temporaire et vide pour disposer de la liste de tous les propriétés possibles
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
+       
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItems($affectation, $affectationRepo, $request); 
 
@@ -39,8 +38,6 @@ class AffectationController extends AbstractController
     public function getAffectation(AffectationRepository $affectationRepo, $id, Request $request)
     //Méthode permettant de renvoyer l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
         $response = $utils->getItem($affectationRepo, $id, $request);
 
@@ -50,14 +47,12 @@ class AffectationController extends AbstractController
     /**
      * @Route("/affectations/{id}/{child}/{relation}", name="showAffectationRelation", requirements={"id"="\d+","child"="[a-z-A-Z]+", "relation"="[a-z-A-Z_]+"}, methods="GET")
      */
-    public function getAffectationRelations(AffectationRepository $affectationRepo, $id, $relation, $child, Request $request, EntityManagerInterface $em)
+    public function getAffectationRelations(AffectationRepository $affectationRepo, $id, $relation, $child, Request $request,  ApiUtils $utils)
     //Méthode permettant de renvoyer les items d'une relation de l'item spécifié par l'id reçue et suivant un niveau de détail demandé
     {
         
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->getItemRelations( $id,  $child, $relation, $em , $request);
+        $response = $utils->getItemRelations( $id,  $child, $relation , $request);
 
         return $response; //On retourne la réponse formattée (item trouvé si réussi, message d'erreur sinon)
     }
@@ -66,7 +61,7 @@ class AffectationController extends AbstractController
     /**
      * @Route("/affectations", name="postAffectation", methods="POST")
      */
-    public function postAffectation (Request $request, EntityManagerInterface $em)
+    public function postAffectation (Request $request,  ApiUtils $utils)
     //Méthode permettant de persister un nouvel item à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
         $affectation = new Affectation(); // On instancie un nouvel item qui va venir être hydraté par les informations fournies dans la requête
@@ -75,11 +70,9 @@ class AffectationController extends AbstractController
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(AffectationType::class, $affectation);
 
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->postItem($affectation, $form, $request, $em);
+        $response = $utils->postItem($affectation, $form, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
@@ -87,7 +80,7 @@ class AffectationController extends AbstractController
     /**
      * @Route("/affectations/{id}", name="updateAffectation", requirements={"id"="\d+"}, methods="PUT")
      */
-    public function updateAffectation ($id, Request $request, EntityManagerInterface $em, AffectationRepository $affectationRepo)
+    public function updateAffectation ($id, Request $request,  AffectationRepository $affectationRepo, ApiUtils $utils)
     //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
         $affectation = $affectationRepo->findOnebyId($id);
@@ -96,12 +89,27 @@ class AffectationController extends AbstractController
         // Cf le fichier config/validator/validation.yaml pour les contraintes
         $form = $this->createForm(AffectationType::class, $affectation);
 
-        $utils = new ApiUtils; // On instancie notre service ApiUtils qui va réaliser tous le travail de préparation de la requête 
-                               //puis la mise en forme de la réponse reçue au format json
         
         // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
-        $response = $utils->updateItem($affectation, $form, $request, $em);
+        $response = $utils->updateItem($affectation, $form, $request);
+
+        return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
+    }
+
+    /**
+     * @Route("/affectations/{id}", name="deleteAffectation", requirements={"id"="\d+"}, methods="DELETE")
+     */
+    public function deleteAffectation ($id, Request $request, AffectationRepository $affectationRepo, ApiUtils $utils)
+    //Méthode permettant de persister les modifications sur un item existant à partir des informations reçues dans la requête (payload) et de le renvoyer
+    {
+        $affectation = $affectationRepo->findOneById($id);
+
+        
+        // On envoie à ApiUtils les outils et les informations dont il a besoin pour travailler et il nous renvoie une réponse
+        $response = $utils->deleteItem($affectation, $request);
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
 }
+
+

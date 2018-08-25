@@ -81,7 +81,7 @@ class DataProvider extends \Faker\Provider\Base
         'JavaScript',
         'Php',
         'React',
-        'Boostrap',
+        'Bootstrap',
         'Bulma',
         'WordPress',
         'HTML',
