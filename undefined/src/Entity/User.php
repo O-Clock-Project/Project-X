@@ -140,6 +140,15 @@ class User implements UserInterface, \Serializable
     private $affectations;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Invitation", mappedBy="sender")
+     * @MaxDepth(1)
+     * 
+     */
+    private $invitations;
+
+
+
+    /**
      * @SerializedName("avatar")
      */
     public $avatar;
@@ -155,6 +164,7 @@ class User implements UserInterface, \Serializable
         $this->bookmarks_warned = new ArrayCollection();
         $this->announces = new ArrayCollection();
         $this->affectations = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
 
 

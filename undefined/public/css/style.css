@@ -17,29 +17,27 @@ body {
 }
 
 #login,
-#signup{
+#signup,
+#register{
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* #login-title,
-#signup-title {
-  margin: 8rem;
-  font-size: 4rem;
-  font-weight: 900;
-  text-align: center;
-  text-transform: uppercase;
-} */
+html, body, #register{
+  height: 80%;
+}
 
 #login-title-logo,
-#signup-title-logo{
+#signup-title-logo,
+#register-title-logo{
   margin:8rem; 
   width: 17%;
 }
 
 #login-subtitle,
-#signup-subtitle {
+#signup-subtitle,
+#register-subtitle{
   font-size: 1.5rem;
   font-weight: 700;
   text-align: center;
@@ -56,7 +54,7 @@ body {
   text-align: center;
 }
 
-.login-form-input {
+.login-form-input, .register-form-input {
   width: 100%;
   margin: 1rem 0;
   padding: .5rem;
@@ -69,12 +67,13 @@ body {
   font-size: 1.2rem;
 }
 
-.login-form-input:focus {
+.login-form-input:focus, .register-form-input:focus {
   border-color: #0ac3a7;
 }
 
 .login-form-btn,
-.signup-form-btn {
+.signup-form-btn,
+.register-form-btn{
   margin: 1rem 0;
   border-radius: .5em;
   display: inline-block;
@@ -93,26 +92,31 @@ body {
 }
 
 .login-form-btn:hover,
-.signup-form-btn:hover {
+.signup-form-btn:hover,
+.register-form-btn:hover{
   background: #e4ca98;
 }
 
 .login-form-btn:active,
-.signup-form-btn:active {
+.signup-form-btn:active,
+.register-form-btn:active{
   background: #cdb380;
   border-width: .15em;
   margin-bottom: .15em;
   transform: translateY(.15em);
 }
 
-#signup-form {
+#signup-form,
+#register-form{
   width: 40%;
   margin: auto;
   padding: 1rem 0;
   text-align: center;
+
 }
 
-.signup-form-category {
+.signup-form-category,
+.register-form-category {
   border-bottom: 1px dashed #ccc;
   display: flex;
   justify-content: space-between;
@@ -120,11 +124,17 @@ body {
   padding-bottom: .5rem;
 }
 
+.register-form-category:first-child{
+  height: 15rem;
+}
+
+
 .signup-form-section {
   margin-bottom: 3rem;
 }
 
-.signup-form-label {
+.signup-form-label,
+.register-form-label{
   min-width: 50%;
   text-align: left;
   font-size: 1.4rem;
@@ -132,36 +142,41 @@ body {
   line-height: 1.4;
 }
 
-.signup-form-input {
+
+.signup-form-input,
+.register-form-input{
   width: 50%;
   background: 0 0;
   border: 0;
-  text-align: right;
-  color: lightblue;
+  text-align: left;
+  background-color: #033649;
+  color: #a58a55;
   font-family: Oclock;
   font-weight: 400;
   font-size: 1.4rem;
 }
 
+.register-form-input option, .register-form-input option{
+  background-color: #031634;
+}
+
+
 .signup-form-input:focus,
-#birthday_day:focus,
-#birthday_month:focus,
-#birthday_year:focus {
+.register-form-input:focus{
   outline: none;
 }
 
-#birthday_day,
-#birthday_month,
-#birthday_year {
+.signup-form-label{
+  position: relative;
+}
+
+.invalid-feedback{
   font-size: 1rem;
-  font-family: Oclock;
-  height: 2rem;
-  margin-left: 5px;
-  width: 80px;
-  background-color: #033649;
-  color: #e8ddcb;
-  border: 0;
-} 
+  font-style: italic;
+  position: absolute;
+  right: 5%;
+}
+
 
 .not_found {
   margin-top: 5rem;

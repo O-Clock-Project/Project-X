@@ -14,12 +14,13 @@
         <h2 id="signup-subtitle">Inscription</h2>
 
         <h3 > {{ message }}</h3>
+        <ul>
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
 
 
         {{ include('security/_form.html.twig') }}
-    <ul>
-    {% for error in errors %}
-        <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
+
 {% endblock %}

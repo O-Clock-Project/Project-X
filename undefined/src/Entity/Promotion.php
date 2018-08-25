@@ -62,11 +62,19 @@ class Promotion
      */
     private $links;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Invitation", mappedBy="promotion")
+     * @MaxDepth(1)
+     * 
+     */
+    private $invitations;
+
     public function __construct()
     {
         $this->affectations = new ArrayCollection();
         $this->announces = new ArrayCollection();
         $this->links = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
 
     public function getId()
