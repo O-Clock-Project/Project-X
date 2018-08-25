@@ -9,32 +9,32 @@
 
 {% block body %}
 
-    <div id="signup">
-        <img id= "signup-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
-        <h2 id="signup-subtitle">Pré'Inscription des éléves</h2>
+    <div id="register">
+        <img id= "register-title-logo" src=" {{ asset('images/logo_bold_jaune.png') }} ">
+        <h2 id="register-subtitle">Pré'Inscription des éléves</h2>
         
         {% for message in app.flashes('notice') %}
             <div > {{ message }}</div>
         {% endfor %}
         
-        <form "{{ path("sendEmailRegistration")}}" method="POST" id="signup-form" action="" autocomplete="off">
+        <form "{{ path("sendEmailRegistration")}}" method="POST" id="register-form" action="" autocomplete="off">
             
-            <div class="signup-form-category">
-                <label class="signup-form-label" for="email">Email</label>
-                <textarea class="signup-form-input" id="email" name="email">
+            <div class="register-form-category">
+                <label class="register-form-label" for="email">Email</label>
+                <textarea class="register-form-input" id="email" name="email">
                 </textarea>
             </div>
 
-            <div class="signup-form-category">
+            <div class="register-form-category">
                 
-                <label class="signup-form-label" for="promotion">Promotion</label>
-                <select class="signup-form-input" type="select" id="Promotion" name="Promotion">
+                <label class="register-form-label" for="promotion">Promotion</label>
+                <select class="register-form-input" type="select" id="Promotion" name="Promotion">
                 {% for promotion in promotions %} 
                     <option value={{ promotion.id|e}}>{{ promotion.name|e}}</option> 
                 {% endfor %}
                 </select> 
             </div>
-            <button type="submit" class="signup-form-btn">Envoyer</button>
+            <button type="submit" class="register-form-btn">Envoyer</button>
         </form> 
         
     
