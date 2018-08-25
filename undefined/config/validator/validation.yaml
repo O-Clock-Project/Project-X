@@ -74,9 +74,8 @@ App\Entity\Bookmark:
             - Url:
                 protocols: [http, https, ftp]
                 message: Cette url "{{ value }}"  n'est pas une url valide.
-            - Url: 
                 checkDNS: 'ANY'
-                message: "Le nom de domaine du lien vers la ressource semble incorrect / inexistant."
+                dnsMessage: "Le nom de domaine du lien vers la ressource semble incorrect / inexistant."
             # - Regex:
             #     pattern: '/(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/i'
         published_at:
