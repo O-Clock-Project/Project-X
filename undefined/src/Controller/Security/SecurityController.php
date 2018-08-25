@@ -110,6 +110,7 @@ class SecurityController extends Controller
             // et je le set à mon objet user 
             $user->setPassword($encoded);
             $em->persist($user);
+            $em->persist($affectation);
             $em->flush();
             return $this->redirectToRoute('login');
             }
