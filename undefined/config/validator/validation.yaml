@@ -90,10 +90,12 @@ App\Entity\Bookmark:
 
 App\Entity\User:
     constraints:
-        # - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
-        #     fields: [ email, pseudo_github ]
-        #     errorPath: [ email, pseudo_github ]
-        #     message: ' "{{ value }}" existe déjà !'           
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: email
+            message: 'Cet email est déjà pris !'     
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: pseudo_github
+            message: 'Ce pseudo_github est déjà pris !'  
     properties:
         first_name:
             - NotBlank:
@@ -102,6 +104,8 @@ App\Entity\User:
             - Length:
                 min: 2
                 minMessage: 'Votre nom doit comporter au moins {{ limit }} caractères.'
+                max: 20
+                maxMessage: Votre nom doit comporter au maximum {{ limit }} caractères.
         last_name:
             - NotBlank: 
                 message: ' Veuillez entrer un prénom ' 
@@ -109,6 +113,8 @@ App\Entity\User:
             - Length:
                 min: 2
                 minMessage: Votre prénom doit comporter au moins {{ limit }} caractères.
+                max: 20
+                maxMessage: Votre prénom doit comporter au maximum {{ limit }} caractères.
         email:
             - NotBlank: 
                 message: ' Veuillez entrer un email ' 
@@ -145,18 +151,15 @@ App\Entity\User:
         #         maxMessage: Votre mot de passe doit comporter au maximum {{ limit }} caractères.
                   
 App\Entity\Vote:
-    # constraints:
-    #      - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+    constraints:
     properties:
         value:
             - NotBlank: 
                 message:  Veuillez entrer une note
             - Type: integer
-            - Range:
-                min: -1
-                max: 1
-                minMessage: Votre note ne doit pas être en dessous de -1.
-                maxMessage: Votre note ne doit pas dépasser 1.
+            - Choice:
+                choices:  [-1, 1]
+                message:  Votre vote doit être -1 ou +1.
             
 
         

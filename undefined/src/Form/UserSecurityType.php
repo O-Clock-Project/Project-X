@@ -150,8 +150,7 @@ class UserSecurityType extends AbstractType
                     'placeholder' => 'Pseudo Github'  
                 ],
             ])
-
-       
+      
         ;
     }
 
