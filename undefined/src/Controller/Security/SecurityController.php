@@ -78,15 +78,12 @@ class SecurityController extends Controller
 
             $invit = $repoInvit->findOneBy(array('email' => $user->getEmail())); //je vais chercher l'invit correspondant à l'email rentré
             
-            if ($invit === null){
-                $errors[] = "Pas d'invitation en attente pour le compte email " . $user->getEmail() ;
-            }
-            else{
-     
-                if (!($invit->getSecretCode() === $request->get('code'))){//je vérifie que le code secret est le bon
-                    $errors[] = "Merci de bien utiliser le lien fourni dans le mail sinon tu ne pourras pas t'inscrire!";
-                } 
-            }
+            // if ($invit === null){
+            //     $errors[] = "Pas d'invitation en attente pour le compte email " . $user->getEmail() ;
+            // }
+            // if(!($invit->getSecretCode() === $request->get('code'))){//je vérifie que le code secret est le bon
+            //         $errors[] = "Merci de bien utiliser le lien fourni dans le mail sinon tu ne pourras pas t'inscrire!";
+            // }
  
             if (empty($errors)){
             $em = $this->getDoctrine()->getManager();

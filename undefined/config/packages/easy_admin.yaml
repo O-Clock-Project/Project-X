@@ -229,6 +229,7 @@ easy_admin:
                     - { property: 'support', label: 'Support' }
                     - { property: 'difficulty', label: 'Difficulté' }
                     - { property: 'votes', label: 'Votes', type_options: { 'by_reference': false }}
+                    - { property: 'tags', label: 'Tags', type_options: { 'by_reference': false }}
                     - { property: 'faved_by', label: 'Mis en favoris', type_options: { 'by_reference': false }}
                     - { property: 'warnings', label: 'Alertes', type_options: { 'by_reference': false }}
                     - { property: 'user', label: 'Utilisateur' }
@@ -250,6 +251,7 @@ easy_admin:
                     - { property: 'difficulty', label: 'Difficulté' }
                     - { property: 'user', label: 'Utilisateur' }
                     - { property: 'locale', label: 'Langue' }
+                    - { property: 'tags', label: 'Tags', type_options: { 'by_reference': false }}
                     - { property: 'warnings', label: 'Alertes', type_options: { 'by_reference': false }}
                     - { property: 'banned' , label: 'Bannir'}
                     - { property: 'published_at', label: 'Date de création de la ressource (officielle)', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' } }
@@ -266,6 +268,7 @@ easy_admin:
                     - { property: 'image', label: 'Image' }
                     - { property: 'support', label: 'Support' }
                     - { property: 'difficulty', label: 'Difficulté' }
+                    - { property: 'tags', label: 'Tags', type_options: { 'by_reference': false }}
                     - { property: 'user', label: 'Utilisateur' }
                     - { property: 'locale', label: 'Langue' }
                     - { property: 'banned' , label: 'Bannir'}

@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,7 +24,13 @@ class UserSecurityType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'constraints' => [ 
-                    New NotBlank()
+                    new NotBlank(),
+                    new Length([
+                        'min' => 2,
+                        'minMessage' => ': Votre pseudo est trop court (2 caractères minimum)',
+                        'max' => 20,
+                        'maxMessage' => ': Votre pseudo est trop long (20 caractères maximum)'
+                    ])
                 ],
                 'label' => 'Pseudo', 
                 'attr' => [
@@ -31,12 +38,11 @@ class UserSecurityType extends AbstractType
                     'placeholder' => 'Pseudo'  
                 ]
             ])
-
             ->add('email', EmailType::class, [
                 'constraints' => [ 
-                    New NotBlank(),
+                    new NotBlank(),
                     new Email([
-                        'mode' => 'html5'
+                        'checkHost' => 'true'
                     ])
                 ],
                 'label' => 'Email', 
@@ -48,10 +54,16 @@ class UserSecurityType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'constraints' => [ 
-                    New NotBlank()
+                    new NotBlank(),
+                    new Length([
+                        'min' => 8,
+                        'minMessage' => ': Votre mot de passe est trop court (8 caractères minimum)',
+                        'max' => 20,
+                        'maxMessage' => ': Votre mot de passe est trop long (20 caractères maximum)'
+                    ])
                 ],
                 'type' => PasswordType::class,
-                'invalid_message' => 'Le mot de passe saisi n\'est pas le même',
+                'invalid_message' => ': Le mot de passe saisi n\'est pas le même',
                 'options' => [
                     'attr' => [
                         'class' => 'signup-form-input',
@@ -69,7 +81,13 @@ class UserSecurityType extends AbstractType
             ])
             ->add('firstname', TextType::class, [
                 'constraints' => [ 
-                    New NotBlank()
+                    new NotBlank(),
+                    new Length([
+                        'min' => 2,
+                        'minMessage' => ': Votre prénom est trop court (2 caractères minimum)',
+                        'max' => 30,
+                        'maxMessage' => ': Votre prénom est trop long (30 caractères maximum)'
+                    ])
                 ],
                 'label' => 'Prenom', 
                 'attr' => [
@@ -79,7 +97,13 @@ class UserSecurityType extends AbstractType
             ])
             ->add('lastname', TextType::class, [
                 'constraints' => [ 
-                    New NotBlank()
+                    new NotBlank(),
+                    new Length([
+                        'min' => 2,
+                        'minMessage' => ': Votre nom est trop court (2 caractères minimum)',
+                        'max' => 30,
+                        'maxMessage' => ': Votre nom est trop long (30 caractères maximum)'
+                    ])
                 ],
                 'label' => 'Nom', 
                 'attr' => [
@@ -89,7 +113,7 @@ class UserSecurityType extends AbstractType
             ])
             ->add('birthday', BirthdayType::class, [
                 'constraints' => [ 
-                    New NotBlank()
+                    new NotBlank()
                 ],
                 'widget' => 'choice',
                 'format' => 'dd-MM-yyyy',
@@ -100,20 +124,25 @@ class UserSecurityType extends AbstractType
                     
             ])
          
-            ->add('zip', NumberType::class, [
+            ->add('zip', TextType::class, [
                 'constraints' => [ 
-                    New NotBlank()
+                    new NotBlank(),
+                    new Length([
+                        'min' => 4,
+                        'minMessage' => ': Votre code postal est trop court (4 caractères minimum)',
+                        'max' => 10,
+                        'maxMessage' => ': Votre code postal est trop long (10 caractères maximum)'
+                    ])
                 ],
                 'label' => 'Code postal', 
                 'attr' => [
                     'class' => 'signup-form-input',
                     'placeholder' => 'Code Postal'  
                 ],
-                'invalid_message' => 'Le code postal saisi n\'est pas un chiffre',
             ])
             ->add('pseudogithub', TextType::class, [
                 'constraints' => [ 
-                    New NotBlank()
+                    new NotBlank()
                 ],
                 'label' => 'Pseudo Github', 
                 'attr' => [

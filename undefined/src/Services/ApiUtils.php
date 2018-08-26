@@ -240,7 +240,12 @@ class ApiUtils
             else{
                 return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST);//si pas d'ancien mdp reçu: error aussi
             }
-            $newPassword = $encoder->encodePassword($object, $parametersAsArray["password"]);//si tout est ok: on encode le nouveau mdp
+            if(strlen($parametersAsArray["password"])>=8){
+                $newPassword = $encoder->encodePassword($object, $parametersAsArray["password"]);//si tout est ok: on encode le nouveau mdp
+            } 
+            else{
+                return new JsonResponse(array('error' => 'Le mot de passe doit faire au moins 8 caractères'), Response::HTTP_BAD_REQUEST);//si pas d'ancien mdp reçu: error aussi
+            }
             unset($parametersAsArray["old_password"]); //On unsette la clé ancien mdp pour ne pas l'envoyer au form
             unset($parametersAsArray["password"]); //On unsette la clé nouveau mdp pour ne pas l'envoyer au form
         }
@@ -285,7 +290,7 @@ class ApiUtils
         
         if(isset($actionsRemoveAsArray)){
             if(isset($actionsRemoveAsArray['error'])){
-                return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse($actionsRemoveAsArray['error'], Response::HTTP_NOT_FOUND);
             }
             else{
                 foreach($actionsRemoveAsArray as $actionRemove){
@@ -299,7 +304,7 @@ class ApiUtils
 
         if(isset($actionsAddAsArray)){
             if(isset($actionsAddAsArray['error'])){
-                return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse($actionsAddAsArray['error'], Response::HTTP_NOT_FOUND);
             }
             else{
                 foreach($actionsAddAsArray as $actionAdd){

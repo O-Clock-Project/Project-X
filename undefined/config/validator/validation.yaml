@@ -114,7 +114,7 @@ App\Entity\User:
                 message: ' Veuillez entrer un email ' 
             - Email: 
                 message: L'email {{ value }} , n'est pas un email valide.
-                checkMX: true
+                checkHost: true
             # - Regex:
             #     pattern: '!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i]'
         birthday:
@@ -130,9 +130,11 @@ App\Entity\User:
         zip:
             - NotBlank:
                 message: ' Veuillez entrer un code postal '
-            - Type: 
-                type: integer
-                message: Le code Postal {{ value }}  n'est pas valide.
+            - Length:
+                min: 4
+                minMessage: Votre code postal doit comporter au moins {{ limit }} caractères.
+                max: 10
+                maxMessage: Votre code postal doit comporter au maximum {{ limit }} caractères.
         #password:
         #     - Symfony\Component\Security\Core\Validator\Constraints\UserPassword:
         #         message: Votre ancien mot de passe n'est pas le bon 
