@@ -572,7 +572,7 @@ easy_admin:
                     - { property: 'is_active',label: 'Activer' }
                     - { property: 'name', label: 'Nom du lien' }
                     - { property: 'url', label: 'Url' }
-                    - { property: 'icon', label: 'Icon' }
+                    - { property: 'icon', type: 'choice', type_options: { choices: { 'Github': 'FaGithub', 'Replays': 'FaGooglePlay', 'Google Drive': 'FaGoogleDrive', 'Slack': 'FaSlackHash','Cockpit': 'FaSchool', 'Fiches récaps': 'FaArchive' } } }
                     - { property: 'promotion', label: 'Promotion' }
         Role:
             class: App\Entity\Role
