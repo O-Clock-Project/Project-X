@@ -92,10 +92,10 @@ App\Entity\User:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
             fields: email
-            message: 'Cet email est déjà pris !'     
+            message: 'Cet email est déjà utilisé !'     
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
             fields: pseudo_github
-            message: 'Ce pseudo_github est déjà pris !'  
+            message: 'Ce pseudo Github est déjà utilisé !'  
     properties:
         first_name:
             - NotBlank:

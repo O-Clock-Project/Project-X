@@ -246,10 +246,11 @@ class ApiUtils
             else{
                 return new JsonResponse(array('error' => 'Le mot de passe doit faire au moins 8 caractères'), Response::HTTP_BAD_REQUEST);//si pas d'ancien mdp reçu: error aussi
             }
-            unset($parametersAsArray["old_password"]); //On unsette la clé ancien mdp pour ne pas l'envoyer au form
-            unset($parametersAsArray["password"]); //On unsette la clé nouveau mdp pour ne pas l'envoyer au form
+              unset($parametersAsArray["password"]); //On unsette la clé nouveau mdp pour ne pas l'envoyer au form
         }
-        
+        if(isset($parametersAsArray["old_password"])){
+            unset($parametersAsArray["old_password"]); //On unsette la clé ancien mdp pour ne pas l'envoyer au form
+        }
         
 
         if(isset($parametersAsArray['remove'])){

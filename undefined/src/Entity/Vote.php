@@ -5,12 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\PrePersist;
-use JMS\Serializer\Annotation\SerializedName;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VoteRepository")
@@ -141,10 +138,6 @@ class Vote
         return $this;
     }
 
-    public function getIdentity(): ?string
-    {
-        return  $this->identity;
-    }
 
     /**
      *

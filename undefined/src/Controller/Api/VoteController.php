@@ -5,10 +5,14 @@ namespace App\Controller\Api;
 use App\Entity\Vote;
 use App\Form\VoteType;
 use App\Services\ApiUtils;
+use App\Repository\UserRepository;
 use App\Repository\VoteRepository;
+use App\Repository\BookmarkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -63,9 +67,14 @@ class VoteController extends AbstractController
     /**
      * @Route("/votes", name="postVote", methods="POST")
      */
-    public function postVote (Request $request, ApiUtils $utils)
+    public function postVote (Request $request, ApiUtils $utils, VoteRepository $voteRepo, UserRepository $userRepo, BookmarkRepository $bookmarkRepo)
     //Méthode permettant de persister un nouvel item à partir des informations reçues dans la requête (payload) et de le renvoyer
     {
+       $response = $this->checkVote($request, $voteRepo, $userRepo, $bookmarkRepo);
+       if($response['exists']){
+            return new JsonResponse($response, Response::HTTP_BAD_REQUEST);
+        }
+        // $voter = $userRepo->findOneById($request['add'][''])
         $vote = new Vote(); // On instancie un nouvel item qui va venir être hydraté par les informations fournies dans la requête
 
         // On crée un formulaire "virtuel" qui va permettre d'utiliser le système de validation des forms Symfony pour checker les données reçues
@@ -112,5 +121,53 @@ class VoteController extends AbstractController
 
         return $response; //On retourne la réponse formattée (item créé si réussi, message d'erreur sinon)
     }
+
+
+    /**
+     * @Route("/votes/check", name="checkVote", methods="GET")
+     */
+    public function checkVote ( Request $request, VoteRepository $voteRepo, UserRepository $userRepo, BookmarkRepository $bookmarkRepo)
+    {
+        if((null!==$request->query->get('voter'))&& null!==$request->query->get('bookmark')){
+            $directRoute = true;
+            $voterId = $request->get('voter');
+            $bookmarkId=$request->get('bookmark');
+        }
+        if ($content = $request->getContent()) { //Si requête pas vide, on met dans $content
+
+            $parametersAsArray = json_decode($content, true); //Et on decode en json
+            if(isset($parametersAsArray['add'])){
+                $directRoute=false;
+                foreach($parametersAsArray['add'] as $relation){
+                    if($relation['property']==='voter'){
+                        $voterId = $relation['id'];
+                    }
+                    elseif($relation['property']==='bookmark'){
+                        $bookmarkId = $relation['id'];
+                    }
+                }
+            }
+        }
+
+        $voter = $userRepo->findOneById($voterId);
+        $bookmark = $bookmarkRepo->findOneById($bookmarkId);
+
+        $existingVote = $voteRepo->findOneBy(array('voter'=>$voter, 'bookmark'=>$bookmark));
+        
+        if(!$existingVote){
+            $response = array('exists' => false, 'value' => 0);
+        }
+        elseif($existingVote){
+            $response = array('exists' => true, 'value' => $existingVote->getValue());
+        }
+        
+        if($directRoute===true){
+            return new JsonResponse($response, Response::HTTP_OK);
+        }
+        else{
+            return $response;
+        }
+    }
+
 
 }
