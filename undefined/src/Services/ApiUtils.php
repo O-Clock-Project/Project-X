@@ -234,17 +234,17 @@ class ApiUtils
         if(isset($parametersAsArray["password"])){
             if(isset($parametersAsArray["old_password"])){ //Pour accepter le changement je dois recevoir aussi l'ancien mdp
                 if (!$encoder->isPasswordValid($object, $parametersAsArray["old_password"])){ //je teste que l'ancien mdp reçu correspond à celui en BDD
-                    return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST); //sinon erreur
+                    $passwordErrors[]='Ancien mot de passe ne correspond pas';
                 }
             }
             else{
-                return new JsonResponse(array('error' => 'Ancien mot de passe ne correspond pas'), Response::HTTP_BAD_REQUEST);//si pas d'ancien mdp reçu: error aussi
+                $passwordErrors[]='Ancien mot de passe ne correspond pas';;//si pas d'ancien mdp reçu: error aussi
             }
-            if(strlen($parametersAsArray["password"])>=8){
+            if(strlen($parametersAsArray["password"])>=8 && empty($passwordErrors)){
                 $newPassword = $encoder->encodePassword($object, $parametersAsArray["password"]);//si tout est ok: on encode le nouveau mdp
             } 
             else{
-                return new JsonResponse(array('error' => 'Le mot de passe doit faire au moins 8 caractères'), Response::HTTP_BAD_REQUEST);//si pas d'ancien mdp reçu: error aussi
+                $passwordErrors[]= 'Le mot de passe doit faire au moins 8 caractères';//si pas d'ancien mdp reçu: error aussi
             }
             unset($parametersAsArray["old_password"]); //On unsette la clé ancien mdp pour ne pas l'envoyer au form
             unset($parametersAsArray["password"]); //On unsette la clé nouveau mdp pour ne pas l'envoyer au form
@@ -275,6 +275,9 @@ class ApiUtils
                 if ((string)$error->getErrors(true) !== ''){
                $errors[$field] = substr(substr(((string)$error->getErrors(true)), 0, -1), 7);
                 }
+            }
+            foreach($passwordErrors as $error){
+                $errors['password']=$error;
             }
         
             return new JsonResponse($errors, Response::HTTP_BAD_REQUEST);

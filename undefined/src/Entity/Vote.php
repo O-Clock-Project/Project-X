@@ -58,10 +58,6 @@ class Vote
      */
     private $voter;
 
-    /**
-     * @SerializedName("identity")
-     */
-    private $identity;
 
     public function __construct()
     {
@@ -148,17 +144,6 @@ class Vote
     public function getIdentity(): ?string
     {
         return  $this->identity;
-    }
-
-    /**
-     * @ORM\PostLoad
-     * @ORM\PreUpdate
-     */
-    public function setIdentity(): self
-    {
-        $this->identity = $this->voter->getId().'-'. $this->bookmark->getId();
-
-        return $this;
     }
 
     /**
