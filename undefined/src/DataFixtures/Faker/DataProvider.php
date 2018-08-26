@@ -27,7 +27,7 @@ class DataProvider extends \Faker\Provider\Base
 
     protected static $promotionLinks = [
         'Replays',
-        'Drive',
+        'Google Drive',
         'Fiches Récap',
         'Slack',
         'Cockpit',
@@ -47,12 +47,12 @@ class DataProvider extends \Faker\Provider\Base
     ];
 
     protected static $linkIcons = [
-        'FaSchool',
-        'FaGithub',
         'FaGooglePlay',
         'FaGoogleDrive',
         'FaArchive',
         'FaSlackHash',
+        'FaSchool',
+        'FaGithub',
     ];
 
     protected static $supportIcons = [

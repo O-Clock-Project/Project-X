@@ -53,6 +53,7 @@ security:
 
     role_hierarchy:
         # role de la clef contient l'autre role
-        ROLE_STUDENT: ROLE_STUDENT
-        ROLE_TEACHER: ROLE_STUDENT
-        ROLE_ADMINISTRATOR: [ROLE_STUDENT, ROLE_TEACHER]
+        ROLE_FRONT: ROLE_STUDENT
+        ROLE_TEACHER: ROLE_FRONT
+        ROLE_REFERENT: ROLE_TEACHER
+        ROLE_ADMINISTRATOR: ROLE_REFERENT

@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\Promotion;
 use App\Entity\Affectation;
 use App\Entity\PromotionLink;
+use App\Entity\AnnouncementType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -47,53 +48,67 @@ class AppFixtures extends Fixture
         $roleAdmin->setCode('ROLE_ADMINISTRATOR');
         $roleAdmin->setname('Administrateur');
         $roleAdmin->setIsActive('1');
+
+        $roleReferent = New Role();
+        $roleReferent->setCode('ROLE_REFERENT');
+        $roleReferent->setname('Professeur référent');
+        $roleReferent->setIsActive('1');  
+
+        $roleTeacher = New Role();
+        $roleTeacher->setCode('ROLE_TEACHER');
+        $roleTeacher->setname('Professeur');
+        $roleTeacher->setIsActive('1');
+
+        $roleFront = New Role();
+        $roleFront->setCode('ROLE_FRONT');
+        $roleFront->setname('Etudiant Front Controller');
+        $roleFront->setIsActive('1');
         
-        $roleUser = New Role();
-        $roleUser->setCode('ROLE_STUDENT');
-        $roleUser->setname('Etudiant');
-        $roleUser->setIsActive('1');
         
-        $roleModerator = New Role();
-        $roleModerator->setCode('ROLE_TEACHER');
-        $roleModerator->setname('Professeur');
-        $roleModerator->setIsActive('1');
+        $roleStudent = New Role();
+        $roleStudent->setCode('ROLE_STUDENT');
+        $roleStudent->setname('Etudiant');
+        $roleStudent->setIsActive('1');
+        
         
         $manager->persist($roleAdmin);
-        $manager->persist($roleUser);
-        $manager->persist($roleModerator);
+        $manager->persist($roleReferent);
+        $manager->persist($roleTeacher);
+        $manager->persist($roleFront);
+        $manager->persist($roleStudent);
 
         
         $userAdmin = new User();
-        $userAdmin->setPassword($this->encoder->encodePassword($userAdmin, 'admin'));
+        $userAdmin->setPassword($this->encoder->encodePassword($userAdmin, 'adminadmin'));
         //$userAdmin->setPassword('admin');
         $userAdmin->setEmail('admin@admin.fr');
         $userAdmin->setBirthday(new DateTime("10-8-1980"));//ddMMyyyy
-        $userAdmin->setUsername('Charly');
-        $userAdmin->setFirstName('Joly');
-        $userAdmin->setLastName('Charles');
-        $userAdmin->setPseudoGithub('Charly');
+        $userAdmin->setUsername('webdif');
+        $userAdmin->setFirstName('Maxime');
+        $userAdmin->setLastName('Vasse');
+        $userAdmin->setPseudoGithub('webdif');
         $userAdmin->setZip('95522');
         $userAdmin->setIsActive('1');
         
         $manager->persist($userAdmin);
         
-        $userModerator = new User();
-        $userModerator->setPassword($this->encoder->encodePassword($userModerator, 'prof'));
-        //$userModerator->setPassword('prof');
-        $userModerator->setEmail('prof@prof.fr');
-        $userModerator->setBirthday(new DateTime("28-12-1985"));//ddMMyyyy
-        $userModerator->setUsername('Soso85');
-        $userModerator->setFirstName('Martin');
-        $userModerator->setLastName('Sophie');
-        $userModerator->setPseudoGithub('Soso85');
-        $userModerator->setZip('18522');
-        $userModerator->setIsActive('1');
+        $userTeacher = new User();
+        $userTeacher->setPassword($this->encoder->encodePassword($userTeacher, 'profprof'));
+        //$userTeacher->setPassword('prof');
+        $userTeacher->setEmail('benjamin@oclock.io');
+        $userTeacher->setBirthday(new DateTime("28-12-1985"));//ddMMyyyy
+        $userTeacher->setUsername('BenOclock');
+        $userTeacher->setFirstName('Benjamin');
+        $userTeacher->setLastName('Cordier');
+        $userTeacher->setPseudoGithub('benoclock');
+        $userTeacher->setZip('55029');
+        $userTeacher->setIsActive('1');
         
-        $manager->persist($userModerator);
-
+        $manager->persist($userTeacher);
+        
         $userSimple = new User();
-        $userSimple->setPassword($this->encoder->encodePassword($userModerator, 'user'));
-        //$userModerator->setPassword('user');
+        $userSimple->setPassword($this->encoder->encodePassword($userTeacher, 'useruser'));
+        //$userTeacher->setPassword('user');
         $userSimple->setEmail('user@user.fr');
         $userSimple->setBirthday(new DateTime("15-02-1990"));//ddMMyyyy
         $userSimple->setUsername('Clem');
@@ -114,13 +129,48 @@ class AppFixtures extends Fixture
         
         // Affectation pour un Professeur
         $affectationUserProf = new Affectation();
-        $affectationUserProf->setRole($roleModerator);
-        $affectationUserProf->setUser($userModerator);
+        $affectationUserProf->setRole($roleTeacher);
+        $affectationUserProf->setUser($userTeacher);
         $affectationUserProf->setIsActive('1');
-        
+
+        // Affectation pour un User
+        $affectationUserSimple = new Affectation();
+        $affectationUserSimple->setRole($roleStudent);
+        $affectationUserSimple->setUser($userSimple);
+        $affectationUserSimple->setIsActive('1');
+
+
+        $promotionLinkNames = [
+            'Github',
+            'Replays',
+            'Slack',
+            'Drive',
+            'Fiches Récap',
+            'Cockpit',
+        ];
+        $linkIconNames = [
+            'FaGooglePlay',
+            'FaGoogleDrive',
+            'FaArchive',
+            'FaSlackHash',
+            'FaSchool',
+            'FaGithub',
+        ];        
+        $promotionOclock = new Promotion();
+        $promotionOclock->setName('Oclock');
+        for($i=0;$i<3;$i++){
+            $link = new PromotionLink();
+            $link->setName($promotionLinkNames[$i+3]);
+            $link->setUrl($faker->url());
+            $link->setIcon($linkIconNames[$i+3]);
+            $manager->persist($link);
+            $promotionOclock->addLink($link);
+            $manager->persist($promotionOclock);
+        }
 
         
-        $populator->addEntity('App\Entity\Promotion', 10,[
+        
+        $populator->addEntity('App\Entity\Promotion', 11,[
              'name' => function() use ($faker) { return $faker->unique()->promotionName(); },
              'is_active' => 1,
         ]);
@@ -209,6 +259,9 @@ class AppFixtures extends Fixture
             'name' => function() use ($faker) { return $faker->unique()->announcementType(); },
         ]);
 
+
+    
+
         $populator->addEntity('App\Entity\Announcement',40 ,[
             'is_active' => 1,
             'frozen' => 0,
@@ -250,11 +303,99 @@ class AppFixtures extends Fixture
         // On demande à Faker d'éxécuter les ajouts en BDD
         $inserted = $populator->execute();
 
-        /*$promotions = $inserted['App\Entity\Promotion'];    
+        $promotions = $inserted['App\Entity\Promotion'];    
         $specialities = $inserted['App\Entity\Speciality']; 
         $supports = $inserted['App\Entity\Support']; 
-        $languages = $inserted['App\Entity\Locale'];  */
-        
+        $languages = $inserted['App\Entity\Locale'];  
+        $difficulties = $inserted['App\Entity\Difficulty'];  
+        $announcementTypes= $inserted['App\Entity\AnnouncementType'];  
+
+        $announcementTypeNames = [
+            'Annonce',
+            'Sondage',
+            'Kiem Tao',
+            'Blague',
+        ];
+        $i=0;
+        foreach($announcementTypes as $announcementType){
+            $announcementType->setName($announcementTypeNames[$i]);
+            $i++;
+        }
+
+        $promotionNames = [
+            'Architects',
+            'BigBang',
+            'Cosmos',
+            'Discovery',
+            'Explorer',
+            'Fusion',
+            'Galaxy',
+            'Hyperspace',
+            'Invaders',
+            'Journey',
+            'Krypton',
+        ];
+        $i=0;
+        foreach($promotions as $promotion){
+            $promotion->setName($promotionNames[$i]);
+            if($promotionNames[$i]==='Architects'){
+                // Affectation pour un admin
+                $affectationUserAdmin = new Affectation();
+                $affectationUserAdmin->setRole($roleAdmin);
+                $affectationUserAdmin->setUser($userAdmin);
+                $affectationUserAdmin->setPromotion($promotion);
+                $affectationUserAdmin->setIsActive('1');
+                
+                
+                // Affectation pour un Professeur
+                $affectationUserProf = new Affectation();
+                $affectationUserProf->setRole($roleTeacher);
+                $affectationUserProf->setUser($userTeacher);
+                $affectationUserProf->setPromotion($promotion);
+                $affectationUserProf->setIsActive('1');
+
+                // Affectation pour un User
+                $affectationUserSimple = new Affectation();
+                $affectationUserSimple->setRole($roleStudent);
+                $affectationUserSimple->setUser($userSimple);
+                $affectationUserSimple->setPromotion($promotion);
+                $affectationUserSimple->setIsActive('1');
+            }
+            $i++;
+        }
+
+        $supportNames = [
+            'Audio',
+            'Écrit',
+            'Video',
+        ];
+        $supportIcons = [
+            'FaHeadphones',
+            'FaFileAlt',
+            'FaFilm',
+        ];
+        $i=0;
+        foreach($supports as $support){
+            $support->setName($supportNames[$i]);
+            $support->setIcon($supportIcons[$i]);
+            $i++;
+        }
+
+        $difficultyNames = [
+            'Commencer',
+            'Progresser',
+            'Se dépasser',
+        ];
+        $i=0;
+        foreach($difficulties as $difficulty){
+            $difficulty->setName($difficultyNames[$i]);
+            $difficulty->setLevel($i+1);
+            $i++;
+        }
+
+
+
+
         $promotions = $inserted['App\Entity\Promotion'];
         $affectationUserAdmin->setPromotion($promotions[0]);
         $affectationUserProf->setPromotion($promotions[0]);
@@ -265,7 +406,7 @@ class AppFixtures extends Fixture
         foreach($users as $user)
         {
             $affectation = new Affectation();
-            $affectation->setRole($roleUser);
+            $affectation->setRole($roleStudent);
             $affectation->setUser($user);
             shuffle($promotions);
             $affectation->setPromotion($promotions[0]);
@@ -293,6 +434,8 @@ class AppFixtures extends Fixture
             }
         }
 
+
+
         $announcements = $inserted['App\Entity\Announcement'];
         foreach($inserted['App\Entity\Promotion'] as $promotion)
         {
@@ -304,15 +447,16 @@ class AppFixtures extends Fixture
             }
             for ( $i=0; $i<3; $i++){
                 $link = new PromotionLink();
-                $link->setName($faker->unique()->promotionLink());
+                $link->setName($promotionLinkNames[$i]);
                 $link->setUrl($faker->url());
-                $link->setIcon($faker->unique()->linkIcon());
+                $link->setIcon($linkIconNames[$i]);
                 $faker->unique($reset = true);
                 $manager->persist($link);
                 $promotion->addLink($link);
                 $manager->persist($promotion);
             }
         }
+
 
 
 
