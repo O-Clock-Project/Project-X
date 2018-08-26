@@ -612,7 +612,7 @@ class User implements UserInterface, \Serializable
         
         if ($promotion === null){
             foreach($affectations as $affectation){
-                $roles[] = $affectation->getRole()->getCode();
+                 $roles[] = $affectation->getRole()->getCode();
             }
         }
         else{
