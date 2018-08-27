@@ -209,7 +209,9 @@ class SecurityController extends Controller
                                 'security/emailType.html.twig',[
                                     'email' => $email,
                                     'code' => $code,
-                                    'logo_src' => $logo_src
+                                    'logo_src' => $logo_src,
+                                    'sender' => $this->getUser()->getUsername(),
+                                    'promotion' => $promotion->getName(),
                                 ]
                             ),
                             'text/html'
