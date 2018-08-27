@@ -9,28 +9,28 @@ security:
         thehub_provider:
             entity:
                 class: App\Entity\User
-                property: username
-                #property: email
+                # property: username
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        # api:
-        #     provider: thehub_provider
-        #     pattern: ^/api/
-        #     lexik_jwt:
-        #         authorization_header: # check token in Authorization Header
-        #             enabled: true
-        #             prefix:  Bearer
-        #         query_parameter:      # check token in query string parameter
-        #             enabled: true
-        #             name:    bearer
-        #         cookie:               # check token in cookie
-        #             enabled: false
-        #             name:    BEARER
-        #         throw_exceptions:        false     # When an authentication failure occurs, return a 401 response immediately
-        #         create_entry_point:      true      # When no authentication details are provided, create a default entry point that returns a 401 response
-        #         authentication_provider: lexik_jwt_authentication.security.authentication.provider  
+        api:
+            provider: thehub_provider
+            pattern: ^/api/
+            lexik_jwt:
+                authorization_header: # check token in Authorization Header
+                    enabled: true
+                    prefix:  Bearer
+                query_parameter:      # check token in query string parameter
+                    enabled: true
+                    name:    bearer
+                cookie:               # check token in cookie
+                    enabled: false
+                    name:    BEARER
+                throw_exceptions:        false     # When an authentication failure occurs, return a 401 response immediately
+                create_entry_point:      true      # When no authentication details are provided, create a default entry point that returns a 401 response
+                authentication_provider: lexik_jwt_authentication.security.authentication.provider  
         main:
             # j'autorise les utilisateurs anonyme à consulter une partie de l'application (le login)
             anonymous: true

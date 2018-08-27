@@ -153,6 +153,11 @@ class User implements UserInterface, \Serializable
      */
     public $avatar;
 
+    /**
+     * @SerializedName("best_role")
+     */
+    public $bestRole;
+
 
     public function __construct()
     {
@@ -628,9 +633,11 @@ class User implements UserInterface, \Serializable
         
         return $roles;
     }
+
     public function eraseCredentials()
     {
     }
+
     /** @see \Serializable::serialize() */
     public function serialize()
     {
@@ -653,6 +660,7 @@ class User implements UserInterface, \Serializable
             // $this->salt
         ) = unserialize($serialized, array('allowed_classes' => false));
     }
+
     // Fonction qui parcourt les roles retournés par getRoles et qui retourne le meilleur (son score et son code)
     public function getBestRole(Promotion $promotion = null){
         $roles = $this->getRoles($promotion);
@@ -677,6 +685,8 @@ class User implements UserInterface, \Serializable
             'level'=> $bestScore
         );
     }
+
+
     /**
      * @ORM\PostLoad
      */
@@ -686,5 +696,6 @@ class User implements UserInterface, \Serializable
         $this->bestRole = $this->getBestRole();
         return $this;
     }
+
 
 }
