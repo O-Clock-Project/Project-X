@@ -1,16 +1,16 @@
 # Readme API/Rest
 
 ### Representational State Transfer
-It's an architecture who define a set of rules helping to conceive a API and define the way how the server and the client communicate.
-In our use case, we will only use principally three of these greats rules, because we always send Json:
+It's an architecture that defines a set of rules. It helps to conceiving an API and defining the way the server and the client communicate.
+In this case, we are going to use principally three of these great rules, because we always send Json:
 
- 1. **The URI as resource identification .**
+ 1. **The URI as resource identification.**
  2. **The HTTP verbs as identification of operations: GET/POST/PUT/DELETE.**
  3. **One authentication token (JWT sent inside the header).**
 
 
-So we don't build a real API RESTful but we will use the good practices and conventions of this one to have a effective API to communicate between the Front and the Back.
-Every routes of the API begins by /api.
+Thus, we do not build a real API RESTful but we will stick to the best practices and conventions to have an effective API that allows easy communication between the Front and the Back.
+Every route of the API begins with /api.
 
 
 ## Available resources (URI)
