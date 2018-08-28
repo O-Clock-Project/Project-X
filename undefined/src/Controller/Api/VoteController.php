@@ -155,10 +155,10 @@ class VoteController extends AbstractController
         $existingVote = $voteRepo->findOneBy(array('voter'=>$voter, 'bookmark'=>$bookmark));
         
         if(!$existingVote){
-            $response = array('exists' => false, 'value' => 0);
+            $response = array('exists' => false, 'value' => 0, 'id' => null);
         }
         elseif($existingVote){
-            $response = array('exists' => true, 'value' => $existingVote->getValue());
+            $response = array('exists' => true, 'value' => $existingVote->getValue(), 'id' => $existingVote->getId());
         }
         
         if($directRoute===true){
