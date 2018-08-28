@@ -27,12 +27,12 @@ Every route of the API begins with /api.
 
 | Route name  | Method | Route objective |
 |--|--|--|
-| /api/resources | GET | Route allowing to receive the list of all items of one resource.  |
-| /api/resources/{id} | GET | Route allowing to receive only one item of one resource according to his id  .|
-| /api/resources/{id}/{child}/{relation} | GET | Route allowing to receive the list of all items of a specified child resource linked at a precise item (specified by id). |
-| /api/resources| POST |Route allowing to persist a new item of one resource (and set his relations with other items) using informations sent in the payload of the request and receive the representation of the item with his new id. |
-| /api/resources/{id}| PUT |Route allowing to make modifications on one item of the resource (and set/unset his relations with other items), specified by his id, using informations sent in the payload of the request and receive the representation of the modified item.  |
-| /api/resources/{id}| DELETE |Route allowing to suppress one item of the resource (and unset his relations with other items), specified by his id, using informations sent in the payload of the request and receive a message giving the status (success/fail) of the action. |
+| /api/{resources} | GET | Route allowing to receive the list of all items of one resource.  |
+| /api/{resources}/{id} | GET | Route allowing to receive only one item of one resource according to his id  .|
+| /api/{resources}/{id}/{child}/{relation} | GET | Route allowing to receive the list of all items of a specified child resource linked at a precise item (specified by id). |
+| /api/{resources}| POST |Route allowing to persist a new item of one resource (and set his relations with other items) using informations sent in the payload of the request and receive the representation of the item with his new id. |
+| /api/{resources}/{id}| PUT |Route allowing to make modifications on one item of the resource (and set/unset his relations with other items), specified by his id, using informations sent in the payload of the request and receive the representation of the modified item.  |
+| /api/{resources}/{id}| DELETE |Route allowing to suppress one item of the resource (and unset his relations with other items), specified by his id, using informations sent in the payload of the request and receive a message giving the status (success/fail) of the action. |
 
 ## Available query strings options (for GET routes)
 | Query string  | Title | Query string objective | Default value |
