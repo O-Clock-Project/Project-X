@@ -25,10 +25,14 @@ The most important side of this project was to create the HUB himself and a good
 
 
  
-Noémie, back-end developer and Symfony dreamer
-Georges, back-end developer and swiss knife 
-Julien, front-end developer and dream maker (but without animation) 
-Nicolas, front-end developer and hub troller
+ - Noémie, back-end developer and Symfony dreamer
+   
+ - Georges, back-end developer and swiss knife
+
+ - Julien, front-end developer and dream maker (but without animation)
+   
+ - Nicolas, front-end developer and hub troller
+
 
 ---
  
