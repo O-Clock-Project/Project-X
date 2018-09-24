@@ -46,7 +46,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'user', label: 'Utilisateur' }
                     - { property: 'promotion', label: 'Promotion' }
@@ -83,7 +82,7 @@ easy_admin:
                     - { property: 'role', label: 'Rôle' }
         Annonce:
             class: App\Entity\Announcement
-            help: 'Voici toutes les annonces disponible'
+            help: 'Voici toutes les annonces disponibles'
             # La view de toutes les annonces
             list:
                 title:  'Les annonces'
@@ -92,7 +91,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'title', label: 'Titre' }
                     - { property: 'body', label: 'Contenu' }
@@ -146,7 +144,7 @@ easy_admin:
                                 
         AnnonceType:
             class: App\Entity\AnnouncementType
-            help: 'Voici toutes les annonces (Sondage, Kiem tao,...) disponible'
+            help: 'Voici toutes les annonces (Sondage, Kiem tao,...) disponibles'
             # La view de toutes les annoncesType
             list:
                 title:  'Les annonces des professeurs'
@@ -155,13 +153,12 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'name', label: 'Titre de l''annonce type' }
                     - { property: 'announces', label: 'Annonce correspondante' } 
             # La view d'une annonceType
             show:
-                title:  'Une annonce du professeur'
+                title:  'Une annonce d''un professeur'
                 help: null
                 fields:
                     - { property: 'id', label: 'Id' }
@@ -172,7 +169,7 @@ easy_admin:
                     - { property: 'announces', label: 'Annonce correspondante' } 
             # La view de modification d'une annonceType    
             edit:
-                title:  'Mise à jour d''annonce du professeur'
+                title:  'Mise à jour d''annonce d''un professeur'
                 help: null
                 fields:
                     - { property: 'is_active',label: 'Activer'}
@@ -197,15 +194,13 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'title', label: 'Titre' }
                     - { property: 'author', label: 'Auteur' }
                     - { property: 'url', label: 'Url' }
-                    - { property: 'image', label: 'Image' }
                     - { property: 'support', label: 'Support' }
                     - { property: 'difficulty', label: 'Difficulté' }
-                    - { property: 'faved_by', label: 'Mis en favoris'}
+                    - { property: 'faved_by', label: 'Favoris'}
                     - { property: 'user', label: 'Utilisateur' }
                     - { property: 'locale', label: 'Langue' }
                     - { property: 'warnings', label: 'Alertes', type_options: { 'by_reference': false }}
@@ -230,7 +225,7 @@ easy_admin:
                     - { property: 'difficulty', label: 'Difficulté' }
                     - { property: 'votes', label: 'Votes', type_options: { 'by_reference': false }}
                     - { property: 'tags', label: 'Tags', type_options: { 'by_reference': false }}
-                    - { property: 'faved_by', label: 'Mis en favoris', type_options: { 'by_reference': false }}
+                    - { property: 'faved_by', label: 'Favoris', type_options: { 'by_reference': false }}
                     - { property: 'warnings', label: 'Alertes', type_options: { 'by_reference': false }}
                     - { property: 'user', label: 'Utilisateur' }
                     - { property: 'locale', label: 'Langue' }
@@ -279,7 +274,7 @@ easy_admin:
 
         Commentaire:
             class: App\Entity\Comment
-            help: 'Voici tous les commentaires disponible'
+            help: 'Voici tous les commentaires disponibles'
             # La view de tous les commentaires
             list:
                 title:  'Les commentaires'
@@ -288,7 +283,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'banned', label: 'Bannir', type: 'toggle' } 
                     - { property: 'announcement', label: 'Annonce correspondante' }
@@ -339,14 +333,13 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'name' , label: 'Nom de la difficulté' }
                     - { property: 'level' , label: 'Niveau' }
                     - { property: 'bookmarks' , label: 'Bookmark associé' }
             # La view d'un niveaux de difficulté d'un bookmark  
             show:
-                title:  'un niveau de difficulté d''un bookmark'
+                title:  'Un niveau de difficulté d''un bookmark'
                 help: null
                 fields:
                     - { property: 'id', label: 'Id' }
@@ -385,7 +378,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'sender', label: 'A l''origine de l''invitation' }
                     - { property: 'promotion', label: 'Promotion' }
@@ -439,7 +431,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'name', label: 'Nom de la langue' }
                     - { property: 'bookmarks', label: 'Bookmark associé' }
@@ -482,7 +473,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'name', label: 'Nom' }
                     - { property: 'affectations', label: 'Droit des utilisateurs dans la promotion' }
@@ -535,7 +525,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'name', label: 'Nom du lien' }
                     - { property: 'url', label: 'Url' }
@@ -562,7 +551,7 @@ easy_admin:
                     - { property: 'is_active',label: 'Activer' }
                     - { property: 'name', label: 'Nom du lien' }
                     - { property: 'url', label: 'Url' }
-                    - { property: 'icon', label: 'Icon' }
+                    - { property: 'icon', type: 'choice', type_options: { choices: { 'Github': 'FaGithub', 'Replays': 'FaGooglePlay', 'Google Drive': 'FaGoogleDrive', 'Slack': 'FaSlackHash','Cockpit': 'FaSchool', 'Fiches récaps': 'FaArchive' } } }
                     - { property: 'promotion', label: 'Promotion' }
             # La view d'ajout de lien d'une promotion
             new:
@@ -586,7 +575,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'name', label: 'Nom du rôle' }
                     - { property: 'code', label: 'Code du rôle' }
@@ -635,7 +623,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'name', label: 'Nom de la spécialité' }
                     - { property: 'students', label: 'Élève de cette spécialité' }
@@ -677,7 +664,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active', label: 'Activer', type: 'toggle' }
                     - { property: 'name', label: 'Type de support' }
                     - { property: 'bookmarks', label: 'Bookmark de ce type de support' }
@@ -719,7 +705,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active', label: 'Activer', type: 'toggle' }
                     - { property: 'label', label: 'Libellé du tag' }
                     - { property: 'bookmarks',label: 'Bookmark associé à ce tag'}
@@ -761,7 +746,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'updated_at', label: 'Mis à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'username', label: 'Pseudo' }
                     - { property: 'first_name', label: 'Prénom' }
@@ -769,7 +753,6 @@ easy_admin:
                     - { property: 'email', label: 'Email' }
                     - { property: 'pseudo_github', label: 'Pseudo Github' }
                     - { property: 'birthday', label: 'Date de naissance', type: 'date', type_options: { widget: 'text', format: 'ddMMyyyy' }}
-                    - { property: 'zip', label: 'Zip' }
                     - { property: 'speciality', label: 'Spécialité' }
                     - { property: 'bookmarks', label: 'Bookmarks' }
                     - { property: 'comments', label: 'Commentaires'  }
@@ -798,7 +781,7 @@ easy_admin:
                     - { property: 'comments', label: 'Commentaires postés par l''utilisateur'  }
                     - { property: 'votes', label: 'Votes postés par l''utilisateur' }
                     - { property: 'favorites', label: 'Bookmarks favoris de l''utilisateur' }
-                    - { property: 'certified_bookmarks', label: 'Bookmarks certifié' }
+                    - { property: 'certified_bookmarks', label: 'Bookmarks certifiés' }
                     - { property: 'bookmarks_warned', label: 'Avertissement sur les Bookmarks' }
                     - { property: 'announces', label: 'Annonces postées par l''utilisateur' }
                     - { property: 'affectations', label: 'Droit de l''utilisateur' }
@@ -859,7 +842,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer', type: 'toggle' }
                     - { property: 'value', label: 'Valeur' }
                     - { property: 'bookmark', label: 'Bookmark associé' }
@@ -905,7 +887,6 @@ easy_admin:
                 fields:
                     - { property: 'id', label: 'Id' }
                     - { property: 'created_at', label: 'Créer le', type: 'datetime' }
-                    - { property: 'Updated_at', label: 'Mise à jour le', type: 'datetime' }
                     - { property: 'is_active',label: 'Activer' }
                     - { property: 'message', label: 'Message' }
                     - { property: 'bookmark', label: 'Le bookmark associé' }

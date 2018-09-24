@@ -33,12 +33,12 @@ class SecurityController extends Controller
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
         
+        
         // last email entered by the user
         // $lastEmail = $authenticationUtils->getLastEmail();
         
         return $this->render('security/login.html.twig', array(
             'last_username' => $lastUsername,
-            // 'last_email' => $lastEmail,
             'error'         => $error,
         ));
     }
@@ -209,7 +209,9 @@ class SecurityController extends Controller
                                 'security/emailType.html.twig',[
                                     'email' => $email,
                                     'code' => $code,
-                                    'logo_src' => $logo_src
+                                    'logo_src' => $logo_src,
+                                    'sender' => $this->getUser()->getUsername(),
+                                    'promotion' => $promotion->getName(),
                                 ]
                             ),
                             'text/html'

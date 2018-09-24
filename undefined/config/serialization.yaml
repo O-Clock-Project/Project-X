@@ -193,7 +193,7 @@ App\Entity\User:
             groups: ['profile']
         avatar:
             groups: ['concise', 'profile', 'announcements', 'announcement', 'comments']
-        best_role:
+        best_role: 
             groups: ['concise', 'profile']
 
 App\Entity\Vote:
